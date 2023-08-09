@@ -3,7 +3,7 @@
  */
 class UserAccessManager{
 
-    #current = 'Free'; 
+    #current = 'free'; 
     #defaultGeneLimit = 20; 
     #isGeneLimitEnforced = true; 
 
@@ -35,7 +35,7 @@ class UserAccessManager{
     // 20 for guest, 100 for registered and unlimited for pro users.
     #setGeneSearchLimit(current)
     {
-        if( current === 'registered' ) 
+        if( current === 'free' ) 
         {
           this.#defaultGeneLimit = 100
         }else if(current === 'pro'){

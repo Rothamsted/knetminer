@@ -60,6 +60,7 @@ const exampleQuery = function()
                 });
 
                 tempXML["genes"] = genes;
+                console.log(tempXML); 
                 sampleQueries.push(tempXML);
             });
 
@@ -232,12 +233,13 @@ const exampleQuery = function()
                 var isGeneListRestricted = userAccess.isLimitEnforced(); 
 
                 /* TODO: too messed-up, See #768 */
-                if(!isQueryRestricted && isGeneListRestricted){
+                if(isQueryRestricted && isGeneListRestricted){
                     queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
-                } else if(!isGeneListRestricted){
-                    queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`; 
+                }else{
+                     queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
                 }
-
+                
+               
         
             // Example query buttons
             var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`; 
