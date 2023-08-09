@@ -3,32 +3,29 @@
  */
 class UserAccessManager{
 
-    #current = 'guest'; 
-    #defaultGeneLimit = 20; 
-    #isGeneLimitEnforced = true; 
+    #current = null; 
+    #defaultGeneLimit = null; 
+    #isGeneLimitEnforced = null; 
 
     constructor(){
-        let userPlan = this.getUserPlan(); 
-        if(userPlan)this.#current = userPlan; 
-        this.#setGeneSearchLimit(this.#current);
+        this.#current = 'guest'
+        this.#defaultGeneLimit = 20;
+        this.#isGeneLimitEnforced = true;
     }
 
     // Calls knetspace API endpoint and returns user current plan (free or pro) as a string. 
-    getUserPlan()
+    setUserPlan()
     {
-        var login_check_url = knetspace_api_host + "/api/v1/me";
-
-        $.ajax({
-          type: 'GET', url: login_check_url, xhrFields: { withCredentials: true }, dataType: "json",
-          timeout: 1000000, cache: false,
-          headers: { "Accept": "application/json; charset=utf-8", "Content-Type": "application/json; charset=utf-8" },
-          success: function (data) {
-            if( ! typeof data.id == 'undefined') return (data.plan.name).toLowerCase(); 
-            return null
-          },
-      
-        });
-            
+        let login_check_url = knetspace_api_host + "/api/v1/me";
+      fetch(login_check_url, {
+          credentials: 'include'
+      }).then(async (response)=> {
+        const data = await response.json();
+         if(!data.name) return null; 
+         const userPlan = data.plan.name.toLowerCase();
+         this.#current = userPlan; 
+         this.#setGeneSearchLimit(userPlan);
+      })
     }
 
     // Sets geneslist search limit based on current user plan.
@@ -117,6 +114,8 @@ class UserRole {
         return result
     }
 }
+
+const userAccessMgr = Object.freeze(new UserAccessManager()); 
 
 
 // Usage examples

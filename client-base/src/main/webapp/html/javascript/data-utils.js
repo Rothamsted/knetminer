@@ -109,8 +109,8 @@ function searchKeyword() {
  */
 function setupGenesSearch() 
 {   			
-    let userPlan = new UserAccessManager(); 
-    const geneListLimit = userPlan.getGenesListLimit();
+    userAccessMgr.setUserPlan(); 
+    const geneListLimit = userAccessMgr.getGenesListLimit();
     $('.genesCount').html(`0/${geneListLimit}`);
     geneCounter();			
 }

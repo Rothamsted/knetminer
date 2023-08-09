@@ -121,6 +121,7 @@ function knetSpaceProfile() {
         return jsonVal;
     });
     setupGenesSearch();
+    exampleQuery.renderQueryHtml()
     console.log(jsonVal.username);
     return jsonVal;
 }

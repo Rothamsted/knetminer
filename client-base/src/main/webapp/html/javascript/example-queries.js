@@ -9,64 +9,63 @@
  * Makes URL calls to sample query endpoint.
  * Creates elements attached to UI with click events that populates queries to search inputs.
  */
-const exampleQuery = function()
-{
+const exampleQuery = function () {
     /**
      * An array that house example queries objects parsed from XML API endpoint.
      */
-    var sampleQueries = []; 
+    var sampleQueries = [];
 
     /**
      * function gets XML-format example queries from dataset-info API endpoint.
      * Parses data into an array of objects.
      */
-    async function setQueryData(){
+    async function setQueryData() {
 
         let request = api_url + '/dataset-info/sample-query.xml';
 
         $.ajax({
             type: 'POST',
-            url: request, 
+            url: request,
             dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
-        // Parse the values from the recieved sampleQueries.xml file into an object.
-            //object to hold parsed xml data
-            $("query", sampleQuery).each(function (index) {	//for each different Query
-                var tempXML = new Object();
-                tempXML["description"] = $("description", this).text();
-                tempXML["term"] = $("term", this).text();
-                // tempXML["withinRegion"] = $("withinRegion", this).text();
-                tempXML["taxId"] = $("taxId", this).text();
-                tempXML["accType"] = $("minimumUserRole", this).text();
-                tempXML["index"] = index
-                var regions = Array();
+                // Parse the values from the recieved sampleQueries.xml file into an object.
+                //object to hold parsed xml data
+                $("query", sampleQuery).each(function (index) {	//for each different Query
+                    var tempXML = new Object();
+                    tempXML["description"] = $("description", this).text();
+                    tempXML["term"] = $("term", this).text();
+                    // tempXML["withinRegion"] = $("withinRegion", this).text();
+                    tempXML["taxId"] = $("taxId", this).text();
+                    tempXML["accType"] = $("minimumUserRole", this).text();
+                    tempXML["index"] = index
+                    var regions = Array();
 
-                $("region", this).each(function () {
-                    regions.push({
-                        chromosome: $("chromosome", this).text(),
-                        start: $("start", this).text(),
-                        end: $("end", this).text(),
-                        label: $("label", this).text()
+                    $("region", this).each(function () {
+                        regions.push({
+                            chromosome: $("chromosome", this).text(),
+                            start: $("start", this).text(),
+                            end: $("end", this).text(),
+                            label: $("label", this).text()
+                        });
                     });
+
+                    tempXML["regions"] = regions;
+
+                    var genes = Array();
+
+                    $("gene", this).each(function () {
+                        genes.push($(this).text());
+                    });
+
+                    tempXML["genes"] = genes;
+                    sampleQueries.push(tempXML);
                 });
 
-                tempXML["regions"] = regions;
+                renderQueryHtml();
 
-                var genes = Array();
-
-                $("gene", this).each(function () {
-                    genes.push($(this).text());
-                });
-
-                tempXML["genes"] = genes;
-                console.log(tempXML); 
-                sampleQueries.push(tempXML);
-            });
-
-            renderQueryHtml(); 
-
-        }})
+            }
+        })
 
 
 
@@ -95,34 +94,34 @@ const exampleQuery = function()
      * Called outside to prevent being trigged when mounting HTML fragments
      * @param {*} queryIndex 
      */
-    function populateQueryValues(queryIndex){
+    function populateQueryValues(queryIndex) {
 
         var targetQuery = sampleQueries.filter((query) => query.index == queryIndex)[0]
         var { term, regions, genes } = targetQuery;
 
-        if(!regions.length){
+        if (!regions.length) {
             removeGeneRow()
-             emptyRegionInputs(1); 
-             if ($("#region_search_area").is(":visible")) {
-                 $("#region_search").attr('src', 'html/image/expand.gif')
-                 $('#region_search_area').hide();
-                 
-             }
+            emptyRegionInputs(1);
+            if ($("#region_search_area").is(":visible")) {
+                $("#region_search").attr('src', 'html/image/expand.gif')
+                $('#region_search_area').hide();
+
+            }
         }
 
-        if(!genes.length){
+        if (!genes.length) {
             $("#list_of_genes").val("");
             if ($("#advanced_search_area").is(":visible")) {
                 $("#advanced_search").attr('src', 'html/image/expand.gif')
                 $("#advanced_search_area").hide();
             }
         }
-        
-        if(genes.length) popuplateGeneList(genes);
 
-        if(regions.length) populateGenomeRegion(regions); 
-        
-        populatekeywordSearch(term); 
+        if (genes.length) popuplateGeneList(genes);
+
+        if (regions.length) populateGenomeRegion(regions);
+
+        populatekeywordSearch(term);
 
         triggerInputsEvents()
 
@@ -137,25 +136,25 @@ const exampleQuery = function()
      * Populates keyword queries to keyword search input
      * @param {*} term 
      */
-    function populatekeywordSearch(term){
-        if($('#kwd_search').attr('src') === 'html/image/expand.gif') {
+    function populatekeywordSearch(term) {
+        if ($('#kwd_search').attr('src') === 'html/image/expand.gif') {
             $('#kwd_search').trigger('click');
-         }
-         $("#keywords").val(term);
+        }
+        $("#keywords").val(term);
     }
 
     /**
      * Populates Genes list search textarea with example query genes list
      * @param {*} genes 
      */
-    function popuplateGeneList(genes){
+    function popuplateGeneList(genes) {
 
         if ($("#advanced_search_area").is(":hidden")) {
             $("#advanced_search").click();
         }
 
         var genesText = "";
-        for ( var gene = 0; gene < genes.length; gene++) {
+        for (var gene = 0; gene < genes.length; gene++) {
             genesText += genes[gene] + "\n";
         }
         $("#list_of_genes").val(genesText);
@@ -165,11 +164,11 @@ const exampleQuery = function()
      * Populates Genome region search with example query chromosome positions
      * @param {*} regions 
      */
-    function populateGenomeRegion(regions){
+    function populateGenomeRegion(regions) {
 
         var numRegions = regions.length;
 
-        while (!$("#chr" + numRegions).length){ //while if the last row for which we have data, doesn't exist add one
+        while (!$("#chr" + numRegions).length) { //while if the last row for which we have data, doesn't exist add one
             $("#addRow").click();
         }
 
@@ -180,7 +179,7 @@ const exampleQuery = function()
         //loop through all regions and fill in the QTL region rows
         for (i = 0; i < numRegions; i++) {
             var num = i + 1;
-            var {chromosome, start, end, label} = regions[i]
+            var { chromosome, start, end, label } = regions[i]
             $("#chr" + num).val(chromosome);
             $("#start" + num).val(start);
             $("#end" + num).val(end);
@@ -190,82 +189,79 @@ const exampleQuery = function()
             toggleRegionDeleteIcon(num)
         }
 
-         
+
     }
 
     /**
      * Calls events that shows number of documents and suggested keywords found from populated inputs.
      */
-    function triggerInputsEvents(){
+    function triggerInputsEvents() {
 
         // updates number of matched documents and genes counter
-        geneCounter(); 
+        geneCounter();
 
         // check if query populates gene list search
-        matchCounter(); 
+        matchCounter();
 
         // Refresh the Query Suggester, if it's already open.
         refreshQuerySuggester();
 
-        
+
         $("#resetknet").show();
 
     }
 
-      /**
-     * Renders query examples to UI .
-     */
-    function renderQueryHtml(){
+    /**
+   * Renders query examples to UI .
+   */
+    function renderQueryHtml() {
         $('#eg_queries').html('')
-       var currentTaxId =  $(".navbar-select").children("option:selected").val();
+        var currentTaxId = $(".navbar-select").children("option:selected").val();
 
-        var selectedQuery = sampleQueries.filter((queries)=> queries.taxId === currentTaxId || queries.taxId === '');
+        var selectedQuery = sampleQueries.filter((queries) => queries.taxId === currentTaxId || queries.taxId === '');
         // empty exiting examples 
-       var userAccess = new UserAccessManager(); 
-
-       selectedQuery.forEach(function(query)
-        {
-            var {accType,description,index} = query
+        selectedQuery.forEach(function (query) {
+            var { accType, description, index } = query
 
             var queryRestriction;
-                // /* TODO: too messed-up, See #768 */
-                var isQueryRestricted  = userAccess.requires(accType);
-                var isGeneListRestricted = userAccess.isLimitEnforced(); 
+            // /* TODO: too messed-up, See #768 */
+            var isQueryRestricted = userAccessMgr.requires(accType);
+            var isGeneListRestricted = userAccessMgr.isLimitEnforced();
 
-                /* TODO: too messed-up, See #768 */
-                if(!isQueryRestricted){
-                    queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`; 
-                }
-                
-                if(isGeneListRestricted && accType == 'pro'){
-                     queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
-                }
-                
-               
-        
+            /* TODO: too messed-up, See #768 */
+            if (!isQueryRestricted) {
+                queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
+            }
+
+            if (isGeneListRestricted && accType == 'pro') {
+                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
+            }
+
+
+
             // Example query buttons
-            var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`; 
+            var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`;
 
             //Add example queries to page  
-            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query"><div> ${sampleQueryButtons} ${queryRestriction}</div>`; 
+            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query"><div> ${sampleQueryButtons} ${queryRestriction}</div>`;
 
             $('#eg_queries').append(query);
-        }) 
+        })
     }
 
-    return{
-        setQueryData:setQueryData,
-        populateQueryValues:populateQueryValues,
-        renderQueryHtml:renderQueryHtml
+    return {
+        setQueryData: setQueryData,
+        populateQueryValues: populateQueryValues,
+        renderQueryHtml: renderQueryHtml
 
     }
 
-}(); 
+}();
 
 /**
  * Called outside object literal to avoid being triggered when mounting HTML element. 
  * @param {*} queryIndex 
  */
-function populateExamples(queryIndex){
-    exampleQuery.populateQueryValues(queryIndex) 
+function populateExamples(queryIndex) {
+    exampleQuery.populateQueryValues(queryIndex)
 }
