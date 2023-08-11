@@ -1,5 +1,5 @@
 /**
- * TODO: Regarding recent changes about accType, we don't have anything to test them in 
+ * TODO: Regarding recent changes about minimumUserRole, we don't have anything to test them in 
  * aratiny, that's not good, we should check if we can have a test user which can be used
  * for the aratiny dataset.
  * 
@@ -31,14 +31,14 @@ const exampleQuery = function () {
             success: function (sampleQuery) {
                 // Parse the values from the recieved sampleQueries.xml file into an object.
                 //object to hold parsed xml data
-                $("query", sampleQuery).each(function (index) {	//for each different Query
+                $("query", sampleQuery).each(function (index) { //for each different Query
                     var tempXML = new Object();
                     tempXML["description"] = $("description", this).text();
                     tempXML["term"] = $("term", this).text();
                     // tempXML["withinRegion"] = $("withinRegion", this).text();
                     tempXML["taxId"] = $("taxId", this).text();
-                    tempXML["accType"] = $("minimumUserRole", this).text();
-                    tempXML["index"] = index
+                    tempXML["minimumUserRole"] = $("minimumUserRole", this).text();
+                    tempXML["index"] = index;
                     var regions = Array();
 
                     $("region", this).each(function () {
@@ -62,11 +62,11 @@ const exampleQuery = function () {
                     sampleQueries.push(tempXML);
                 });
 
-                renderQueryHtml();
+                renderQueryHtml(); 
 
             }
-        })
-
+        });
+    }
 
 
         /*
@@ -87,7 +87,6 @@ const exampleQuery = function () {
         *       > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
         *
         */
-    }
 
     /**
      * Populate the search fields example query is clicked. 
@@ -116,8 +115,8 @@ const exampleQuery = function () {
                 $("#advanced_search_area").hide();
             }
         }
-
-        if (genes.length) popuplateGeneList(genes);
+        
+        if (genes.length) populateGeneList(genes);
 
         if (regions.length) populateGenomeRegion(regions);
 
@@ -147,7 +146,7 @@ const exampleQuery = function () {
      * Populates Genes list search textarea with example query genes list
      * @param {*} genes 
      */
-    function popuplateGeneList(genes) {
+    function populateGeneList(genes) {
 
         if ($("#advanced_search_area").is(":hidden")) {
             $("#advanced_search").click();
@@ -188,8 +187,6 @@ const exampleQuery = function () {
 
             toggleRegionDeleteIcon(num)
         }
-
-
     }
 
     /**
@@ -208,7 +205,6 @@ const exampleQuery = function () {
 
 
         $("#resetknet").show();
-
     }
 
     /**
@@ -220,12 +216,15 @@ const exampleQuery = function () {
 
         var selectedQuery = sampleQueries.filter((queries) => queries.taxId === currentTaxId || queries.taxId === '');
         // empty exiting examples 
-        selectedQuery.forEach(function (query) {
-            var { accType, description, index } = query
+       var userAccess = new UserAccessManager(); 
+
+       selectedQuery.forEach(function(query)
+        {
+            var {minimumUserRole,description,index} = query
 
             var queryRestriction;
             // /* TODO: too messed-up, See #768 */
-            var isQueryRestricted = userAccessMgr.requires(accType);
+            var isQueryRestricted = userAccessMgr.requires(minimumUserRole);
             var isGeneListRestricted = userAccessMgr.isLimitEnforced();
 
             /* TODO: too messed-up, See #768 */
@@ -233,11 +232,9 @@ const exampleQuery = function () {
                 queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
             }
 
-            if (isGeneListRestricted && accType == 'pro') {
+            if (isGeneListRestricted && minimumUserRole == 'pro') {
                 queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
             }
-
-
 
             // Example query buttons
             var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`;

@@ -3,6 +3,8 @@
 	<query>
 		<description>FLC gene expression</description>
 		<term>flowering FLC FT</term>
+		<minimumUserRole>guest</minimumUserRole>
+
 	</query>
 	<query>
 		<description>Yield-related Ara. QTLs</description>
@@ -19,10 +21,13 @@
 		<gene>CAK*</gene>
 		<gene>AT1G*</gene>		
 		<taxId>3702</taxId>
+		<minimumUserRole>guest</minimumUserRole>
+
 	</query>	
 	<query>
 		<description>Dormancy</description>
 		<term>dormancy OR anthocyanin</term>
 		<taxId>4577</taxId>
+		<minimumUserRole>guest</minimumUserRole>
 	</query>
 </sampleQueries>
