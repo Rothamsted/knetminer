@@ -73,6 +73,7 @@ class UserRole {
 
     static GUEST = new UserRole ( 1000 )
     static REGISTERED = new UserRole ( 500 )
+    static FREE = new UserRole ( 500 )
     static PRO = new UserRole ( 100 )
 
     constructor(level){
