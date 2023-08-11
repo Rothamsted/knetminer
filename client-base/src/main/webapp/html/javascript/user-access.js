@@ -31,12 +31,16 @@ class UserAccessManager{
     }
 
     // Sets geneslist search limit based on current user plan.
-    // 20 for guest, 100 for registered and unlimited for pro users.
+    // 20 for guest, 100 for free and unlimited for pro users.
     #setGeneSearchLimit()
     {
-        if( this.#current === 'registered' ) 
+        if( this.#current === 'free' ) 
         {   
           this.#defaultGeneLimit = 100;
+          
+          // sets current genelist limit
+          $('.genesCount').html(`0/${this.#defaultGeneLimit}`)
+
         }else if(this.#current === 'pro'){
             this.#isGeneLimitEnforced = false;
             $('.genesCount').hide(); 
