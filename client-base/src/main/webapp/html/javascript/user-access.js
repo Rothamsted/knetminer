@@ -21,22 +21,25 @@ class UserAccessManager{
           credentials: 'include'
       }).then(async (response)=> {
         const data = await response.json();
-         if(!data.name) return null; 
-         const userPlan = data.plan.name.toLowerCase();
-         this.#current = userPlan; 
-         this.#setGeneSearchLimit(userPlan);
+          const userPlan = data.plan?.name.toLowerCase()
+          if(userPlan?.length){
+            this.#current = userPlan
+            this.#setGeneSearchLimit();
+          }
+
       })
     }
 
     // Sets geneslist search limit based on current user plan.
     // 20 for guest, 100 for registered and unlimited for pro users.
-    #setGeneSearchLimit(current)
+    #setGeneSearchLimit()
     {
-        if( current === 'free' ) 
+        if( this.#current === 'free' ) 
         {
-          this.#defaultGeneLimit = 100
-        }else if(current === 'pro'){
-            this.#isGeneLimitEnforced = false; 
+          $('.genesCount').html('0/100');
+        }else if(this.#current === 'pro'){
+            this.#isGeneLimitEnforced = false;
+            $('.genesCount').hide(); 
         } 
     }
 
@@ -48,10 +51,6 @@ class UserAccessManager{
     }
 
     // Gets geneslist search limit
-    getGenesListLimit(){
-        return this.#defaultGeneLimit
-    }
-
     // Checks if query restriction should be added to example queries.
     // Method compare user current role to the roles specified for each example queries. 
     requires(queryRole){
@@ -115,7 +114,7 @@ class UserRole {
     }
 }
 
-const userAccessMgr = Object.freeze(new UserAccessManager()); 
+const userAccessMgr = new UserAccessManager()
 
 
 // Usage examples

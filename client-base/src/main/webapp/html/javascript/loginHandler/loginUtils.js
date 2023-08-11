@@ -121,8 +121,6 @@ function knetSpaceProfile() {
         return jsonVal;
     });
     setupGenesSearch();
-    exampleQuery.renderQueryHtml()
-    console.log(jsonVal.username);
     return jsonVal;
 }
 
@@ -293,8 +291,9 @@ function   fetchCredentials(loginModal) {
             if (bool) {
 
                 knetSpaceProfile().then(function (myJson) {
-                    let content = "Welcome, " + myJson.username; // Welcome the user
+                    let content = "Welcome, " + myJson.username;// Welcome the user
                     jboxNotice(content, 'blue', 60, 1000);
+                    exampleQuery.renderQueryHtml(); // renders example queries
                     // Update the login icon & name
                     $('#login_icon').attr("title", "More"); // insert new link
                     $('#login_icon').attr("target", "");

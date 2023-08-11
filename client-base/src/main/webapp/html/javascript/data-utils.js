@@ -110,8 +110,6 @@ function searchKeyword() {
 function setupGenesSearch() 
 {   			
     userAccessMgr.setUserPlan(); 
-    const geneListLimit = userAccessMgr.getGenesListLimit();
-    $('.genesCount').html(`0/${geneListLimit}`);
     geneCounter();			
 }
 
