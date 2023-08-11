@@ -35,12 +35,17 @@ class UserAccessManager{
     #setGeneSearchLimit()
     {
         if( this.#current === 'free' ) 
-        {
-          $('.genesCount').html('0/100');
+        {   
+          this.#defaultGeneLimit = 100;
         }else if(this.#current === 'pro'){
             this.#isGeneLimitEnforced = false;
             $('.genesCount').hide(); 
         } 
+    }
+
+    // returns genelist search Limit 
+    getGeneSearchLimit(){
+      return this.#defaultGeneLimit
     }
 
     // Checks if genes list limit is enforced or not. 

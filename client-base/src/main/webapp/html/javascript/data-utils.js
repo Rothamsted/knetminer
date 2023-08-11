@@ -707,17 +707,19 @@ class GenesListManager {
 
   // System defined geneslist limit, 20 for guest users, 100 for logged in users 
   // unlimited for pro users
-  #listLimit = freegenelist_limit;
+  #listLimit = null
 
   // Geneslist input length
   #listLength = null;
 
   // System defined boolean value to check if genelist input limit is enforced
-  #isLimitEnforced = enforce_genelist_limit
+  #isLimitEnforced = null
 
 
   constructor(listLength) {
     this.#listLength = listLength;
+    this.#listLimit = userAccessMgr.getGeneSearchLimit(); 
+    this.#isLimitEnforced = userAccessMgr.isLimitEnforced();
   }
 
 
