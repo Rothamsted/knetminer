@@ -34,7 +34,7 @@ class UserAccessManager{
     // 20 for guest, 100 for registered and unlimited for pro users.
     #setGeneSearchLimit()
     {
-        if( this.#current === 'free' ) 
+        if( this.#current === 'registered' ) 
         {   
           this.#defaultGeneLimit = 100;
         }else if(this.#current === 'pro'){
@@ -72,7 +72,7 @@ class UserRole {
     #level = null
 
     static GUEST = new UserRole ( 1000 )
-    static FREE = new UserRole ( 500 )
+    static REGISTERED = new UserRole ( 500 )
     static PRO = new UserRole ( 100 )
 
     constructor(level){
