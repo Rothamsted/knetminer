@@ -108,15 +108,23 @@ class UserRole {
   /**
    * Get role by string, case-insensitive
    */
-    static get ( roleStr )
-    {
-      if ( typeof roleStr != 'string' ) 
-        throw new TypeError ( "get() requires a non-null string" );
-        roleStr = roleStr.toUpperCase()
-        const result = UserRole[ roleStr ].#level
-        if ( !result ) throw new TypeError ( `Invalid user role ${roleStr}` )
-        return result
-    }
+    static get(roleStr) {
+      if (typeof roleStr !== 'string') 
+          throw new TypeError("get() requires a non-null string");
+          
+      roleStr = roleStr.toUpperCase();
+
+      // Check if the role exists in the UserRole class
+      if (!UserRole[roleStr]) {
+          throw new TypeError(`Invalid user role '${roleStr}'`);
+      }
+
+      const result = UserRole[roleStr].#level;
+      if (!result) {
+          throw new TypeError(`Unable to retrieve level for role '${roleStr}'`);
+      }
+      return result;
+  }
 }
 
 const userAccessMgr = new UserAccessManager()
