@@ -251,7 +251,7 @@ function generateMultiEvidenceNetwork(event) {
         var params = { keyword: evidences_ondexid_list };
         params.list = geneids;
         if (geneids.length > 0 && geneids[0].length > 1) {
-            getLongWaitMessage.createLoader('#'+event.target.id,'#tabviewer_content','Creating Network')
+            new WaitPopUp('#'+event.target.id,'#tabviewer_content','Creating Network').animate(); 
             // Generate the evidence knetwork in KnetMaps.
             generateCyJSNetwork(api_url + '/network', params, false);
         }

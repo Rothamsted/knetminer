@@ -1,79 +1,44 @@
+class WaitPopUp {
 
-// TODO: getXXX are very bad name for anything that isn't a getter
-// Also, this is not a message, but more someting like waitPopUp or waitPopUpManager
-getLongWaitMessage = function(){
+    #buttonId = null; 
+    #parentId = null; 
+    #loaderText = null; 
+    #loaderTimer = null 
 
-    // TODO: as above, this is a very bad name for anything that is not a getter
-    var getTimeOutId;
-    
-    /* TODO: why are these here, if they're just a simple constants, used in createUiItem() only?!
-     * - define things in the closest scope where they're used
-	   * - define values that don't change as const, not var
-	   * - prefer 'let' to 'var' (Google it)
-     */ 
-    var loadingPulse = '<div class="dot"></div>';
-    var overlay = '<div class="overlay"></div>'
+    #overlay = '<div class="overlay"></div>'   
+    #loadingPulse = '<div class="dot"></div>';
 
-		/* TODO: this looks like bad design. It seems an option (eg, useAwesomeFonts) that could be set
-		 * in createUiItem(), or could be a separated method like setAwesomeFonts( enabled = true )
-		 * 
-		 * or maybe there's no need to make this optional, it could be always on and hidden from the
-		 * invoker. 
-		 * 
-		 */
-    // function to create overlay with fontawesome spinners
-    function createOverlayLoader(parentElement){
-        const loaderContainer = `<div style="font-size:2rem;color:#51CE7B;" class="overlay"><i class="fas fa-dna fa-spin fa-lg"></i></div>`   
-        $(parentElement).append(loaderContainer)
+    constructor(buttonId,parentId,loaderText){
+        this.#buttonId = buttonId; 
+        this.#parentId  = parentId
+        this.#loaderText = loaderText; 
+        // check if the button is an input type of button
+        if(typeof buttonId !== 'string'){
+            throw new Error('Target element Id must be a string');
+        }
     }
 
-    // function to create overlay upon  
-    function createUiItem(button,parentElement,loaderText){
-        var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+loaderText +loadingPulse+'</span>';
-        $(parentElement).append(overlay);
-        $(button).html(uiContent)
+    //Clear timeout Id from callstack
+    stop(){
+        clearTimeout(this.#loaderTimer)    
     }
 
-		/* 
-		 * TODO: this is a bad design: the invoker shouldn't be forced to know that it has to  
-		 * disable a timeout in order to hide the wait pop-up. You're mixing two abstraction levels
-		 * and that's why it's bad, the invoker should be able to just say: stop() or hide() and then
-		 * such method should take care of disabling the timeout. 
-		 * 
-		 * If that's not possible because there is more than one timeout at the same time, then 
-		 * you much convert this to a class and have as many instances as needed. But, for what I
-		 * understand, it's more likely that you just need to manage the timeout internally only and
-		 * you always have one instance of this wait-pop up all the time.
-		 * 
-		 */
-    // function returns timeout Id    
-    function returnTimeOut(){
-        return getTimeOutId;
-    }
-
-    // function to set message and animation
-    function setMessage(){
-        createUiItem('#searchBtn','#search','Searching');
-        
-
-       getTimeOutId = setTimeout(function(){
+    // Starts loader animation on target element Ids and removes loader animation after 116 secs
+    start(){
+        this.animate();
+        // 
+        this.#loaderTimer = setTimeout(function(){
             $('.overlay').html('')
-            createUiItem('#searchBtn','#search','Loading Result');     
+            $(this.#buttonId).html('Search')
         },116000)
 
     }
 
-		// TODO: what's the need to name exposed methods differently than internal
-		// functions?
-    return{
-        // TODO: is this needed to the outside?! Why isn't createLoader() enough?
-        init:setMessage,
-        // TODO: remove this is not needed, as above 
-        timeOutId:returnTimeOut,
-        // TODO: why both this and init() are needed. Isn't start ( message = 'Searching' ) a better
-        // name for both the exposed method and the function (with the default, it could be invoked 
-        // as start() and init() shouldn't be needed)
-        createLoader:createUiItem,
-        uiLoader:createOverlayLoader
+    // adds loading purse animation to target button and appends overlay to target element parent. 
+    animate(){
+        var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+this.#loaderText+this.#loadingPulse+'</span>';
+        $(this.#parentId).append(this.#overlay);
+        $(this.#buttonId).html(uiContent)
     }
-}();
+
+}

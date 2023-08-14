@@ -90,7 +90,7 @@ function createGenesTable ( tableData, keyword )
 	// TODO: evidence dropdown functions to be refined in Knetminer 5.7 
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
 		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
-		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
+		 new WaitPopUp('#'+e.target.id,'#tabviewer_content','Creating Network').animate(); 
 	});
 
 
@@ -239,7 +239,11 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			console.log(errorMsg);
 			//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 		}
-	}).always(function () { $('.overlay').remove() });
+	}).always(function () { 
+		
+		$('.overlay').remove() 
+		
+	});
 }
 
 /*
