@@ -4106,7 +4106,7 @@
 		<gene>ZM00001EB240630</gene>
 	</query>
 	<!-- TODO: pro query-->
-	<query>
+	<!-- <query>
 		<description></description>
 		<minimumUserRole></minimumUserRole>
 		<taxId></taxId>
@@ -4118,6 +4118,6 @@
 			<end></end>
 			<label></label>
 		</region>
-	</query>
+	</query> -->
 
 </sampleQueries>
