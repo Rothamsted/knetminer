@@ -159,7 +159,8 @@ async function searchKeyword() {
 function setupGenesSearch() 
 {   			
     userAccessMgr.setUserPlan(); 
-    geneCounter();			
+    const geneListLimit = userAccessMgr.getGeneSearchLimit()
+    $('genesCount').html(`0/${geneListLimit}`)	
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
@@ -774,13 +775,20 @@ class GenesListManager {
   // Method checks if genelist limit is reached and passes resulting boolean as a state value to toggle HTML Elements and to triggers type of message shown on UI.
   #setLimitStatus() {
 
-    const isLimitReached = this.#listLength <= this.#listLimit || !this.#isLimitEnforced ? true : false;
+    const isLimitReached = (this.#listLength <= this.#listLimit || !this.#isLimitEnforced )
 
-    $('#searchBtn').toggleClass('button-disabled', !isLimitReached);
+    const searchButton = $('#searchBtn');
+
     $(".genecount-container").toggleClass('show', isLimitReached)
     $(".limit-message").toggleClass('show', !isLimitReached);
     $(".border").toggleClass('limit-border', !isLimitReached);
     $('.genesCount').toggleClass('genes-limit', !isLimitReached);
+
+    // checks if restriction is already based on search button
+    if(!searchButton.hasClass('button-disabled'))
+    {
+      searchButton.toggleClass('button-disabled', !isLimitReached);
+    }
 
     if (!isLimitReached) this.#showStatusMessage(isLimitReached);
 
