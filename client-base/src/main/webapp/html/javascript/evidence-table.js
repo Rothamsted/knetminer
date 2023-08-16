@@ -300,8 +300,6 @@ async function openGeneListPopup(conceptId, element)
             accessionList.push(accessionItem.join("\t"))
         }
 
-        accessionList.shift(); 
-
         navigator.clipboard.writeText(accessionList.join("\n"));
     
         evidenceNotice = '<span><b>Acession Copied to clipboard</b></span>'
@@ -584,10 +582,16 @@ class AccessionPopupManager
         var genesCount = this.#setPagination()
 
         for(var nodeIndex = 0; nodeIndex <  genesCount; nodeIndex++){
-            var [accession, geneName, chromosome]  = this.#accessionData[nodeIndex].split("\t").slice(1, 4);
+            var accessionDataArray = this.#accessionData[nodeIndex].split("\t").slice(1, 5); 
+            
+            // removes third items from the array (TAXID)
+            accessionDataArray.splice(accessionDataArray.length -2, 1)
+
+            var [accession, name, chromosome] = accessionDataArray; 
+
             const row = tableBodyNode.insertRow(nodeIndex);
             row.insertCell(0).textContent = accession
-            row.insertCell(1).textContent = geneName
+            row.insertCell(1).textContent = name
             row.insertCell(2).textContent = chromosome
         }
 

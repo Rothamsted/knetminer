@@ -165,6 +165,9 @@
           // TODO: WILL BE REMOVED IN COMING DAYS
           let geneTable = formatJsonToTsv(response.geneTable);
           geneTable = geneTable.split("\n")
+          
+          // removes the first time of the array (title)
+          geneTable.shift(); 
 
           // extended method registers cache request and response objects (geneTable and headers)
           super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})
