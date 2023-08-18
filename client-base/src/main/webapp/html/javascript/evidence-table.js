@@ -251,7 +251,7 @@ function generateMultiEvidenceNetwork(event) {
         var params = { keyword: evidences_ondexid_list };
         params.list = geneids;
         if (geneids.length > 0 && geneids[0].length > 1) {
-            getLongWaitMessage.createLoader('#'+event.target.id,'#tabviewer_content','Creating Network')
+            new WaitPopUp('#'+event.target.id,'#tabviewer_content','Creating Network').animate(); 
             // Generate the evidence knetwork in KnetMaps.
             generateCyJSNetwork(api_url + '/network', params, false);
         }
@@ -299,8 +299,6 @@ async function openGeneListPopup(conceptId, element)
 
             accessionList.push(accessionItem.join("\t"))
         }
-
-        accessionList.shift(); 
 
         navigator.clipboard.writeText(accessionList.join("\n"));
     
@@ -584,10 +582,16 @@ class AccessionPopupManager
         var genesCount = this.#setPagination()
 
         for(var nodeIndex = 0; nodeIndex <  genesCount; nodeIndex++){
-            var [accession, geneName, chromosome]  = this.#accessionData[nodeIndex].split("\t").slice(1, 4);
+            var accessionDataArray = this.#accessionData[nodeIndex].split("\t").slice(1, 5); 
+            
+            // removes third items from the array (TAXID)
+            accessionDataArray.splice(accessionDataArray.length -2, 1)
+
+            var [accession, name, chromosome] = accessionDataArray; 
+
             const row = tableBodyNode.insertRow(nodeIndex);
             row.insertCell(0).textContent = accession
-            row.insertCell(1).textContent = geneName
+            row.insertCell(1).textContent = name
             row.insertCell(2).textContent = chromosome
         }
 

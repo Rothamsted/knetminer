@@ -11,9 +11,9 @@
                     <!-- Sample Queries -->
                     <div id="info" class="details">
                         <div id="info-text">
-                            <div><h3  style="margin:10px 0; class="query_title">Examples</h3>
+                            <div><h3  style="margin:10px 0; class="query_title">Example Queries</h3>
                                 <span style="display:flex;" class="close" onclick="queryToggle($('#eg_queries'),$('.query_title'),this)" title="close"><img class="close"  src="html/image/close_button.png"><img class="close" style="display:none;" src="html/image/drop-down.png"/></span></div>
-                            <div id="eg_queries"></div>
+                            <ul id="eg_queries"></ul>
                         </div>
                     </div>
 				</li>

@@ -29,7 +29,6 @@ function activateButton(option){
 
     var isEvidenceViewCreated = $('#'+option+'_button').hasClass('created');
     if( !isEvidenceViewCreated && option == 'evidenceTable'){
-        getLongWaitMessage.uiLoader('#tabviewer_content')
         createEvidenceView()
     }
     
@@ -459,7 +458,7 @@ function clearGeneListInput(){
 // }
 
 
-/** NOTE: NOT SURE IF THIS IS NEEDED, WAITING FOR FEEDBACK.
+/** 
  * returns genemap view width based on user screen size.
  * @returns width
  */
@@ -480,4 +479,10 @@ function adaptGenoMapSize (){
 	// orginal size
 	return 800; 
 
+}
+
+// function resets geneview after network call.
+function resetNetworkCall(){
+    $('.overlay').remove();
+    $("#new_generateMultiGeneNetworkButton").html('Create Network')
 }

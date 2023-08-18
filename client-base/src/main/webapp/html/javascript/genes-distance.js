@@ -137,6 +137,7 @@ const knetscoreFilter = function(){
 const geneTableFilterMgr = function() {
 
     let tableData = null
+    let filteredData = []; 
 
    return { 
         // saves geneview table
@@ -158,8 +159,7 @@ const geneTableFilterMgr = function() {
 
             const scoreMax = Number($('#score-max').val()); 
 
-
-            let filteredData = []
+            let knetScoreFilteredData = []
 
             // Filter through data 
             for(let genes of tableData ){
@@ -168,21 +168,22 @@ const geneTableFilterMgr = function() {
                     // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
                     const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) )
 
-                    if(isScoreInRange) filteredData.push(genes)
+                    if(isScoreInRange) knetScoreFilteredData.push(genes)
             }
 
-            if(filteredData.length) geneTableFilterMgr.renderFilteredTable(filteredData)
+            if(knetScoreFilteredData.length){
+                geneTableFilterMgr.renderFilteredTable(knetScoreFilteredData)
+                filteredData = knetScoreFilteredData; 
+            }
 
-            if(!filteredData.length)$('#filterMessage').text('Your filter is returning no results')
-            $('#filterMessage').toggleClass('show-block',!filteredData.length); 
-            $('#geneTableBody').toggleClass('hide',!filteredData.length);
-        
+            geneTableFilterMgr.toggleTableState(knetScoreFilteredData.length)
+   
         },
         // handles graph distance filtering
         filterByGraphDistance: function()
         {
             const distance = $('#select-distance option:selected').val()
-            const filteredData = []
+            const distanceFilteredData = []
             const data = [...tableData]
         
             data.forEach(genes => {
@@ -203,15 +204,26 @@ const geneTableFilterMgr = function() {
                 }
                 // checks if object.Keys has length
                 const isConceptEmpty = Object.keys(concepts).length
-                if(isConceptEmpty > 0 ) filteredData.push(genes)
+                if(isConceptEmpty > 0 ) distanceFilteredData.push(genes)
                 
             })
-        
-            if(filteredData.length) geneTableFilterMgr.renderFilteredTable(filteredData)
-        
-            $('#filterMessage').text('Your filter is returning no results');
-            $('#filterMessage').toggleClass('show-block',!filteredData.length); 
-            $('#tablesorter').toggleClass('hide',!filteredData.length);
-        }
+            
+            if(distanceFilteredData.length){
+                geneTableFilterMgr.renderFilteredTable(distanceFilteredData); 
+                filteredData = distanceFilteredData
+            }
+
+            geneTableFilterMgr.toggleTableState(distanceFilteredData.length)
+        },
+        // sets filtered data as table data when user switch filter view
+        setFilteredData:function(){
+            tableData = filteredData.length ? filteredData : tableData
+        }, 
+        // toggle table state when filtered data length is equal to zero. 
+        toggleTableState:function(dataLength){
+            if(dataLength <= 0)$('#filterMessage').text('Your filter is returning no results');
+            $('#filterMessage').toggleClass('show-block',dataLength <= 0); 
+            $('#geneTableBody').toggleClass('hide',dataLength <= 0);
+        } 
     }
 }()

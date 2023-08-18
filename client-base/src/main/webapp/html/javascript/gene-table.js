@@ -89,8 +89,9 @@ function createGenesTable ( tableData, keyword )
 
 	// TODO: evidence dropdown functions to be refined in Knetminer 5.7 
 	$("#new_generateMultiGeneNetworkButton").click(function (e) {
-		generateMultiGeneNetwork_forNewNetworkViewer(keyword);
-		getLongWaitMessage.createLoader('#'+e.target.id,'#tabviewer_content','Creating Network'); 
+		var  targetElementId = e.target.id
+		generateMultiGeneNetwork_forNewNetworkViewer(keyword,targetElementId);
+
 	});
 
 
@@ -239,7 +240,9 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 			console.log(errorMsg);
 			//$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div">' + "Error: <br/>" + "Details: " + errorMsg + '</div>');
 		}
-	}).always(function () { $('.overlay').remove() });
+	}).always(function () { 
+		resetNetworkCall()
+	});
 }
 
 /*
@@ -247,7 +250,11 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
  * Generates multi gene network in KnetMaps
  * @author: Ajit Singh.
  */
-function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
+function generateMultiGeneNetwork_forNewNetworkViewer(keyword, targetElement) {
+
+	// adds loadings to create network button
+	new WaitPopUp(`#${targetElement}`,'#tabviewer_content','Creating Network').animate(); 
+
 	var candidatelist = [];
 	var knetNotice;
 
@@ -276,6 +283,8 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword) {
 		}
 
 		jboxNotice(knetNotice, 'red', 300, 2000);
+		resetNetworkCall()
+
 	}
 	else {
 		generateCyJSNetwork(api_url + '/network', { keyword: keyword, list: candidatelist, isExportPlainJSON: false }, false);
@@ -562,10 +571,9 @@ function openAccessionNetworkView(event,genesAccessions){
 	const distanceLimit = 8  // number could be dynamic 
 
 	let ui = '<div id="distance-view" class="view"><span>Distance</span><select id="select-distance" onchange="geneTableFilterMgr.filterByGraphDistance()">'
-    for(let index = 1; index < distanceLimit; index++){
-        ui += `<option value='${index}'>${index}</option>`
+    for(let index = 0; index < distanceLimit; index++){
+        ui += `<option value='${index + 1}' ${index === 7 ? 'selected': ''}>${index + 1}</option>`
     }
-
     ui += '</select></div>';
 	return ui
  }
@@ -582,4 +590,5 @@ function openAccessionNetworkView(event,genesAccessions){
 
 	$(element).addClass('active-tabs'); 
 	$(`#${selected}-view`).addClass('active');
+	geneTableFilterMgr.setFilteredData(); 
  }

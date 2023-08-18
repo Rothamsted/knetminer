@@ -1,7 +1,32 @@
+// Function sends a post request to genome Api endpoint and returns an object data
+async function genomeApi (request, requestParams) 
+{
+    const startTime = performance.now(); 
+
+    const genomeData =  await fetch(api_url + request, {
+        method:'POST',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify(requestParams),
+        timeout: 1000000,
+      }).then((response) => {
+        let data = response.json(); 
+        let querytime = performance.now() - startTime; // query response time
+        let queryseconds = (querytime / 1000).toFixed(2);
+        data['queryseconds'] = queryseconds; 
+        return data; 
+      })
+      return genomeData
+}
+
+
 /*
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
-function searchKeyword() {
+async function searchKeyword() {
+  const searchButtonAnimation = new WaitPopUp('#searchBtn','#search','Searching'); 
+  searchButtonAnimation.start(); 
   //var searchMode = getRadioValue(document.gviewerForm.search_mode);
   var searchMode = "genome"; // default
 
@@ -72,10 +97,34 @@ function searchKeyword() {
     $("#NetworkCanvas_button").removeClass('network-created');
     $('#evidenceTable_button').removeClass('created');
 
-    requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list)
-    getLongWaitMessage.init()
+   await genomeApi(request, requestParams).then((data)=> {
+    genomicViewContent(data, keyword, geneList_size, searchMode, list)
+
+    googleAnalytics.trackEvent(
+      request, // It already has a leading '/'
+      {
+        // WARNING: keep these fields consistent with the API tracking in 
+        // KnetminerServer.java
+        'keywords': keyword,
+        'genesListSize': geneList_size,
+        'genesListMode': requestParams?.qtl?.listMode || "",
+        'chrSize': requestParams?.qtl?.length || 0,
+        'taxId': requestParams?.taxId || ""
+      }
+    )
+    data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show();
+        
+    }).finally(()=> {
+      $('.overlay').remove();
+      $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
+      document.getElementById('resultsTable_button').click();
+      searchButtonAnimation.stop(); 
+      document.getElementById('pGSearch_title').scrollIntoView();
+    }).catch(err => console.log(err));
   }
 }
+
+
 
 /**
  * checks user login status and, in case of success, calls the API specified in searchMode and
@@ -110,73 +159,42 @@ function searchKeyword() {
 function setupGenesSearch() 
 {   			
     userAccessMgr.setUserPlan(); 
-    geneCounter();			
+    const geneListLimit = userAccessMgr.getGeneSearchLimit()
+    $('genesCount').html(`0/${geneListLimit}`)	
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above
-function requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list) {
-  var firstTimeout;
-  $.post({
-    url: api_url + request,
-    timeout: 1000000,
-    startTime: performance.now(),
-    headers: {
-      "Accept": "application/json; charset=utf-8",
-      "Content-Type": "application/json; charset=utf-8"
-    },
-    datatype: "json",
-    data: JSON.stringify(requestParams)
-  })
-    .fail(function (xhr, status, errorlog) {
-      $("#pGViewer_title").html(''); // clear display msg
-      var server_error = JSON.parse(xhr.responseText); // full error json from server
-      var errorMsg = "Search failed...\t" + server_error.statusReasonPhrase + " (" + server_error.type + "),\t" + server_error.title + "\nPlease use valid keywords, gene IDs or QTLs.";
-      console.log(server_error.detail);
-      alert(errorMsg);
-      $('.overlay').remove();
-    })
-    .success(function (data) {
-      var gviewer = data.gviewer
-      var querytime = performance.now() - this.startTime; // query response time
-      var queryseconds = querytime / 1000;
-      queryseconds = queryseconds.toFixed(2); // rounded to 2 decimal places
-      // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
-      genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list)
+// async function requestGenomeData(requestParams, keyword, request, searchMode, geneList_size, list) {  
 
-      googleAnalytics.trackEvent(
-        request, // It already has a leading '/'
-        {
-          // WARNING: keep these fields consistent with the API tracking in 
-          // KnetminerServer.java
-          'keywords': keyword,
-          'genesListSize': geneList_size,
-          'genesListMode': requestParams?.qtl?.listMode || "",
-          'chrSize': requestParams?.qtl?.length || 0,
-          'taxId': requestParams?.taxId || ""
-        }
-      )
-      data.docSize == 0 ? $('#tabviewer').hide() : $('#tabviewer').show();
-    }
-    ).complete(function () {
-      // Remove loading spinner from 'search' div
-      $('.overlay').remove();
-      $('#searchBtn').html('<i class="fa fa-search" aria-hidden="true"></i> Search')
-      document.getElementById('resultsTable_button').click();
-      var secondTimeOut = getLongWaitMessage.timeOutId();
 
-      // clear timeout from callstack
-      // TODO: this timeout is never set, remove its declaration and use
-      // if no longer needed. 
-      clearTimeout(firstTimeout);
+  
+//   $.post({
 
-      clearTimeout(secondTimeOut);
+    
 
-      document.getElementById('pGSearch_title').scrollIntoView();
-    })
-}
+
+//   })
+//     .fail(function (xhr, status, errorlog) {
+//       $("#pGViewer_title").html(''); // clear display msg
+//       var server_error = JSON.parse(xhr.responseText); // full error json from server
+//       var errorMsg = "Search failed...\t" + server_error.statusReasonPhrase + " (" + server_error.type + "),\t" + server_error.title + "\nPlease use valid keywords, gene IDs or QTLs.";
+//       console.log(server_error.detail);
+//       alert(errorMsg);
+//       $('.overlay').remove();
+//     })
+//     .success(function (data) {
+//        // rounded to 2 decimal places
+//       // $(".loadingDiv").replaceWith('<div class="loadingDiv"></div>');
+  
+//     }
+//     ).complete(function () {
+//       // Remove loading spinner from 'search' div
+        
+//     })
+// }
 
 // function runs inside fetch data to show client features like: numbers of linked/unlinked genes;
-function genomicViewContent(data, keyword, geneList_size, searchMode, queryseconds, gviewer, list) {
+function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   let messageNode;
   let genomicViewTitle;
   let status;
@@ -185,9 +203,7 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
   data.geneTable = replaceOndexId(data.geneTable);
   data.evidenceTable = replaceOndexId(data.evidenceTable);
 
-  let { geneCount, geneTable, evidenceTable } = data;
-
-
+  let { geneCount, geneTable, evidenceTable, gviewer, queryseconds } = data;
 
 
   if (geneCount == 0) {
@@ -228,8 +244,6 @@ function genomicViewContent(data, keyword, geneList_size, searchMode, querysecon
     document.getElementById('resultsTable').innerHTML = "";
     document.getElementById('evidenceTable').innerHTML = "";
     document.getElementById('NetworkCanvas').innerHTML = "";
-
-    return
 
   }
 
@@ -639,10 +653,6 @@ function createEvidenceView() {
   $('#evidenceTable_button').addClass('created');
   var data = $('body').data().data
 
-  // removes loading spinner
-  $('.overlay').remove();
-
-
   // Finally, render the table. 
   // Testing with doSortTable = false and sorting coming from the server
   createEvidenceTable(data.evidenceTable, false);
@@ -765,13 +775,20 @@ class GenesListManager {
   // Method checks if genelist limit is reached and passes resulting boolean as a state value to toggle HTML Elements and to triggers type of message shown on UI.
   #setLimitStatus() {
 
-    const isLimitReached = this.#listLength <= this.#listLimit || !this.#isLimitEnforced ? true : false;
+    const isLimitReached = (this.#listLength <= this.#listLimit || !this.#isLimitEnforced )
 
-    $('#searchBtn').toggleClass('button-disabled', !isLimitReached);
+    const searchButton = $('#searchBtn');
+
     $(".genecount-container").toggleClass('show', isLimitReached)
     $(".limit-message").toggleClass('show', !isLimitReached);
     $(".border").toggleClass('limit-border', !isLimitReached);
     $('.genesCount').toggleClass('genes-limit', !isLimitReached);
+
+    // checks if restriction is already based on search button
+    if(!searchButton.hasClass('button-disabled'))
+    {
+      searchButton.toggleClass('button-disabled', !isLimitReached);
+    }
 
     if (!isLimitReached) this.#showStatusMessage(isLimitReached);
 

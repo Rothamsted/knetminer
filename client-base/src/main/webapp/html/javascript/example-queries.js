@@ -96,7 +96,12 @@ const exampleQuery = function () {
     function populateQueryValues(queryIndex) {
 
         var targetQuery = sampleQueries.filter((query) => query.index == queryIndex)[0]
-        var { term, regions, genes } = targetQuery;
+        var { term, regions, genes, minimumUserRole } = targetQuery;
+
+        var isQueryRestricted = userAccessMgr.requires(minimumUserRole);
+
+        // disables search button if query is restricted
+        $('#searchBtn').toggleClass('button-disabled', !isQueryRestricted); 
 
         if (!regions.length) {
             removeGeneRow()
@@ -123,6 +128,7 @@ const exampleQuery = function () {
         populatekeywordSearch(term);
 
         triggerInputsEvents()
+
 
         //  if (trim(withinRegion) == 'true') {
         //      $("input:radio[name=search_mode]").val(['qtl']);
@@ -203,7 +209,6 @@ const exampleQuery = function () {
         // Refresh the Query Suggester, if it's already open.
         refreshQuerySuggester();
 
-
         $("#resetknet").show();
     }
 
@@ -216,7 +221,6 @@ const exampleQuery = function () {
 
         var selectedQuery = sampleQueries.filter((queries) => queries.taxId === currentTaxId || queries.taxId === '');
         // empty exiting examples 
-       var userAccess = new UserAccessManager(); 
 
        selectedQuery.forEach(function(query)
         {
@@ -229,20 +233,18 @@ const exampleQuery = function () {
 
             /* TODO: too messed-up, See #768 */
             if (!isQueryRestricted) {
-                queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
+                queryRestriction = `<span class='query-restriction-text' onclick="loginModalInit()">(Login)</span>`;
             }
 
             if (isGeneListRestricted && minimumUserRole == 'pro') {
-                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
+                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</span>`;
             }
 
             // Example query buttons
-            var sampleQueryButtons = `<a onclick="populateExamples(${index})" class='exampleQuery'>${description}</a>`;
-
+            var sampleQueryButtons = !queryRestriction ?  `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a></li>`: `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a> ${queryRestriction}</li>`;
             //Add example queries to page  
-            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query"><div> ${sampleQueryButtons} ${queryRestriction}</div>`;
 
-            $('#eg_queries').append(query);
+            $('#eg_queries').append(sampleQueryButtons);
         })
     }
 
@@ -250,7 +252,6 @@ const exampleQuery = function () {
         setQueryData: setQueryData,
         populateQueryValues: populateQueryValues,
         renderQueryHtml: renderQueryHtml
-
     }
 
 }();

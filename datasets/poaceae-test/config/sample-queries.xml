@@ -5,6 +5,8 @@
 		  - I've updated the names to minimumUserRole, since I believe that to be the logic. If a user is registered they get the guest+registered queries.
 		  - Changed convention to lower case (though it is getting case transformed anyway).
 		  - Changed "Free" to "registered"
+		  - Moved minimumUserRole higher, as once a gene list is entered it becomes frustrating to edit/make sure it is correct.
+		  - JSONified changes are a WIP - see below.
 
 		  TODO:
 		  - This file format is accumulating too many tweaks, it would be worth to 
@@ -17,39 +19,79 @@
 	<!-- guest queries-->	
 	<query>
 		<description>Keyword search (AND)</description>
-		<term>"seed germination" AND flavon*</term>
 		<minimumUserRole>guest</minimumUserRole>
+		<term>"seed germination" AND flavon*</term>
 	</query>
 	
 	<query>
 		<description>Keyword search (OR)</description>
+		<minimumUserRole>guest</minimumUserRole>		
 		<term>dormancy OR anthocyanin</term>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
 	
 	<query>
 		<description>Gene names search</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<term>drought OR heat OR frost</term>
 		<gene>TPS*</gene>
 		<gene>TPP?</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>	
 	
 	<!-- Wheat queries -->
 	<!-- guest queries-->
 	<query>
 		<description>Wheat gene symbols</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>4565</taxId>
 		<term>yield AND rust</term>
 		<gene>TRAESCS3D02G468400</gene>
 		<gene>TRAESCS3D03G0544800</gene>
 		<gene>TaSIZ1</gene>
 		<gene>CDC5</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
-	
+
 	<query>
-		<description>Wheat gene list (small)</description>
+		<description>Grain colour + PHS</description>
+		<minimumUserRole>guest</minimumUserRole>
+		<taxId>4565</taxId>
+		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
+		<gene>TraesCS3B02G007400</gene>
+		<gene>TraesCS2A02G025700</gene>
+		<gene>TraesCS2D02G530600</gene>
+		<gene>TraesCS2A02G527700</gene>
+		<gene>TraesCS2B02G558400</gene>
+		<gene>TraesCS2B02G038700</gene>
+		<gene>TraesCS3B02G257900</gene>
+		<gene>TraesCS3A02G226600</gene>
+		<gene>TraesCS3D02G224600</gene>
+		<gene>TraesCS3D02G468400</gene>
+		<gene>TraesCS3B02G280700</gene>
+		<gene>TraesCS2D02G493400</gene>
+	</query>
+
+	<query>
+		<description>Grain growth (Region Search)</description>
+		<minimumUserRole>guest</minimumUserRole>
+		<taxId>4565</taxId>
+		<term>"grain fill duration" OR "seed growth"</term>
+		<withinRegion>false</withinRegion>
+		<region>
+			<chromosome>5A</chromosome>
+			<start>580000000</start>
+			<end>590000000</end>
+			<label>QTL1</label>
+		</region>
+		<region>
+		<chromosome>2D</chromosome>
+			<start>280000000</start>
+			<end>310000000</end>
+			<label>QTL2</label>
+		</region>
+	</query>
+
+	<query>
+		<description>Wheat gene list (20 genes)</description>
+		<minimumUserRole>guest</minimumUserRole>		
 		<taxId>4565</taxId>
 		<term>"seed germination" OR "seed dormancy"</term>
 		<gene>TRAESCS3D02G468400</gene>
@@ -72,73 +114,12 @@
 		<gene>TRAESCS4A02G206800</gene>
 		<gene>TRAESCS3B02G006100</gene>
 		<gene>TRAESCS3A02G464900</gene>
-		<minimumUserRole>guest</minimumUserRole>
-	</query>
-
-	<query>
-		<description>Grain colour + PHS</description>
-		<taxId>4565</taxId>
-		<term>dormancy OR germination OR color OR flavon* OR proanthocyanidin</term>
-		<gene>TraesCS3B02G007400</gene>
-		<gene>TraesCS2A02G025700</gene>
-		<gene>TraesCS2D02G530600</gene>
-		<gene>TraesCS2A02G527700</gene>
-		<gene>TraesCS2B02G558400</gene>
-		<gene>TraesCS2B02G038700</gene>
-		<gene>TraesCS3B02G257900</gene>
-		<gene>TraesCS3A02G226600</gene>
-		<gene>TraesCS3D02G224600</gene>
-		<gene>TraesCS3D02G468400</gene>
-		<gene>TraesCS3B02G280700</gene>
-		<gene>TraesCS2D02G493400</gene>
-		<minimumUserRole>guest</minimumUserRole>
-	</query>
-	
-	<query>
-		<description>Rust response</description>
-		<taxId>4565</taxId>
-		<term>rust OR disease</term>
-		<gene>TRAESCS5B02G337300</gene>
-		<gene>TRAESCS6D02G405600</gene>
-		<gene>TRAESCS6A02G417600</gene>
-		<gene>TRAESCS5D02G560900</gene>
-		<gene>TRAESCS2A02G395200</gene>
-		<gene>TRAESCS2D02G010700</gene>
-		<gene>TRAESCS6A02G416300</gene>
-		<gene>TRAESCS5B02G241800</gene>
-		<gene>TRAESCS2B02G183200</gene>
-		<gene>TRAESCS5D02G560600</gene>
-		<gene>TRAESCS6D02G401700</gene>
-		<gene>TRAESCS1B02G343800</gene>
-		<gene>TRAESCS6B02G462300</gene>
-		<gene>TRAESCS7A02G033100</gene>
-		<gene>TRAESCS4A02G456300</gene>
-		<minimumUserRole>guest</minimumUserRole>
-	</query>
-
-	<query>
-		<description>Grain growth</description>
-		<taxId>4565</taxId>
-		<term>"grain fill duration" OR "seed growth"</term>
-		<withinRegion>false</withinRegion>
-		<region>
-			<chromosome>5A</chromosome>
-			<start>580000000</start>
-			<end>590000000</end>
-			<label>QTL1</label>
-		</region>
-		<region>
-		<chromosome>2D</chromosome>
-			<start>280000000</start>
-			<end>310000000</end>
-			<label>QTL2</label>
-		</region>
-		<minimumUserRole>guest</minimumUserRole>	
 	</query>
 
 	<!-- registered queries-->
 	<query>
-		<description>Drought + Stress resistance</description>
+		<description>Drought + Stress resistance (100 genes)</description>
+		<minimumUserRole>registered</minimumUserRole>		
 		<taxId>4565</taxId>
 		<term>"drought resistance" OR "drought" OR "stress"</term>
 		<gene>TRAESCS1A02G011100</gene>
@@ -241,12 +222,12 @@
 		<gene>TRAESCS2A02G388900</gene>
 		<gene>TRAESCS2A02G414800</gene>
 		<gene>TRAESCS2A02G415900</gene>
-		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<!-- pro queries-->
 	<query>
-		<description>Disease resistance</description>
+		<description>Disease resistance (1000s of genes)</description>
+		<minimumUserRole>pro</minimumUserRole>
 		<taxId>4565</taxId>
 		<gene>TRAESCS2D02G224800</gene>
 		<gene>TRAESCS2D02G225300</gene>
@@ -2505,20 +2486,20 @@
 		<gene>TRAESCS3D02G353900</gene>
 		<gene>TRAESCS3D02G354100</gene>
 		<gene>TRAESCS3D02G354700</gene>
-		<minimumUserRole>pro</minimumUserRole>
 	</query>
 	
 	<!-- Arabidopsis queries -->
 	<!-- guest queries-->
 	<query>
 		<description>FLC gene expression</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>3702</taxId>
 		<term>flowering FLC FT</term>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
 
 	<query>	
 		<description>Petal size QTL</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>3702</taxId>
 		<term>"cell size" OR "cell division" OR "cell cycle"</term>
 		<withinRegion>true</withinRegion>
@@ -2529,19 +2510,19 @@
 			<label>Petal size</label>
 		</region>
         <gene>At4g18330</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
 
 	<query>
 		<description>Dormancy</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>3702</taxId>
 		<term>dormancy OR anthocyanin</term>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
 
 	<!-- registered queries-->
 	<query>
-		<description>Arabidopsis developmental stages</description>
+		<description>Development stages (100 genes)</description>
+		<minimumUserRole>registered</minimumUserRole>
 		<taxId>3702</taxId>
 		<term>"seed germination" OR "flowering time" OR "root development"</term>
 		<gene>AT1G03310</gene>
@@ -2644,12 +2625,12 @@
 		<gene>AT1G01550</gene>
 		<gene>AT1G01570</gene>
 		<gene>AT1G01630</gene>
-		<minimumUserRole>registered</minimumUserRole>
 	</query>
 	
 	<!-- pro queries-->
 	<query>
-		<description>Shade avoidance</description>
+		<description>Shade avoidance (800 genes)</description>
+		<minimumUserRole>pro</minimumUserRole>
 		<taxId>3702</taxId>
 		<term>"Shade Avoidance" OR "Regulation of shade avoidance"</term>
 		<gene>AT1G01060</gene>
@@ -3520,23 +3501,23 @@
 		<gene>AT5G67280</gene>
 		<gene>AT5G67380</gene>
 		<gene>ATCG00380</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
 	<!-- Rice queries -->
 	<!-- guest queries-->
 	<query>
 		<description>Rice gene symbols</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>39947</taxId>
 		<term>strigolactone</term>
 		<gene>LOC_Os12g29980</gene>
 		<gene>Os12g0484900</gene>
 		<gene>OsGRF7</gene>
 		<gene>GRF7</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
-
+	<!-- registered queries-->
 	<query>
-		<description>Rice drought gene list</description>
+		<description>Rice drought (20 genes)</description>
+		<minimumUserRole>registered</minimumUserRole>
 		<taxId>39947</taxId>
 		<term>drought</term>
 		<gene>OS07G0150700</gene>
@@ -3559,12 +3540,11 @@
 		<gene>OS05G0552300</gene>
 		<gene>OS09G0570800</gene>
 		<gene>OS07G0137800</gene>
-		<minimumUserRole>pro</minimumUserRole>
 	</query>
-	
-	<!-- registered queries-->
-<query>
-		<description>Submergence tolerance</description>
+	<!-- pro queries-->
+	<query>
+		<description>Submergence tolerance (470 genes)</description>
+		<minimumUserRole>pro</minimumUserRole>
 		<taxId>39947</taxId>
 		<term>Submergence Tolerance</term>
 		<gene>OS01G0149700</gene>
@@ -4037,15 +4017,32 @@
 		<gene>OS12G0260500</gene>
 		<gene>OS12G0498650</gene>
 		<gene>OS12G0620000</gene>
-		<minimumUserRole>pro</minimumUserRole>
 	</query>
-	
 	
 	<!-- Maize queries -->
 	<!-- guest queries-->
+		<!-- Crafted by MB to see something significant about regions -->
 	<query>
+		<description>Maize region search</description>
+		<minimumUserRole>guest</minimumUserRole>
 		<taxId>4577</taxId>
-		<description>Maize genes</description>
+		<term>drought AND ABA</term>
+		<gene>SIZ1</gene>
+		<gene>HAB1</gene>
+		<gene>AT1G50370</gene>
+		<gene>ZM00001EB355410</gene>
+		<region>
+			<chromosome>8</chromosome>
+			<start>122482486</start>
+			<end>168395052</end>
+			<label>Drought</label>
+		</region>
+	</query>
+	
+	<query>
+		<description>Maize drought (20 genes)</description>
+		<minimumUserRole>guest</minimumUserRole>
+		<taxId>4577</taxId>
 		<term>drought</term>
 		<gene>ZM00001EB073420</gene>
 		<gene>ZM00001EB158420</gene>
@@ -4067,12 +4064,12 @@
 		<gene>ZM00001EB086800</gene>
 		<gene>ZM00001EB274190</gene>
 		<gene>ZM00001EB300010</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
-	
+	<!-- registered queries-->
 	<query>
+		<description>Maize drought (30 genes)</description>
+		<minimumUserRole>registered</minimumUserRole>		
 		<taxId>4577</taxId>
-		<description>Maize drought gene list</description>
 		<term>drought</term>
 		<gene>ZM00001EB038010</gene>
 		<gene>ZM00001EB176680</gene>
@@ -4107,38 +4104,20 @@
 		<gene>ZM00001EB219160</gene>
 		<gene>ZM00001EB064480</gene>
 		<gene>ZM00001EB240630</gene>
-		<minimumUserRole>guest</minimumUserRole>
 	</query>
-
-	<!-- pro queries-->
-	<!-- Arne continue here xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx the below one isn't done yet.-->
-	<query>
+	<!-- TODO: pro query-->
+	<!-- <query>
 		<description></description>
-		<taxId>4577</taxId>
+		<minimumUserRole></minimumUserRole>
+		<taxId></taxId>
 		<term></term>
 		<gene></gene>
-		<minimumUserRole>registered</minimumUserRole>
-	</query>
-	
-	<!-- Crafted by MB to see something significant about regions -->
-	<query>
-		<description>Maize region search</description>
-		<taxId>4577</taxId>
-		<term>drought AND ABA</term>
-		<gene>SIZ1</gene>
-		<gene>HAB1</gene>
-		<gene>AT1G50370</gene>
-		<gene>ZM00001EB355410</gene>
 		<region>
-			<chromosome>8</chromosome>
-			<start>122482486</start>
-			<end>168395052</end>
-			<label>Drought</label>
+			<chromosome></chromosome>
+			<start></start>
+			<end></end>
+			<label></label>
 		</region>
-		<minimumUserRole>guest</minimumUserRole>
-	</query>	
-
-	<!-- registered queries-->
-	<!-- pro queries-->
+	</query> -->
 
 </sampleQueries>
