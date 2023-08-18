@@ -791,9 +791,8 @@ span.hint-big:hover {
 .query-restriction-text{
     font-weight: 600;
     font-size: 14px;
-    color:var(--green);
+    color:gray;
     margin-left: .3rem; 
-    margin-bottom: .4rem;
 }
 
 #restricted-query{

@@ -209,9 +209,6 @@ const exampleQuery = function () {
         // Refresh the Query Suggester, if it's already open.
         refreshQuerySuggester();
 
-
-
-
         $("#resetknet").show();
     }
 
@@ -240,15 +237,14 @@ const exampleQuery = function () {
             }
 
             if (isGeneListRestricted && minimumUserRole == 'pro') {
-                queryRestriction = `<span class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</span>`;
+                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</span>`;
             }
 
             // Example query buttons
-            var sampleQueryButtons = `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a></li>`;
+            var sampleQueryButtons = !queryRestriction ?  `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a></li>`: `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a> ${queryRestriction}</li>`;
             //Add example queries to page  
-            var query = !queryRestriction ? sampleQueryButtons : `<div id="restricted-query">${sampleQueryButtons} ${queryRestriction}</div>`;
 
-            $('#eg_queries').append(query);
+            $('#eg_queries').append(sampleQueryButtons);
         })
     }
 
@@ -256,7 +252,6 @@ const exampleQuery = function () {
         setQueryData: setQueryData,
         populateQueryValues: populateQueryValues,
         renderQueryHtml: renderQueryHtml
-
     }
 
 }();
