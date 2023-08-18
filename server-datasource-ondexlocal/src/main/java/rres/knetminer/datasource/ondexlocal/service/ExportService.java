@@ -133,20 +133,10 @@ public class ExportService
 			for ( Integer qtlConceptId : genes2QTLs.getOrDefault ( gene.getId (), Collections.emptySet () ) )
 			{
 				ONDEXConcept qtl = graph.getConcept ( qtlConceptId );
-	
-				/* TODO: remove
-				// TODO: we used to see this error here, but probably was due to bad multi-threading, to
-				// be tested (ideally, apply proof or correctness) and removed when OK.
-				if ( qtl == null )
-				{
-					log.error ( "exportGeneTable(): no gene found for id: ", qtlConceptId );
-					continue;
-				}
-				*/
-				
+					
 				String acc = Optional.ofNullable ( qtl.getConceptName () )
 					.map ( ConceptName::getName )
-					.map ( StringEscapeUtils::escapeCsv )
+					.map ( StringEscapeUtils::escapeJson )
 					.orElseGet ( () -> {
 						log.error ( "exportGeneTable(): gene name not found for id: {}", qtlConceptId );
 						return "";
@@ -489,9 +479,12 @@ public class ExportService
   /**
    * Export the evidence Table for the KnetMiner 'Evidence View' tab (the third one).
    * 
+   * TODO: Remove keywords it's not used here. 
+   * 
    * @param doSortResult if true, sorts the resulting rows based on various columns (pvalue,
    * no of matching user genes, no of total matching genes, Lucene score). On the API it's false
    * by default, to avoid undesired performance issues.
+   * 
    */
 	public List<EvidenceTableEntry> exportEvidenceTable ( 
 		String keywords, 

@@ -58,9 +58,9 @@ import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
  * 
  * As described in the POM, these are off-line data initialisations that benefit KnetMiner. 
  *
- * TODO: probably some methods require thread safety (get {@link #getGraph()}.
+ * TODO: probably some methods require thread safety (eg {@link #getGraph()}.
  * 
- * TODO: we actually need a significant re-arrangement of the Maven structure for Knetminer, see
+ * TODO: we would need a significant re-arrangement of the Maven structure for Knetminer, see
  * comments on {@link GeneHelper}.
  * 
  * @author brandizi
@@ -261,12 +261,12 @@ public class KnetMinerInitializer
 
   /**
    * Populates internal data about semantic motif paths, either using the configured {@link AbstractGraphTraverser}
-   * or loading previously saved data from files.
+   * or loading previously-saved data from files.
    * 
-   * This is made public for the purpose of re-running a traverser with different options (eg, the CypherDebugger
-   * sets new queries and then re-runs).
+   * This method is made public for the purpose of re-running a traverser with different options (eg, the 
+   * CypherDebugger sets new queries and then re-runs).
    * 
-   * If doReset is true it always regenerate the data, without considering existing computed
+   * If doReset is true, it always regenerates the data, without considering existing computed
    * files. This is used by components like CypherDebugger.
    * 
    * This can be called independently of {@link #initKnetMinerData()}, to trigger a new traversal, however,

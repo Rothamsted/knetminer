@@ -272,7 +272,7 @@ public class SearchService
 	 * Computes a {@link SemanticMotifsSearchResult} from the result of a gene search.
 	 * Described in detail in Hassani-Pak et al. (2020)
 	 * 
-	 * @param hit2score a map of found concept -> lucene score.
+	 * @param scoredEvidenceConcepts a map of found concept -> lucene score.
 	 * 
 	 * @param taxId used to filter concpet-associated genes that belong to the given ID. This is 
 	 * only considered for that and not for the knetminer score (see #626 for details). 
@@ -280,12 +280,12 @@ public class SearchService
 	 * 
 	 * Was getScoredGenesMap.
 	 */
-	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> hit2score, String taxId ) 
+	public SemanticMotifsSearchResult getScoredGenes ( Map<ONDEXConcept, Float> scoredEvidenceConcepts, String taxId ) 
 	{
 		var taxIdNrm = StringUtils.trimToNull ( taxId );
 		var graph = dataService.getGraph ();
 	
-		log.info ( "Getting genes from {} Lucene hits ", hit2score.keySet ().size () );
+		log.info ( "Getting genes from {} Lucene hits ", scoredEvidenceConcepts.keySet ().size () );
 	
 		var concepts2Genes = knetInitializer.getConcepts2Genes ();
 		var genes2PathLengths = knetInitializer.getGenes2PathLengths ();
@@ -300,7 +300,7 @@ public class SearchService
 		// In other words: Filter the global gene2concept map for concepts that contain the keyword
 		//
 		Map<Integer, Set<Integer>> gene2HitConcepts =
-			hit2score.keySet () // concepts found via Lucene
+			scoredEvidenceConcepts.keySet () // concepts found via Lucene
 			.parallelStream ()
 			.map ( ONDEXConcept::getId ) // conceptId
 			.filter ( concepts2Genes::containsKey ) // Has related genes (via sem motifs)?
@@ -341,20 +341,26 @@ public class SearchService
 			.forEach ( conceptId -> 
 			{
 				// relevance of search term to concept
-				float luceneScore = hit2score.get ( graph.getConcept ( conceptId ) );
+				float luceneScore = scoredEvidenceConcepts.get ( graph.getConcept ( conceptId ) );
 
 				// specificity of evidence to gene
 				double igf = Math.log10 ( (double) genesCount / concepts2Genes.get ( conceptId ).size () );
 
-				// inverse distance from gene to evidence
-				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, conceptId ) );
-				if ( pathLen == null ) 
-					log.info ( "WARNING: Path length is null for: gene ID: {} / concept ID: {}", geneId, conceptId );
 				
-				double distance = pathLen == null ? 0 : ( 1d / pathLen );
-
+				// inverse distance from gene to evidence
+				double revGraphDistance;
+				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, conceptId ) );
+				if ( pathLen == null )
+				{
+					log.info ( "WARNING: Path length is null for: gene ID: {} / concept ID: {}", geneId, conceptId );
+					revGraphDistance = 0;
+				}
+				else 
+					revGraphDistance = 1d / pathLen;				
+				
 				// take the mean of all three components
-				double evidenceWeight = ( igf + luceneScore + distance ) / 3;
+				// TODO: are they comparable?
+				double evidenceWeight = ( igf + luceneScore + revGraphDistance ) / 3;
 
 				// sum of all evidence weights
 				weightedEvidenceSum.addAndGet ( evidenceWeight );

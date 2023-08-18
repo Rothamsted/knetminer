@@ -237,17 +237,15 @@ public class OndexLocalDataSource extends KnetminerDataSource
 			request.getKeyword (), ondexServiceProvider, userGenes, taxId
 		);
 
-		Map<ONDEXConcept, Double> candidateGenesMap = Map.of ();
-		Stream<ONDEXConcept> genesStream = Stream.of ();
 
 		// Please note, this deal with the cases of /genome (response == GenomeResponse) and /qtl
 		// If you add additional calls, try to apply the S-of-SOLID and deal with them separately.
 
 		log.info ( "Keyword search done" );
 
-		candidateGenesMap = smSearchMgr.getSortedGeneCandidates ();
+		Map<ONDEXConcept, Double> candidateGenesMap = smSearchMgr.getSortedGeneCandidates ();
 		Set<ONDEXConcept> candidateGenes = candidateGenesMap.keySet ();
-		genesStream = candidateGenes.parallelStream ();
+		Stream<ONDEXConcept> genesStream = candidateGenes.parallelStream ();
 
 		if ( !userGenes.isEmpty () )
 		{
