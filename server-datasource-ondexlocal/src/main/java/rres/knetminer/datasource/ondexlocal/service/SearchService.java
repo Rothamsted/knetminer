@@ -348,19 +348,19 @@ public class SearchService
 
 				
 				// inverse distance from gene to evidence
-				double revGraphDistance;
+				double invGraphDistance;
 				Integer pathLen = genes2PathLengths.get ( Pair.of ( geneId, conceptId ) );
 				if ( pathLen == null )
 				{
 					log.info ( "WARNING: Path length is null for: gene ID: {} / concept ID: {}", geneId, conceptId );
-					revGraphDistance = 0;
+					invGraphDistance = 0;
 				}
 				else 
-					revGraphDistance = 1d / pathLen;				
+					invGraphDistance = 1d / pathLen;				
 				
 				// take the mean of all three components
 				// TODO: are they comparable?
-				double evidenceWeight = ( igf + luceneScore + revGraphDistance ) / 3;
+				double evidenceWeight = ( igf + luceneScore + invGraphDistance ) / 3;
 
 				// sum of all evidence weights
 				weightedEvidenceSum.addAndGet ( evidenceWeight );
