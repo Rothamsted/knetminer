@@ -590,4 +590,5 @@ function openAccessionNetworkView(event,genesAccessions){
 
 	$(element).addClass('active-tabs'); 
 	$(`#${selected}-view`).addClass('active');
+	geneTableFilterMgr.setFilteredData(); 
  }
