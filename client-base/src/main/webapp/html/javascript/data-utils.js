@@ -25,8 +25,7 @@ async function genomeApi (request, requestParams)
  * Function to search KnetMiner & update Map View, Gene View and Evidence View
  */
 async function searchKeyword() {
-  const searchButtonAnimation = new WaitPopUp('#searchBtn','#search','Searching'); 
-  searchButtonAnimation.start(); 
+ 
   //var searchMode = getRadioValue(document.gviewerForm.search_mode);
   var searchMode = "genome"; // default
 
@@ -92,11 +91,19 @@ async function searchKeyword() {
     $('.pGViewer_title_line').css("color", "red");
     $('#tabviewer').hide();
   } else if (keyword !== '' || list.length !== 0 || requestParams.qtl.length !== 0) {
+    // starts initialise and starts animation while waiting for response from API endpoint
+    const searchButtonAnimation = new WaitPopUp('#searchBtn','#search','Searching'); 
+    searchButtonAnimation.start(); 
+
+    // clears data saved for genes and evidence views
     $('#evidenceTable').data({ keys: [] });
     $('#resultsTable').data({ keys: [] });
+
+    // removes network tags 
     $("#NetworkCanvas_button").removeClass('network-created');
     $('#evidenceTable_button').removeClass('created');
 
+    // calls GenomeAPI endpoint and when request resolves genomicViewContent function is called to show geneview table
    await genomeApi(request, requestParams).then((data)=> {
     genomicViewContent(data, keyword, geneList_size, searchMode, list)
 
@@ -161,6 +168,8 @@ function setupGenesSearch()
     userAccessMgr.setUserPlan(); 
     const geneListLimit = userAccessMgr.getGeneSearchLimit()
     $('genesCount').html(`0/${geneListLimit}`)	
+
+    geneCounter()
 }
 
 // sends search queries as a POST request to genome API endpoint, called in checkUserPlan() above

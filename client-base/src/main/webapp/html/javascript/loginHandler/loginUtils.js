@@ -294,6 +294,8 @@ function   fetchCredentials(loginModal) {
                     let content = "Welcome, " + myJson.username;// Welcome the user
                     jboxNotice(content, 'blue', 60, 1000);
                     exampleQuery.renderQueryHtml(); // renders example queries
+                    geneCounter() // checks genelist limit and inputs
+                    
                     // Update the login icon & name
                     $('#login_icon').attr("title", "More"); // insert new link
                     $('#login_icon').attr("target", "");

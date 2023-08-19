@@ -216,7 +216,10 @@ const exampleQuery = function () {
    * Renders query examples to UI .
    */
     function renderQueryHtml() {
+        
         $('#eg_queries').html('')
+        $('#searchBtn').removeClass('button-disabled')
+        
         var currentTaxId = $(".navbar-select").children("option:selected").val();
 
         var selectedQuery = sampleQueries.filter((queries) => queries.taxId === currentTaxId || queries.taxId === '');
@@ -233,11 +236,11 @@ const exampleQuery = function () {
 
             /* TODO: too messed-up, See #768 */
             if (!isQueryRestricted) {
-                queryRestriction = `<span class='query-restriction-text' onclick="loginModalInit()">(Login)</span>`;
+                queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
             }
 
             if (isGeneListRestricted && minimumUserRole == 'pro') {
-                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</span>`;
+                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
             }
 
             // Example query buttons
