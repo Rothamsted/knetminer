@@ -229,6 +229,7 @@
 		<description>Disease resistance (1000s of genes)</description>
 		<minimumUserRole>pro</minimumUserRole>
 		<taxId>4565</taxId>
+		<term>"Disease resistance"</term>
 		<gene>TRAESCS2D02G224800</gene>
 		<gene>TRAESCS2D02G225300</gene>
 		<gene>TRAESCS2D02G229100</gene>
