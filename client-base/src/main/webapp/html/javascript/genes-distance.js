@@ -133,6 +133,7 @@ const knetscoreFilter = function(){
 
 }()
 
+// TO REFINE OBJECT LITERAL IN COMING DAYS
 // Handles evidence and knetscore filters 
 const geneTableFilterMgr = function() {
 
@@ -149,7 +150,7 @@ const geneTableFilterMgr = function() {
             genesTableScroller.setTableData (table)
             createGeneTableBody(table) 
         },
-        // hnadles knetscore filtering
+        // handles knetscore filtering
         filterByKnetScore: function (event)
         {
 
@@ -173,15 +174,15 @@ const geneTableFilterMgr = function() {
 
             if(knetScoreFilteredData.length){
                 geneTableFilterMgr.renderFilteredTable(knetScoreFilteredData)
-                filteredData = knetScoreFilteredData; 
             }
 
             geneTableFilterMgr.toggleTableState(knetScoreFilteredData.length)
    
         },
         // handles graph distance filtering
-        filterByGraphDistance: function()
+        filterByGraphDistance: function(element)
         {
+            toggleDistanceFilter(element)
             const distance = $('#select-distance option:selected').val()
             const distanceFilteredData = []
             const data = [...tableData]
@@ -222,6 +223,7 @@ const geneTableFilterMgr = function() {
         // toggle table state when filtered data length is equal to zero. 
         toggleTableState:function(dataLength){
             if(dataLength <= 0)$('#filterMessage').text('Your filter is returning no results');
+
             $('#filterMessage').toggleClass('show-block',dataLength <= 0); 
             $('#geneTableBody').toggleClass('hide',dataLength <= 0);
         } 

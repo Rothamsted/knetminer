@@ -2146,6 +2146,8 @@ a {
         width: 60%;
     }
 
+    
+
 }
 
 /* responsiveness value for desktop screen */
@@ -2521,12 +2523,6 @@ a {
 }
 
 
-@media(min-width:1920px) {
-    .accession-popup-table{
-        max-height: 700px;
-    }
-}
-
 
 
 /* dark mode fix for inputs */
@@ -2807,15 +2803,7 @@ color: #C0C0C0;
 }
 
 
-.show-flex{
-    display: flex;
-}
-.hide{
-  display: none;  
-}
-.show-block{
-    display: block;
-}
+
 
 .limit-border{
     border-color: red;
@@ -2825,17 +2813,104 @@ color: #C0C0C0;
     color: red;
 }
 
-#distance-view{
+#resultsTable{
+    position: relative;
+}
+
+
+.distance-view{
     align-items: center;
+    width: 180px;
+    position: absolute;
+    top: 1.85pc;
+    right: -10pc;
+    font-size: .85rem;
+    color:black;
+    background-color: white;
+    border: 1px solid var(--green);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    font-weight: 500;
+    display: none;
+
 }
 
-#distance-view select{
-    margin: 0;
-}
-
-#distance-view span {
+.distance-view span {
     color:var(--green);
     margin-right:.5rem
+}
+
+
+@media(min-width:1920px) {
+    .accession-popup-table{
+        max-height: 700px;
+    }
+
+    #distance{
+        left: 27pc;
+    }
+}
+
+
+.distance-filter-button{
+    height: 22px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .25rem;
+    background-color: transparent;
+    color: black;
+    font-size: 10px;
+    text-align: center;
+    border: none;
+    border-radius: 2px;
+}
+
+#select-distance{
+    margin: .5rem 0; 
+}
+
+
+.filter-footer{
+    padding: .5rem .75rem;
+    border-top: .5px solid silver;
+}
+
+#evidence-filter, .filter-footer, .filter-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.filter-footer button {
+    padding: .25rem .5rem;
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.filter-header{
+    justify-content: flex-start;
+    padding: .5rem .75rem;
+}
+
+.filter-header label{
+    margin-right: .25rem;
+}
+
+.bg-gray{
+    background-color: gray;
+}
+
+
+.show-flex{
+    display: flex;
+}
+.hide{
+  display: none;  
+}
+.show-block{
+    display: block;
 }
 
 

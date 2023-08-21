@@ -11,14 +11,13 @@ function createGenesTable ( tableData, keyword )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
-		var geneDistanceFilter = graphDistanceFilterHtml()
+
 		
 		table += '<form name="checkbox_form"><div class="filter-tab">';
 		table +=  '<div class="filter-container"><div class="filter-tabs active-tabs" onclick="changeFilterView(this)" id="concepts" name="filters" value="concepts" type="radio"> <i class="fas fa-dna"></i> Concepts</div>';
-		table += '<div class="filter-tabs" onclick="changeFilterView(this)" type="radio" name="filters" id="distance" value="distance"> <i class="fab fa-megaport"></i> Evidence Distance</div>';
 		table += '<div class="filter-tabs" onclick="changeFilterView(this)" name="filters" id="knetscore" value="knetscore" type="radio"> <i class="fas fa-exchange-alt"></i> </i> KnetScore </div></div></div>'
 		table += '<div class="divider"></div><div class="gene_header_container">';
-		table += '<div id="filters">'+ geneDistanceFilter + interactiveSummaryLegend + '</div><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"></i></div></div>';
+		table += '<div id="filters">'+ interactiveSummaryLegend + '</div><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"></i></div></div>';
 		table += '</div>';
 		table += '<br>';
 		// dynamic Evidence Summary to be displayed above Gene View table
@@ -31,7 +30,7 @@ function createGenesTable ( tableData, keyword )
 		table += '<th width="60">Chr</th>';
 		table += '<th width="70">Nt start</th>';
 	
-		table += '<th id="evidence-filter" width="330">Evidence</th>';
+		table += '<th  width="330"><div id="evidence-filter">  <span>Evidence</span> <button type="button" id="distance-filter-button" onclick="toggleDistanceFilter(this)" class="distance-filter-button" data-id="#distance-filter-button"><i class="fas fa-filter"></i></button></div></th>';
 		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
@@ -69,6 +68,8 @@ function createGenesTable ( tableData, keyword )
 		$("#tablesorter").tablesorter( tableSorterOpts );
 		knetscoreFilter.appendFilterToUi(); 
 		geneTableFilterMgr.saveTableData(tableData);
+
+		graphDistanceFilterHtml()
 
 
 
@@ -570,19 +571,26 @@ function openAccessionNetworkView(event,genesAccessions){
 
 	const distanceLimit = 8  // number could be dynamic 
 
-	let ui = '<div id="distance-view" class="view"><span>Distance</span><select id="select-distance" onchange="geneTableFilterMgr.filterByGraphDistance()">'
+	let ui = `<div class="distance-view"><div class="filter-header" >
+			<label>Distance:</label>
+				<select id="select-distance">`
     for(let index = 0; index < distanceLimit; index++){
         ui += `<option value='${index + 1}' ${index === 7 ? 'selected': ''}>${index + 1}</option>`
     }
-    ui += '</select></div>';
-	return ui
+    ui += `</select></div>
+			<div class="filter-footer">
+			<span onclick="resetTable()">Reset</span>
+			<button data-id="#distance-filter-button" onclick="geneTableFilterMgr.filterByGraphDistance(this)" type="button">Apply</button>
+			</div></div>`;
+
+	$("#evidence-filter").append(ui)
  }
 
 /**
+ * TODO: To be removed when geneview filters are finally with popup filters (currently in progress)
  * changes upper genetable filter views
  */
  function changeFilterView(element){
-
 
 	const selected = $(element).attr('value'); 
 	$('.view').removeClass('active')
@@ -590,5 +598,20 @@ function openAccessionNetworkView(event,genesAccessions){
 
 	$(element).addClass('active-tabs'); 
 	$(`#${selected}-view`).addClass('active');
-	geneTableFilterMgr.setFilteredData(); 
+ }
+
+// toggles distance filter popup modal 
+ function toggleDistanceFilter(element){
+	const isDistanceFilterVisible = $('.distance-view').is(":visible")
+	const targetClass = $(element).attr('data-id'); 
+
+	$('.distance-view').toggleClass('show-block', !isDistanceFilterVisible)
+	$(targetClass).toggleClass('bg-gray',!isDistanceFilterVisible )
+	
+ }
+
+// TEMPORARY SOLUTION WILL BE REPLACED IN COMING DAYS
+// resets geneview table
+ function resetTable(){
+	$("#revertGeneView").click();
  }
