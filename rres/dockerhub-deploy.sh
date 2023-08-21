@@ -6,6 +6,11 @@
 
 set -e # Stop upon the first problem
 
+if [[ "`hostname`" =~ 'babvs72' ]]; then
+  printf "\n\n     ===== CI on babvs72 is temporary disabled =====\n\n"
+  exit 
+fi
+
 dataset_dir=/opt/data/knetminer-datasets/poaceae-ci
 dataset_id=poaceae-test
 container_name=poaceae-ci
