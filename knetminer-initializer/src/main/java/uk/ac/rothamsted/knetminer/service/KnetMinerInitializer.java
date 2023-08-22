@@ -1131,7 +1131,7 @@ public class KnetMinerInitializer
 				totalCount++;
 				if (totalCount == genes2PathLengths.size()) break;
 			}
-			this.genes2PathLengthsNeo4jBatchInsert(mapEntriesList);
+			this.neo4jBatchInsertWithUnwind(mapEntriesList);
 			mapEntriesList.clear();
 			count = 0;
 		}
