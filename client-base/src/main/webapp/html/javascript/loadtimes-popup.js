@@ -34,7 +34,15 @@ class WaitPopUp {
 
     }
 
-    // adds loading purse animation to target button and appends overlay to target element parent. 
+		/* 
+		 * TODO: Why sometimes animate() is used and other times start()/stop() are used?
+		 * 
+		 * Can't we expose either animate() only, or start()/stop()? Or vice-versa?
+		 * If all of the three have to be public, please explain why in the comments. 
+		 *
+		 */ 
+
+    // adds loading pulse animation to target button and appends overlay to target element parent. 
     animate(){
         var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+this.#loaderText+this.#loadingPulse+'</span>';
         
