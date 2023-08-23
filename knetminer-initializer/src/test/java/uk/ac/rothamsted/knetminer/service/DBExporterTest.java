@@ -20,7 +20,6 @@ public class DBExporterTest {
                 .withDisabledServer()
                 .withFixture("CREATE (:Gene {ondexId: 1})")
                 .withFixture("CREATE (:Concept {ondexId: 2})")
-                //.withFixture("CREATE FULLTEXT INDEX concept_index FOR (a:Concept) ON EACH [a.identifier, a.prefName, a.altName, a.description, a.AbstractHeader, a.AUTHORS, a.Abstract]")
                 .build();
 
         private Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI());
