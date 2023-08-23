@@ -1,3 +1,9 @@
+/** 
+ * ===> TODO: have these changed been introduced into web-cache.js?
+ * Delete this file when it's no longer needed 
+ * 
+ */
+
 /**
  * Manages the caching for web requests, with a specific new entry handler that 
  * make URL calls and deals with possible errors.
@@ -97,6 +103,8 @@ class EvidenceAccessionCache extends WebCacheWrapper
 		if ( !result ) return result
 		
 		// TODO: WILL BE REMOVED IN COMING DAYS
+		// TODO: Sounds like this should stay for the purpose of evidence genes download
+		// possibly, remove the comments.
     let geneTable = formatJsonToTsv(response.geneTable)
     geneTable = geneTable.split("\n")
     

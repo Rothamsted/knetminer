@@ -1,3 +1,14 @@
+/**
+ * ===> TODO:
+ * - CLEAN IT, it has a lot of old comments and web-cache-new.js is still around.
+ * 
+ * - It looks like it hasn't yet reworked as outlined in web-cache-new. We can't 
+ *   release 5.7 with this mess.
+ * 
+ */
+
+
+
 /** 
  * TODO: THIS HAS BECOME WRONG IN UNINMAGINABLE WAYS!!! 
  * 
@@ -163,6 +174,9 @@
         .done((response) => {
 
           // TODO: WILL BE REMOVED IN COMING DAYS
+          // TODO: Sounds like this should stay for the purpose of evidence genes download
+          // possibly, remove the comments.
+          
           let geneTable = formatJsonToTsv(response.geneTable);
           geneTable = geneTable.split("\n")
           

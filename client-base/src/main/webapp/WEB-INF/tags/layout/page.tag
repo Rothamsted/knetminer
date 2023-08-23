@@ -61,19 +61,19 @@
         	
         	TODO: We're taking jquery from this distro, maybe it's not what we want.
         -->
-        <script  src="html/lib/genomaps/js/jquery-bstrap.min.js"></script>
+        <script src="html/lib/genomaps/js/jquery-bstrap.min.js"></script>
         
         <!-- 
         	TODO: this should be part of knetmaps.js, see update-js.sh.
         	TODO: Do we need html/lib/jquery-ui/jquery-ui.css too? 
         -->
-        <script  src="html/lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="html/lib/jquery-ui/jquery-ui.min.js"></script>
         
-        <script  src="html/lib/genomaps/js/genomap-lib.min.js"></script>
-        <script  src="html/lib/genomaps/js/genomap.min.js"></script>
+        <script src="html/lib/genomaps/js/genomap-lib.min.js"></script>
+        <script src="html/lib/genomaps/js/genomap.min.js"></script>
 
         <!--JBox (managed by update-js.sh) -->
-      	<script  src="html/lib/jbox/jBox.all.min.js"></script>
+      	<script src="html/lib/jbox/jBox.all.min.js"></script>
 
         <!--Particle-->
         <!--  
@@ -83,87 +83,87 @@
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
         
         <!-- KnetMaps.js -->
-        <script  src="html/lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
-        <script  src="html/lib/knetmaps/js/knetmaps.min.js"></script>
+        <script src="html/lib/knetmaps/js/knetmaps-lib-nojquery.min.js"></script>
+        <script src="html/lib/knetmaps/js/knetmaps.min.js"></script>
 
-        <script  src="html/javascript/utils-config.js"></script>
+        <script src="html/javascript/utils-config.js"></script>
         <!-- interactive summary Legend for Gene View -->
-        <script  src="html/GeneView/summary-legend.js"></script>
+        <script src="html/GeneView/summary-legend.js"></script>
         <!-- interactive Legend for Evidence View -->
-        <script  src="html/javascript/evidence-legend.js"></script>
+        <script src="html/javascript/evidence-legend.js"></script>
         
-        <script  src="html/javascript/loginHandler/cookieUtils.js"></script>
-        <script  src="html/javascript/loginHandler/loginUtils.js"></script>
-        <script  src="html/javascript/filter-knetwork.js"></script>
+        <script src="html/javascript/loginHandler/cookieUtils.js"></script>
+        <script src="html/javascript/loginHandler/loginUtils.js"></script>
+        <script src="html/javascript/filter-knetwork.js"></script>
         <!-- KnetMaps - js utils to save knet to knetspace -->
-        <script  src="html/javascript/saveKnetwork/save-knet.js"></script>
+        <script src="html/javascript/saveKnetwork/save-knet.js"></script>
         
         <!-- KnetMaps - js utils to export a local download of the KnetMaps knetwork to user PC -->
-        <script  src="html/javascript/exportKnetwork/download-knet.js"></script>
+        <script src="html/javascript/exportKnetwork/download-knet.js"></script>
         
         <!-- utils -->
-        <script  src="html/javascript/utils.js"></script>
+        <script src="html/javascript/utils.js"></script>
 
            <!-- tooltips data -->
-        <script  src="html/javascript/tooltips-data.js"></script>
+        <script src="html/javascript/tooltips-data.js"></script>
 
           <!-- string loadtimes files -->
-        <script  src="html/javascript/loadtimes-popup.js"></script>
+        <script src="html/javascript/loadtimes-popup.js"></script>
 
               <!-- species selector file -->
-        <script  src="html/javascript/user-access.js"></script>
+        <script src="html/javascript/user-access.js"></script>
 
         <!-- init utils -->
-        <script  src="html/javascript/init-utils.js"></script>
+        <script src="html/javascript/init-utils.js"></script>
          
-      	<script  src="html/lib/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
+      	<script src="html/lib/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
         
         <!-- query suggestor -->
-        <script  src="html/javascript/query-suggester.js"></script>
+        <script src="html/javascript/query-suggester.js"></script>
 
         <!-- species selector file -->
-        <script  src="html/javascript/species-selector.js"></script>
+        <script src="html/javascript/species-selector.js"></script>
 
         <!-- species selector file -->
-        <script  src="html/javascript/genes-distance.js"></script>
+        <script src="html/javascript/genes-distance.js"></script>
 
         <!-- multi species file -->
-        <script  src="html/javascript/knet-widget.js"></script>
+        <script src="html/javascript/knet-widget.js"></script>
 
        
         
         <!-- gene table -->
-        <script  src="html/javascript/gene-table.js"></script>
+        <script src="html/javascript/gene-table.js"></script>
         
         <!-- evidence table -->
-        <script  src="html/javascript/evidence-table.js"></script>
+        <script src="html/javascript/evidence-table.js"></script>
 
         <!-- Web cache -->
-        <script  src="html/javascript/web-cache.js"></script>
+        <script src="html/javascript/web-cache.js"></script>
         
         <!-- Chromosome region-->
-        <script  src="html/javascript/chromosome-region.js"></script>
+        <script src="html/javascript/chromosome-region.js"></script>
 
 
         <!-- UI utils  -->
-        <script  src="html/javascript/ui-utils.js"></script>
+        <script src="html/javascript/ui-utils.js"></script>
 
         <!-- Example Queries -->
-        <script  src="html/javascript/example-queries.js"></script>
+        <script src="html/javascript/example-queries.js"></script>
 
         <!-- table-handler -->
-        <script  src="html/javascript/table-scrolling.js"></script>
+        <script src="html/javascript/table-scrolling.js"></script>
 
         <!-- ajax data Utils-->
         <script src="html/javascript/data-utils.js"></script>
 
         <!-- string data Utils-->
-        <script  src="html/javascript/string-utils.js"></script>
+        <script src="html/javascript/string-utils.js"></script>
       
         <!-- google analytics-->
-        <script  src="html/javascript/google-analytics.js"></script>
+        <script src="html/javascript/google-analytics.js"></script>
 
-        <script  src="html/javascript/releaseNotes/showNetworkStats.js"></script>
+        <script src="html/javascript/releaseNotes/showNetworkStats.js"></script>
         
         <!-- interactJS; DISABLED -->
         <!--	<script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script> -->

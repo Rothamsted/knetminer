@@ -282,6 +282,8 @@ async function openGeneListPopup(conceptId, element)
   // Checking if modal element is already created for current conceptID 
 
     let accessionCache = new EvidenceAccessionCache('accession-cache');
+    
+    // TODO: As explained, this is too poor to get into the 5.7
     let accessionData =  await accessionCache.apiHandler(conceptId); 
 	
 	if ( accessionData ){

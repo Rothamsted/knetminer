@@ -3,6 +3,13 @@
 	<query>
 		<description>FLC gene expression</description>
 		<term>flowering FLC FT</term>
+		<!--
+		  TODO: cumbersome name, userRole is enough, it's obvious that
+		  higher roles can do this too.
+		  
+		  Also, the lowest role should be a reasonable
+		  default, and it should be possible to omit it
+		-->
 		<minimumUserRole>guest</minimumUserRole>
 
 	</query>

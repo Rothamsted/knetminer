@@ -279,9 +279,11 @@ function logOut(knetspace_address) {
     $('#signup').attr('href','https://knetminer.com/beta/knetspace/sign-up/');
 }
 
-/** Fetches user credentials 
+/** 
+ * Fetches user credentials, manages setup operations to be run after successful login.
  * 
- * @param {type} loginModal
+ * TODO: (not a priority): it's a mess, the handler below should be split into per-concern
+ * functions.
  */
 function   fetchCredentials(loginModal) {
 
@@ -330,6 +332,11 @@ function   fetchCredentials(loginModal) {
                             var profileTitle = '<font size="5"><font color="white">Welcome, </font><font color="#51CE7B">' + myJson.username + '</font>';
                         }
 
+                        /* 
+                          TODO: (not a priority) poor code. It should be rewritten in its function (ad mentioned above)
+                          and should be based on `` and ${interpolation}, so that it might look more like a template, instead
+                          of this unreadable mess.
+                        */  
                         var profile_menu_html = "<font size='4'><a href='" + knetspace_address + "/profile' target='_blank' style='text-decoration:none' class='profileClass'>My Profile</a>"
                                 + "<hr>"
                                 + "<a href='" + knetspace_address + "/network' target='_blank' style='text-decoration:none' class='profileClass'>My Knetworks</a>"
