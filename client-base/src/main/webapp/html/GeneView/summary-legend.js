@@ -59,12 +59,6 @@ function filterGeneTableByType ( event, conceptType )
 	 	// Splits the gene evidences string in the gene table into an array of evidences. 
 	  // See the API for details about this format
 	  
-	  /* TODO: remove, use the available facilities for these
-	     operations
-	  let evidences = []
-	  for(let evidence in conceptEvidences){
-		evidences.push(evidence)
-	  } */
 	  const rowEvidences = Object.keys ( conceptEvidences )
 	  return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
 	}
