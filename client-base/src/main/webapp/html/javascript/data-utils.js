@@ -12,7 +12,16 @@ async function genomeApi (request, requestParams)
         timeout: 1000000,
       }).then((response) => {
         let data = response.json(); 
-        let querytime = performance.now() - startTime; // query response time
+        let querytime = performance.now() - startTime; // query response time        
+
+		// TODO: this is bad practice. Rounding should be a UI concern,
+		// it should be done by a UI component or some other closely
+		// related component. Values should not be rounded so early,
+		// cause that's too messy and some other code might need their
+		// original value.
+		// Plus, this is a kindergarten way to do it, there are dedicated
+		// rond() functions for that
+		//
         let queryseconds = (querytime / 1000).toFixed(2);
         data['queryseconds'] = queryseconds; 
         return data; 
@@ -208,6 +217,8 @@ function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   let genomicViewTitle;
   let status;
 
+  // TODO: I thought we decided to remove this and keep the 'ondexId' label, 
+  // can we disable this?
   // TEMPORARY HACK TO REPLACE ONDEXID WITH NODEID 
   data.geneTable = replaceOndexId(data.geneTable);
   data.evidenceTable = replaceOndexId(data.evidenceTable);
@@ -841,8 +852,6 @@ function geneTableToTsv(data) {
 	
 
 	const genesArrayExclEvidences = data.map ( geneTableRow => {
-		// TODO: remove WHAT SORT OF NAME IS genesWithoutEvidence?!?
-		// const { conceptEvidences, qtlEvidences, ...genesWithoutEvidence } = genes
 		const { conceptEvidences, qtlEvidences, ...filteredFields} = geneTableRow
 		return filteredFields
 	})

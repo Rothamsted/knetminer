@@ -21,11 +21,9 @@ const exampleQuery = function () {
      */
     async function setQueryData() {
 
-        let request = api_url + '/dataset-info/sample-query.xml';
-
         $.ajax({
             type: 'POST',
-            url: request,
+            url: api_url + '/dataset-info/sample-query.xml',
             dataType: "xml",
             cache: false, //force cache off
             success: function (sampleQuery) {
@@ -96,6 +94,12 @@ const exampleQuery = function () {
     function populateQueryValues(queryIndex) {
 
         var targetQuery = sampleQueries.filter((query) => query.index == queryIndex)[0]
+        /* TODO: is this really needed Can't you just do something like:
+           var targetQuery = sampleQueries [ queryIndex ]
+           If not, is it because sampleQueries creation requires something like: 
+           sampleQueries [ <the index attribute> ] = <the parsed XML>
+        */ 
+
         var { term, regions, genes, minimumUserRole } = targetQuery;
 
         var isQueryRestricted = userAccessMgr.requires(minimumUserRole);

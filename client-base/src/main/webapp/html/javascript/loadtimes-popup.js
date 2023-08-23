@@ -37,6 +37,13 @@ class WaitPopUp {
     // adds loading purse animation to target button and appends overlay to target element parent. 
     animate(){
         var uiContent = '<span style="display:flex;align-items:center;justify-content:center">'+this.#loaderText+this.#loadingPulse+'</span>';
+        
+        // TODO: maybe it makes sense to have this HTML as a constant variable, instead of putting it
+        // straight in .append(). 
+        // But even so, why is it a class field and not a local constant, if it's used here only?
+        //
+        // The same for #loadingPulse above
+        // 
         $(this.#parentId).append(this.#overlay);
         $(this.#buttonId).html(uiContent)
     }
