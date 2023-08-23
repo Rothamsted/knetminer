@@ -2851,7 +2851,7 @@ color: #C0C0C0;
 }
 
 
-.distance-filter-button{
+.filter-button{
     height: 22px;
     width: 20px;
     display: flex;
@@ -2876,7 +2876,7 @@ color: #C0C0C0;
     border-top: .5px solid silver;
 }
 
-#evidence-filter, .filter-footer, .filter-header{
+#evidence-filter, .filter-footer, .filter-header, #knetscore-filter, #knetscore-container{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2896,6 +2896,32 @@ color: #C0C0C0;
 
 .filter-header label{
     margin-right: .25rem;
+}
+
+
+
+.knetscore-view{
+    width: 200px;
+    padding: 1rem;
+    height: fit-content;
+    background-color: white;
+    border: 0.5px solid var(--green);
+    position: absolute;
+    top:2pc;
+    right: -4pc;
+    display: none;
+}
+
+.distance-button{
+    margin-top: .5rem;
+
+}
+
+.distance-button button{
+    border: none;
+    background-color:black;
+    color: white;
+    padding: .25rem .5rem;
 }
 
 .bg-gray{

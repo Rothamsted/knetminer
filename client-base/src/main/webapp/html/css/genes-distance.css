@@ -17,11 +17,10 @@
 .distance-unit {
     display: flex;
     align-items: center;
-    margin-right: 1.5rem;
 }
 
 
-.distance-buttons{
+.distance-button{
     justify-content: flex-end;
 }   
 

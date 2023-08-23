@@ -13,10 +13,8 @@ function createGenesTable ( tableData, keyword )
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
 
 		
-		table += '<form name="checkbox_form"><div class="filter-tab">';
-		table +=  '<div class="filter-container"><div class="filter-tabs active-tabs" onclick="changeFilterView(this)" id="concepts" name="filters" value="concepts" type="radio"> <i class="fas fa-dna"></i> Concepts</div>';
-		table += '<div class="filter-tabs" onclick="changeFilterView(this)" name="filters" id="knetscore" value="knetscore" type="radio"> <i class="fas fa-exchange-alt"></i> </i> KnetScore </div></div></div>'
-		table += '<div class="divider"></div><div class="gene_header_container">';
+		table += '<form name="checkbox_form">'
+		table += '<div class="gene_header_container">';
 		table += '<div id="filters">'+ interactiveSummaryLegend + '</div><div id="revertGeneView" class="legends-reset-button" title= "Revert all filtering changes"><i class="fas fa-undo  unhover"></i></div></div>';
 		table += '</div>';
 		table += '<br>';
@@ -30,8 +28,8 @@ function createGenesTable ( tableData, keyword )
 		table += '<th width="60">Chr</th>';
 		table += '<th width="70">Nt start</th>';
 	
-		table += '<th  width="330"><div id="evidence-filter">  <span>Evidence</span> <button type="button" id="distance-filter-button" onclick="toggleDistanceFilter(this)" class="distance-filter-button" data-id="#distance-filter-button"><i class="fas fa-filter"></i></button></div></th>';
-		table += '<th width="150"> KnetScore <span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span> </th>';
+		table += '<th  width="330"><div id="evidence-filter">  <span>Evidence</span> <button type="button" id="distance-filter-button" onclick="toggleFilterIcons(this)" class="filter-button" data-id="distance"><i class="fas fa-filter"></i></button></div></th>';
+		table += '<th width="200"><div id="knetscore-filter"> <div id="knetscore-container"><span>KnetScore </span><span id="knetScore" class="hint hint-small"> <i class="fas fa-info-circle"></i></span></div><button type="button" id="knetscore-filter-button" onclick="toggleFilterIcons(this)" class="filter-button" data-id="knetscore"><i class="fas fa-filter"></i></button></div></th>';
 		table += '<th width="70">Select</th>';
 		table += '</tr>';
 		table += '</thead>';
@@ -66,10 +64,11 @@ function createGenesTable ( tableData, keyword )
 		}
 		
 		$("#tablesorter").tablesorter( tableSorterOpts );
-		knetscoreFilter.appendFilterToUi(); 
+
+		geneTableFilterUi.renderFilterUis();
 		geneTableFilterMgr.saveTableData(tableData);
 
-		graphDistanceFilterHtml()
+
 
 
 
@@ -566,47 +565,19 @@ function openAccessionNetworkView(event,genesAccessions){
 
 }
 
-//  function returns graph distance filter HTML element
- function graphDistanceFilterHtml(){
 
-	const distanceLimit = 8  // number could be dynamic 
 
-	let ui = `<div class="distance-view"><div class="filter-header" >
-			<label>Distance:</label>
-				<select id="select-distance">`
-    for(let index = 0; index < distanceLimit; index++){
-        ui += `<option value='${index + 1}' ${index === 7 ? 'selected': ''}>${index + 1}</option>`
-    }
-    ui += `</select></div>
-			<div class="filter-footer">
-			<span onclick="resetTable()">Reset</span>
-			<button data-id="#distance-filter-button" onclick="geneTableFilterMgr.filterByGraphDistance(this)" type="button">Apply</button>
-			</div></div>`;
-
-	$("#evidence-filter").append(ui)
- }
-
-/**
- * TODO: To be removed when geneview filters are finally with popup filters (currently in progress)
- * changes upper genetable filter views
- */
- function changeFilterView(element){
-
-	const selected = $(element).attr('value'); 
-	$('.view').removeClass('active')
-	$('.filter-tabs').removeClass('active-tabs')
-
-	$(element).addClass('active-tabs'); 
-	$(`#${selected}-view`).addClass('active');
- }
 
 // toggles distance filter popup modal 
- function toggleDistanceFilter(element){
-	const isDistanceFilterVisible = $('.distance-view').is(":visible")
-	const targetClass = $(element).attr('data-id'); 
+ function toggleFilterIcons(element){
 
-	$('.distance-view').toggleClass('show-block', !isDistanceFilterVisible)
-	$(targetClass).toggleClass('bg-gray',!isDistanceFilterVisible )
+	const targetClass = $(element).attr('data-id'); 
+	const view = $(`.${targetClass}-view`)
+	const viewButtonId = $(`#${targetClass}-filter-button`)
+	const isDistanceFilterVisible = view.is(":visible")
+
+	$(view).toggleClass('show-block', !isDistanceFilterVisible)
+	$(viewButtonId).toggleClass('bg-gray',!isDistanceFilterVisible )
 	
  }
 
