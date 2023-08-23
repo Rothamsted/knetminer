@@ -1,4 +1,32 @@
 
+/*
+ *
+ * TODO: as already discussed. This is has a poor and messy design. 
+ * 
+ * Some of the most powerful tools in software design are abstraction and Liskov
+ * substitution principle.
+ * 
+ * Here, a filter is an entity that can produce some UI, can be updated from UI, can be applied
+ * to the input table. ==> Think in these terms, immagine you don't know what the filter 
+ * exactly does, imagine which methods you have to call, INDEPENDENTLY OF ANY PARTICULAR 
+ * IMPLEMENTATION. This will make the code simpler and easy to extend with additional filters.
+ * 
+ * You find a possible outline in gene-table-filtering-draft.js. 
+ * The current code has a number of comments that should be useful for that new architecture too.  
+ */
+
+
+/**
+ * TODO: Why is this file named gene-distance.js, if it's about other filter types too?
+ * 
+ * Please DO STOP naming thing lazily!
+ * 
+ */
+
+/**
+ * TODO: why aren't the other filters managed via similar Filter singletons? 
+ */
+
 // houses knetscore slider type filter internal functionalities
 const knetscoreFilter = function(){
 
@@ -175,8 +203,6 @@ const knetscoreFilter = function(){
 }()
 
 
-
-
 // TO REFINE OBJECT LITERAL IN COMING DAYS
 // Handles evidence and knetscore filters 
 const geneTableFilterMgr = function() {
@@ -195,6 +221,17 @@ const geneTableFilterMgr = function() {
                 tableData = data;
                 knetscoreFilter.detectScoreRange(data); 
         },
+        
+        /*
+         * TODO: this doesn't belong in this component. There shoukd be a 
+				 * gene table manager, able to updade itself with new data. And it's should also be able 
+				 * to know it has a scroller to update too.
+				 * 
+				 * You need to think more of the concerns the various components have, imagine that 
+				 * ideally, each one deals with one aspect only and a set of parts (functions, fields, etc) 
+				 * that concern about that aspect only.
+				 * 
+         */ 
         renderFilteredTable: function (table){
             genesTableScroller.setTableData (table)
             createGeneTableBody(table) 
