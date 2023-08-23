@@ -9,27 +9,55 @@ const knetscoreFilter = function(){
 
         // gets data from parent element
 
+				// TODO: use map() for mapping arrays.
         const scoreArry = []; 
         tableData.forEach(genes => {
+						// TODO: what's the point with rounding them here, rather than upon visualisation?
+						// Also, it's already a number, use Math.round()
             const score = Number(genes.score).toFixed(2); 
             scoreArry.push(score) 
         })
 
-        // uses Math min and max method to get min and max values from genetable score property. 
+        /* TODO: remove, come on!
+        
         const minValue = Math.min(...scoreArry);
         const maxValue = Math.max(...scoreArry); 
         minScore = minValue
-        maxScore = maxValue; 
+        maxScore = maxValue;
+        */
+			 
+        minScore = Math.min(...scoreArry)
+        maxScore = Math.max(...scoreArry); 
+
+
+				/*
+				 * TODO: separation of concerns, don't keep computations together with UI tasks
+				 * Move this to some other function like updateSliderRange( min, max )
+				 * 
+				 * Also, rename detectScoreRange(), you're not detecting anything here, you're 
+				 * computing/finding extremes in a list.
+				 * 
+				 * Possible new names/arrangement: 
+				 *  
+				 * setupSlider ( tableData ):
+				 *   // in place of this detectScoreRange()
+				 *   // calls #getScoreRange() and then #updateSliderRange() 
+				 * 
+				 * #getScoreRange ( tableData ):
+				 *   computes min/max
+				 * #updateSliderRange ( min, max ):
+				 *   // calls setRangeInputValues() like here below
+				 *   // possible new name for setRangeInputValues: #updateSliderPosition()
+				 */ 
 
         // sets defaults values for min and max range inputs
-        setRangeInputValues(minValue, 'min')
-        setRangeInputValues(maxValue, 'max')
+        setRangeInputValues(minScore, 'min')
+        setRangeInputValues(maxScore, 'max')
     }
     // Function set input values for range input type called in (detectScoreRange)
     function setRangeInputValues(value, rangeType){
 
         $('#'+rangeType+'Value').val(value); 
-
         $('#score-'+rangeType).attr({
             'min':minScore,
             'max':maxScore,
@@ -38,6 +66,9 @@ const knetscoreFilter = function(){
 
     }
 
+		/* TODO: why these funny names, rather than something like 
+     * onChangeLeftSlider(), onChangeRightSlider()
+		 */
     // Gets the left range input value when an onchange event event is triggered.
     // Set style direction in percentage
     function handleLeftThumb(element){ 
@@ -70,6 +101,16 @@ const knetscoreFilter = function(){
 
         setScorePosition(inputValue, 'max');
     }
+
+		/**
+		 * TODO: why are you calling $('#maxValue').val(inputValue.toFixed(2)) separately, 
+		 * instead of doing it inside this method?
+		 * 
+		 * TODO: in setRangeInputValues() you named it 'type', here, you name it 'direction', 
+		 * let's have some consistency (eg, direction, or sliderType)
+		 * 
+		 * TODO: probably something like moveSlider ( v, type ) would be a better name
+		 */
 
     // Adds CSS style position and coverage percentage to range slider
     function setScorePosition(inputValue, direction){
@@ -133,6 +174,9 @@ const knetscoreFilter = function(){
 
 }()
 
+
+
+
 // TO REFINE OBJECT LITERAL IN COMING DAYS
 // Handles evidence and knetscore filters 
 const geneTableFilterMgr = function() {
@@ -141,6 +185,11 @@ const geneTableFilterMgr = function() {
     let filteredData = []; 
 
    return { 
+				/*
+				 * TODO: Where are you saving it? On a disk? This is a method to hand the class 
+				 * a value, which is then kept in its state. Methods like this are usually named 
+				 * like setTableData()
+				 */  		 
         // saves geneview table
         saveTableData:function(data){
                 tableData = data;
@@ -150,6 +199,7 @@ const geneTableFilterMgr = function() {
             genesTableScroller.setTableData (table)
             createGeneTableBody(table) 
         },
+        
         // handles knetscore filtering
         filterByKnetScore: function (event)
         {
@@ -161,8 +211,15 @@ const geneTableFilterMgr = function() {
             const scoreMax = Number($('#score-max').val()); 
 
             let knetScoreFilteredData = []
-
-            // Filter through data 
+	
+            // Filter through data
+            // TODO: use .map()
+            
+            /* TODO: why are you naming it genes, if it's one gene only per row?! And it's not even
+               a gene, cause it's a geneRow! Don't name things lazily, they might become very misleading and
+               damaging when someone has to understand the code, including you in a few weeks.
+             */
+              
             for(let genes of tableData ){
                 const score = Number(genes.score).toFixed(2);
 
@@ -179,6 +236,14 @@ const geneTableFilterMgr = function() {
             geneTableFilterMgr.toggleTableState(knetScoreFilteredData.length)
    
         },
+        
+        
+        /**
+				 * TODO: filterByKnetScore() is receiving an event, then this is receiving an element.
+				 * Why aren't they consistent?!
+				 *  
+				 */
+        
         // handles graph distance filtering
         filterByGraphDistance: function(element)
         {
@@ -187,6 +252,9 @@ const geneTableFilterMgr = function() {
             const distanceFilteredData = []
             const data = [...tableData]
         
+        		/*
+        		 * TODO: as above, use a better name and use .map()
+        		*/
             data.forEach(genes => {
         
                 let concepts = genes.conceptEvidences
@@ -211,6 +279,16 @@ const geneTableFilterMgr = function() {
             
             if(distanceFilteredData.length){
                 geneTableFilterMgr.renderFilteredTable(distanceFilteredData); 
+                
+                /* 
+                 * TODO: What's the point of doing it here?! Why isn't dealt with by 
+								 * renderFilteredTable(), and is it at all necessary?!
+								 * 
+								 * Why isn' filterByKnetScore() working the same, given that, after filtering, 
+								 * they do the same thing?!
+                 * 
+								 * DAMN IT! Let's code with some more attention and consistency!
+                */
                 filteredData = distanceFilteredData
             }
 
