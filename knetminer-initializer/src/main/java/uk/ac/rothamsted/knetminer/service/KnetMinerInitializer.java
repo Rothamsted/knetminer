@@ -41,8 +41,6 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
 
-import org.neo4j.driver.*;
-
 /**
  * 
  * The core functionality.
@@ -91,12 +89,6 @@ public class KnetMinerInitializer
 	private Map<Integer, Set<Integer>> genes2QTLs;
 	
 	private int genomeGenesCount = -1;
-
-	private String uri = "bolt://127.0.0.1:7687";
-	private String username = "neo4j";
-	private String password = "neo4j-nova";
-
-	private Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
 
 	private Logger log = LogManager.getLogger ( this.getClass () );
 
@@ -1033,126 +1025,6 @@ public class KnetMinerInitializer
 	public int getGenomeGenesCount ()
 	{
 		return genomeGenesCount;
-	}
-
-	/**
-	* Launch of the ordinary implementation of adding edges in Neo4j database.
-	*/
-	public void neo4jOperationsLaunch(){
-		addGenes2ConceptsRelations(genes2Concepts);
-		addGenes2PathLengthsRelations(genes2PathLengths);
-		driver.close();
-	}
-
-	public void addGenes2ConceptsRelations(Map<Integer, Set<Integer>> genes2Concepts) {
-		int count = 0;
-		int totalCount = 0;
-		List<Map.Entry<Integer, Set<Integer>>> mapEntriesList = new LinkedList<>();
-			Set<Map.Entry<Integer, Set<Integer>>> entries = genes2Concepts.entrySet();
-			for (Map.Entry<Integer, Set<Integer>> entry : entries) {
-				while (count < 2000) {
-					mapEntriesList.add(entry);
-					count++;
-					totalCount++;
-					if (totalCount == genes2Concepts.size()) break;
-				}
-				this.genes2ConceptsNeo4jBatchInsert(mapEntriesList);
-				mapEntriesList.clear();
-				count = 0;
-			}
-	}
-	private void genes2ConceptsNeo4jBatchInsert(List<Map.Entry<Integer, Set<Integer>>> mapEntriesList) {
-		Session session = driver.session();
-		Transaction tx = session.beginTransaction();
-		for (Map.Entry<Integer, Set<Integer>> mapEntry : mapEntriesList) {
-			mapEntry.getValue().stream().forEach(v -> tx.run(buildGenes2ConceptsNeo4jQuery(mapEntry.getKey(), v)));
-		}
-		tx.commit();
-		session.close();
-	}
-
-	private String buildGenes2ConceptsNeo4jQuery (Integer geneId, Integer conceptId){
-		return "MATCH (g:Gene), (c:Concept) WHERE g.id = " + geneId +
-				" AND c.id = " + conceptId + " CREATE (g)-[:hasMotifLink]->(c)";
-	}
-
-	public void addGenes2PathLengthsRelations(Map<Pair<Integer, Integer>, Integer> genes2PathLengths) {
-		int count = 0;
-		int totalCount = 0;
-		List<Map.Entry<Pair<Integer, Integer>, Integer>> mapEntriesList = new LinkedList<>();
-		Set<Map.Entry<Pair<Integer, Integer>, Integer>> entries = genes2PathLengths.entrySet();
-		for (Map.Entry<Pair<Integer, Integer>, Integer> entry : entries) {
-			while (count < 2000) {
-				mapEntriesList.add(entry);
-				count++;
-				totalCount++;
-				if (totalCount == genes2PathLengths.size()) break;
-			}
-			this.genes2PathLengthsNeo4jBatchInsert(mapEntriesList);
-			mapEntriesList.clear();
-			count = 0;
-		}
-	}
-
-	private void genes2PathLengthsNeo4jBatchInsert(List<Map.Entry<Pair<Integer, Integer>, Integer>> mapEntriesList) {
-		Session session = driver.session();
-		Transaction tx = session.beginTransaction();
-		for (Map.Entry<Pair<Integer, Integer>, Integer> mapEntry : mapEntriesList) {
-			Integer sourceNodeId = mapEntry.getKey().getKey();
-			Integer targetNodeId = mapEntry.getKey().getValue();
-			tx.run(buildGenes2PathLengthsNeo4jQuery(sourceNodeId, targetNodeId, mapEntry.getValue()));
-		}
-		tx.commit();
-		session.close();
-	}
-
-	private String buildGenes2PathLengthsNeo4jQuery (Integer sourceNodeId, Integer targetNodeId, Integer pathLength){
-		return "MATCH (s:Gene), (t:Concept) WHERE s.ondexId = " + sourceNodeId +
-				" AND t.ondexId = " + targetNodeId + " CREATE (s)-[r:hasMotifLink{graphDistance}]->(t) SET r.graphDistance = " + pathLength;
-	}
-
-	/**
-	 * Launch of the unwind implementation of adding edges in Neo4j database.
-	 */
-	public void neo4jOperationsLaunchWithUnwind(){
-		addGenes2PathLengthsRelationsWithUnwind(genes2PathLengths);
-		driver.close();
-	}
-
-	public void addGenes2PathLengthsRelationsWithUnwind(Map<Pair<Integer, Integer>, Integer> genes2PathLengths) {
-		int count = 0;
-		int totalCount = 0;
-		List<Map.Entry<Pair<Integer, Integer>, Integer>> mapEntriesList = new LinkedList<>();
-		Set<Map.Entry<Pair<Integer, Integer>, Integer>> entries = genes2PathLengths.entrySet();
-		for (Map.Entry<Pair<Integer, Integer>, Integer> entry : entries) {
-			while (count < 2000) {
-				mapEntriesList.add(entry);
-				count++;
-				totalCount++;
-				if (totalCount == genes2PathLengths.size()) break;
-			}
-			this.neo4jBatchInsertWithUnwind(mapEntriesList);
-			mapEntriesList.clear();
-			count = 0;
-		}
-	}
-
-	private void neo4jBatchInsertWithUnwind (List<Map.Entry<Pair<Integer, Integer>, Integer>> mapEntriesList) {
-		Session session = driver.session();
-		Transaction tx = session.beginTransaction();
-		String baseCQLQuery = "UNWIND $relRows AS relRow\n" +
-				" MATCH ( s:Gene { ondexId: relRow.geneId } )\n" +
-				"MATCH ( t:Concept { ondexId: relRow.conceptId }\n" +
-				"CREATE (s) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (d)";
-		for (Map.Entry<Pair<Integer, Integer>, Integer> mapEntry : mapEntriesList) {
-			Map<String, Object> relRows = new HashMap<>();
-			relRows.put("geneId", mapEntry.getKey().getKey());
-			relRows.put("conceptId", mapEntry.getKey().getValue());
-			relRows.put("graphDistance", mapEntry.getValue());
-			tx.run(baseCQLQuery, relRows);
-		}
-		tx.commit();
-		session.close();
 	}
 	
 }
