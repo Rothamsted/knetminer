@@ -1,4 +1,3 @@
-
 // Houses knetscore slider type filter internal functionalities
 const knetscoreFilterHandlers = function(){
 
@@ -191,51 +190,55 @@ const geneTableFilterMgr = function() {
         // handles knetscore filtering
         filterByDistanceAndScore: function (event)
         {   
-            const element = event.target
-            const data = [...tableData]
-
+            const element = event.target;
+            const data = [...tableData];
+        
             event.preventDefault();
             toggleFilterIcons(element); 
-
-            distance = $('#select-distance option:selected').val()
+        
+            distance = $('#select-distance option:selected').val();
             scoreMin = Number($('#score-min').val()); 
             scoreMax = Number($('#score-max').val()); 
-
-            let filteredData = []
-
-            // Filter through data 
-            for(let genes of data ){
-
-                    const score = Number(genes.score).toFixed(2);
-
-                    // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
-                    const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) )
-
-                    let concepts = genes.conceptEvidences
         
-                    for(let concept in concepts ){
-                        
-                        let evidence = concepts[concept].conceptEvidences;
-    
-                        evidence = evidence.filter( item => item.graphDistance <= distance)
-            
-                        if(!evidence.length){
-                            const newObject = Object.assign({},concepts)
-                            delete newObject[concept]; 
-                            concepts = newObject;
-                        } 
-                    }
-                    // checks if object.Keys has length
-                    const isConceptEmpty = Object.keys(concepts).length
-                    if(isConceptEmpty > 0 && isScoreInRange) filteredData.push(genes)
+            let filteredData = [];
+        
+            // Filter through data 
+            for(let gene of data ){
+                // Deep clone the gene object to ensure we don't modify the original data
+                let geneClone = JSON.parse(JSON.stringify(gene));
+        
+                const score = Number(geneClone.score).toFixed(2);
+        
+                // Checks if the gene's score falls within the selected range (inclusive of the range boundaries)
+                const isScoreInRange = ((score >= scoreMin ) && (score <= scoreMax) );
+        
+                let concepts = geneClone.conceptEvidences;
+        
+                for(let concept in concepts ){
+                    
+                    let evidence = concepts[concept].conceptEvidences;
+        
+                    evidence = evidence.filter( item => item.graphDistance <= distance);
+        
+                    // Update the evidence list for the concept
+                    concepts[concept].conceptEvidences = evidence;
+                    
+                    if(!evidence.length){
+                        delete concepts[concept]; 
+                    } 
+                }
+                // checks if object.Keys has length
+                const isConceptEmpty = Object.keys(concepts).length;
+                if(isConceptEmpty > 0 && isScoreInRange) {
+                    filteredData.push(geneClone);
+                }
             }
-
+        
             if(filteredData.length){
-                geneTableFilterMgr.renderFilteredTable(filteredData)
+                geneTableFilterMgr.renderFilteredTable(filteredData);
             }
-
-            geneTableFilterMgr.toggleTableState(filteredData.length)
-   
+        
+            geneTableFilterMgr.toggleTableState(filteredData.length);
         },
         // toggle table state when filtered data length is equal to zero. 
         toggleTableState:function(dataLength){
