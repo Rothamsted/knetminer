@@ -234,15 +234,19 @@ const exampleQuery = function () {
             var {minimumUserRole,description,index} = query
 
             var queryRestriction;
-            // /* TODO: too messed-up, See #768 */
             var isQueryRestricted = userAccessMgr.requires(minimumUserRole);
             var isGeneListRestricted = userAccessMgr.isLimitEnforced();
 
-            /* TODO: too messed-up, See #768 */
             if (!isQueryRestricted) {
                 queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
             }
 
+						/* TODO: NO! roles need to be cheched via can(), see user-access.js
+						   
+						   Also, why are you checking minimumUserRole again, if it was already done upon 
+						   setting isGeneListRestricted? 
+						*/
+						
             if (isGeneListRestricted && minimumUserRole == 'pro') {
                 queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
             }

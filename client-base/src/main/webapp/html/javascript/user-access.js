@@ -1,8 +1,19 @@
 /**
  * Manages user access to resources based on user plan tier
+ * 
  */
 class UserAccessManager{
-
+		/* 
+		 * TODO: rename into something like #currentRole
+		 * 
+		 * Also, consider to set this to the object, rather than keeping the bare string:
+		 * 
+		 * this.#currentRole = UserRole.get ( <string from KnetSpace> )
+		 *
+		 * Should make things slightly more efficient.
+		 * 
+		 */
+		
     #current = null; 
     #defaultGeneLimit = null; 
     #isGeneLimitEnforced = null; 
@@ -16,8 +27,7 @@ class UserAccessManager{
     // Calls knetspace API endpoint and returns user current plan (free or pro) as a string. 
     setUserPlan()
     {
-        let login_check_url = knetspace_api_host + "/api/v1/me";
-      fetch(login_check_url, {
+      fetch(knetspace_api_host + "/api/v1/me", {
           credentials: 'include'
       }).then(async (response)=> {
         const data = await response.json();
@@ -34,6 +44,29 @@ class UserAccessManager{
     // 20 for guest, 100 for free and unlimited for pro users.
     #setGeneSearchLimit()
     {
+			  /* 
+			   * TODO: this is logically wrong. Once you've introduced roles as 
+				 * abstract objects, you must be consistent with them vision and 
+				 * do these checkings in this way:
+				 * 
+				 * if ( this.#currentRole.can ( UserRole.PRO )))
+				 *   ...
+				 * else if ( this.#currentRole.can ( UserRole.FREE )) )
+				 *   ...
+				 * else
+				 *   // minimal role
+				 * 
+				 * You need to check things in priority/power order, since you need to apply the 
+				 * highest permissions the user has
+				 * 
+				 * Also, you need can(), you can't use '==', since a role grants access to its own 
+				 * permisssions plus the permissions of roles with lower power.
+				 * 
+				 * For instance with the current wrong code, an ADMIN role would be treated like 
+				 * a guest. 
+				 *  
+				 */
+			  
         if( this.#current === 'free' ) 
         {   
           this.#defaultGeneLimit = 100;
@@ -43,6 +76,9 @@ class UserAccessManager{
 
         }else if(this.#current === 'pro'){
             this.#isGeneLimitEnforced = false;
+            // TODO: don't mix business logic and UI
+            // Have a separated function/component, like refreshUIrestrictions() and 
+            // call it outside of this class, after updates like setUserPlan() 
             $('.genesCount').hide(); 
         } 
     }
@@ -59,10 +95,25 @@ class UserAccessManager{
       return this.#isGeneLimitEnforced
     }
 
+		/**
+		 * TODO: no, this isn't about the genes list limit, it is about checking what the current
+		 * user can do. 
+		 * 
+		 * It doesn't matter if you wrote this for the genes list thing, it is not what it's doing,
+		 * don't write misleading comments or names.
+		 * 
+		 * Also, use a better name, such as can ( role )
+		 * 
+		 */
     // Gets geneslist search limit
     // Checks if query restriction should be added to example queries.
     // Method compare user current role to the roles specified for each example queries. 
     requires(queryRole){
+			/* 
+			   TODO: This should be this.#currentRole.can ( queryRole )
+			   
+			   See above about #current, and see below about can()
+			 */
       return  UserRole.can( this.#current, queryRole); 
     }
 
@@ -77,6 +128,7 @@ class UserRole {
 
     static GUEST = new UserRole ( 1000 )
     static REGISTERED = new UserRole ( 500 )
+    // TODO: How is it that there are two roles with the same level?!
     static FREE = new UserRole ( 500 )
     static PRO = new UserRole ( 100 )
 
@@ -88,7 +140,7 @@ class UserRole {
         return this.#level;
     }
 
-     /** 
+   /** 
    * Compare by level, returns -1 | 0  | 1, ie, negative means this role is more
    * powerful than the other.
    */
@@ -101,7 +153,24 @@ class UserRole {
            
     }   
     
+    /* TODO: this is poor. Initially, it was designed as an object method, not a static one, 
+		 * see examples below. The idea is that you ask a role object what its powers are.
+		 * 
+		 * Asking this to string pairs is less readable.
+		 * 
+		 * For instance: 
+		 * 
+		 * currentRole = UserRole.get ( "registered" )
+		 * if ( !currentRole.can ( "pro" ) )
+		 *   <you aren't as powerful as a pro, you can't do this>
+		 * if ( currentRole.can ( "free" ) )
+		 *   <as registered, you can do free user stuff too>
+		 * 
+		 * 
+		 */
+		
       /**
+			 * 
    * True if the role parameter has the same or higher power of this role.
 	 * Param can be a UserRole or a string.
    */
