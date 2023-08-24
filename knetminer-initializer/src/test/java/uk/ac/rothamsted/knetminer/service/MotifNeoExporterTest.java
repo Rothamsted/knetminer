@@ -14,9 +14,25 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.time.Instant;
 import java.util.Map;
 
-public class DBExporterTest {
+public class MotifNeoExporterTest {
 
-        private Neo4j embeddedDatabaseServer = Neo4jBuilders.newInProcessBuilder()
+			 /**
+			  * TODO: As already said, this can't be tested with Harness. 
+			  * 
+			  * I'll prepare a test skeleton, which will be similar to test classes 
+			  * in aratiny-ws (eg, ApiIT.java)
+			  * 
+			  * Before that is ready, this test is good, but you should make more verifications 
+			  * using Cypher. That is, test that there are 'hasMotifLink' relations are created 
+			  * and they match the test nodes and the testGenes2PathLengths dummy map that 
+			  * you are creating programmatically.
+			  * 
+			  * You don't need the initialiser at all to perform this basic test, since you're 
+			  * injecting completely mock-up data, which is a good basic test case, to be tried
+			  * before using a more realistic test dataset. 
+			  *  
+			  */
+       private Neo4j embeddedDatabaseServer = Neo4jBuilders.newInProcessBuilder()
                 .withDisabledServer()
                 .withFixture("CREATE (:Gene {ondexId: 1})")
                 .withFixture("CREATE (:Concept {ondexId: 2})")
@@ -26,11 +42,11 @@ public class DBExporterTest {
 
         private KnetMinerInitializer knetMinerInitializer = new KnetMinerInitializer();
 
-        private DBExporter exporter = new DBExporter(knetMinerInitializer);
+        private MotifNeoExporter exporter = new MotifNeoExporter(knetMinerInitializer);
 
         private Map<Pair<Integer, Integer>, Integer> testGenes2PathLengths = Map.of(Pair.of(1, 2), 1);
 
-        private static final Logger log = LogManager.getLogger(DBExporterTest.class);
+        private static final Logger log = LogManager.getLogger(MotifNeoExporterTest.class);
 
         @Test
         public void testDBExportation() {
