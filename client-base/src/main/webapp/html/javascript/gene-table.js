@@ -36,7 +36,7 @@ function createGenesTable ( tableData, keyword )
 		table += '<tbody id="geneTableBody" class="scrollTable">';
 		table += '</tbody>';
 		table += '</table>';
-		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results. Try increasing the amount of genes visible (bottom left).</div></div>';
+		table += '<div id="filterMessage" class="showFilter"> Your filter is returning no results.</div></div>';
 		table += '</form>';
 	
 		table += '<div class="gene-footer-container"><div class="gene-footer-flex">';
