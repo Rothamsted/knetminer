@@ -176,6 +176,14 @@
 
 	<profiles>
 		
+		<!-- 
+		You need mvn -Pneo4j to run the tests in MotifNeoExporterIT
+		
+		TODO: this is a copy from aratiny-ws. For the moment, it will do, but 
+		I need to organise it better, like starting the neo server plug-in 
+		once and reusing it here and in other modules too (aratiny-ws, knetminer-initializer-cli),
+		similarly to https://github.com/Rothamsted/knetminer-backend/blob/master/resources-init.sh		
+		-->
 		<profile>
 			<id>neo4j</id>
 			<properties>
