@@ -49,8 +49,21 @@ public class KnetMinerInitializerTest
 		initializer = createKnetMinerInitializer ( true );
 	}
 	
+	/**
+	 * This serves both this class, via {@link #initKnetMinerInitializer()} and 
+	 * {@link MotifNeoExporterIT}. 
+	 *   
+	 * Here, it is invoked with doReset = true, so that new support data are created from scratch
+	 * and tested. 
+	 * 
+	 * In {@link MotifNeoExporterIT}, it is invoked with doReset = false, so that the initialisation
+	 * isn't repeated.
+	 * 
+	 * Both the OXL and the support data are either to be created or loaded in both cases, since
+	 * the integration tests (*IT.java) have to happen after regular tests and are run by a 
+	 * different JVM process.
+	 */
 	static KnetMinerInitializer createKnetMinerInitializer ( boolean doReset ) 
-	  throws IOException
 	{
 		var mavenBuildPath = System.getProperty ( "maven.buildDirectory", "target" );
 		mavenBuildPath = Path.of ( mavenBuildPath ).toAbsolutePath ().toString ();

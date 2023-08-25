@@ -1,11 +1,17 @@
+/*
+ * TODO: replaced by MotifNeoExporterIT. 
+ * Read the TODO: comments below and then remove this file
+ *  
+ */
 //package uk.ac.rothamsted.knetminer.service;
 //
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
-//import org.neo4j.driver.Driver;
-//import org.neo4j.driver.GraphDatabase;
+//import org.neo4j.driver.*;
 //import org.neo4j.harness.Neo4j;
 //import org.neo4j.harness.Neo4jBuilders;
+//
+//import uk.ac.ebi.utils.time.XStopWatch;
 //
 //import org.junit.Test;
 //
@@ -13,6 +19,7 @@
 //
 //import java.time.Instant;
 //import java.util.Map;
+//import java.util.stream.Collectors;
 //
 //public class MotifNeoExporterTest {
 //
@@ -40,9 +47,7 @@
 //
 //        private Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI());
 //
-//        private KnetMinerInitializer knetMinerInitializer = new KnetMinerInitializer();
-//
-//        private MotifNeoExporter exporter = new MotifNeoExporter(knetMinerInitializer);
+//        private MotifNeoExporter exporter = new MotifNeoExporter();
 //
 //        private Map<Pair<Integer, Integer>, Integer> testGenes2PathLengths = Map.of(Pair.of(1, 2), 1);
 //
@@ -52,20 +57,34 @@
 //        public void testDBExportation() {
 //        log.info("Size of testGenes2PathLengths map: " + testGenes2PathLengths.size());
 //        log.info("Entry set of testGenes2PathLengths map: " + testGenes2PathLengths.entrySet().toString());
+//        
+//        /* TODO: we don't always need to time everything, and for the cases where we need, use helpers like
+//         * this:
+//         */
+//        // var exportTime = XStopWatch.profile ( () -> exporter.saveMotifs(testGenes2PathLengths) ); 
+//        
 //        long exportStart = Instant.now().toEpochMilli();
-//        exporter.batchExportToDB(testGenes2PathLengths);
+//        exporter.saveMotifs(testGenes2PathLengths);
 //        long exportEnd = Instant.now().toEpochMilli();
 //        log.info("Exportation time: " + (exportEnd - exportStart));
 //        }
 //
-//        @Test
-//        public void testAltDBExportation() {
-//        log.info("Size of testGenes2PathLengths map: " + testGenes2PathLengths.size());
-//        log.info("Entry set of testGenes2PathLengths map: " + testGenes2PathLengths.entrySet().toString());
-//        long exportStart = Instant.now().toEpochMilli();
-//        exporter.altBatchExportToDB(testGenes2PathLengths);
-//        long exportEnd = Instant.now().toEpochMilli();
-//        log.info("Alternative exportation time: " + (exportEnd - exportStart));
+//    @Test
+//    public void hasNode(){
+//        exporter.saveMotifs(testGenes2PathLengths);
+//        Session session = null;
+//        try {
+//            session = driver.session();
+//            String cqlQuery = "MATCH (g:Gene)\n" +
+//                    "WHERE g.ondexId = 1\n" +
+//                    "RETURN g.ondexId";
+//            Result result = session.run(cqlQuery);
+//            log.info("Node: " + result.list().toString());
+//        } catch (Exception e) {
+//            // TODO: NEVER EVER deal with exceptions this way!!!
+//            log.info("Exception popped up at Neo4j session: {}.", e.getMessage());
+//        } finally {
+//            session.close();
 //        }
-//
+//    }
 //}

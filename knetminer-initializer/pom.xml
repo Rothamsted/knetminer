@@ -121,8 +121,10 @@
 	      <configuration>
 	      	<systemProperties>
 	      		<maven.profileId>${maven.profileId}</maven.profileId>
+		        <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
 	      	</systemProperties>
 	      </configuration>
+	      
 			</plugin>
 			
 	  	<plugin>
