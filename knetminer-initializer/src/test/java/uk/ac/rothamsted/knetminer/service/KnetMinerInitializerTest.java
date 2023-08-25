@@ -46,6 +46,12 @@ public class KnetMinerInitializerTest
 	@BeforeClass
 	public static void initKnetMinerInitializer() throws IOException
 	{
+		initializer = createKnetMinerInitializer ( true );
+	}
+	
+	static KnetMinerInitializer createKnetMinerInitializer ( boolean doReset ) 
+	  throws IOException
+	{
 		var mavenBuildPath = System.getProperty ( "maven.buildDirectory", "target" );
 		mavenBuildPath = Path.of ( mavenBuildPath ).toAbsolutePath ().toString ();
 		mavenBuildPath = mavenBuildPath.replace ( '\\', '/' );
@@ -58,12 +64,15 @@ public class KnetMinerInitializerTest
 		
 		ONDEXGraph graph = Parser.loadOXL ( oxlPath );
 		
-		initializer = new KnetMinerInitializer ();
+		var initializer = new KnetMinerInitializer ();
 		initializer.setGraph ( graph );
-		initializer.setKnetminerConfiguration ( datasetPath +"/config/config.yml" );
+		initializer.setKnetminerConfiguration ( datasetPath + "/config/config.yml" );
 		
-		initializer.initKnetMinerData ( true );
-	}
+		initializer.initKnetMinerData ( doReset );
+		
+		return initializer;
+	}	
+	
 	
 	@Test
 	public void testGetConfig ()

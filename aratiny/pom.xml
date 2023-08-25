@@ -81,24 +81,6 @@
 		</pluginManagement>
 		
 		<plugins>
-
-			<!-- Disabling stuff from the parent level -->
-			<!-- TODO: remove, it has been disabled 
-      <plugin>
-        <artifactId>maven-site-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-site</id>
-            <phase />
-          </execution>
-          <execution>
-            <id>default-deploy</id>
-            <phase />
-          </execution>
-        </executions>
-      </plugin>
-      -->
-		
 		</plugins>
 	</build>
   <reporting />		
