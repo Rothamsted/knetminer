@@ -163,7 +163,7 @@ public class MotifNeoExporterIT
 		 *   MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
 		 *   RETURN g.ondexId AS geneId, r.graphDistance AS distance, c.ondexId AS conceptId
 		 *
-		 * Verify that the Cypher result has MOTIFS_SAMPLE_SIZE tuples.
+		 * Verify that the Cypher result has testMotifs.size() tuples.
 		 * 
 		 * Then, verify each of them:
 		 * 
