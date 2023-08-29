@@ -125,7 +125,7 @@
         <script src="html/javascript/species-selector.js"></script>
 
         <!-- species selector file -->
-        <script src="html/javascript/genes-distance.js"></script>
+        <script src="html/javascript/genes-table-filtering.js"></script>
 
         <!-- multi species file -->
         <script src="html/javascript/knet-widget.js"></script>

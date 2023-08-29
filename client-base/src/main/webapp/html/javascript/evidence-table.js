@@ -206,7 +206,7 @@ function evidencePath(concept, targetElement, genesCount) {
     
     var genesList = $(targetElement).attr('data-genelist').trim().split(",");
     var params = { keyword: 'ConceptID:' + concept };
-    if (geneList.length > 0) {
+    if (genesList.length > 0) {
         params.list = genesList;
     }
     if(genesCount > 0)generateCyJSNetwork(api_url + '/network', params, false);
@@ -431,7 +431,7 @@ function createEvidenceTableBody ( tableData, doAppend = false )
   
   tableData.forEach( (evidence,index) => 
   {   
-    let {conceptType, name, pvalue, totalGenesSize, geneList, nodeId, userGenesSize, userGeneAccessions } = evidence
+    let {conceptType, name, pvalue, totalGenesSize, ondexId, userGenesSize, userGeneAccessions } = evidence
 
     // Prefer this templating style, at least for new code
     // Also, avoid "x = x + ...", it's more verbose than +=, especially when
@@ -439,8 +439,8 @@ function createEvidenceTableBody ( tableData, doAppend = false )
     //  
     tableBody +=`<tr>
                     <td>
-                    <p onclick="evidenceTableExcludeKeyword(${nodeId},this,event)" id="evidence_exclude_${index}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
-                        <p onclick="evidenceTableAddKeyword(${nodeId},this,event)" id="evidence_add_${index}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
+                    <p onclick="evidenceTableExcludeKeyword(${ondexId},this,event)" id="evidence_exclude_${index}" style="padding-right:10px;" class="excludeKeyword evidenceTableExcludeKeyword" title="Exclude term"></p>
+                        <p onclick="evidenceTableAddKeyword(${ondexId},this,event)" id="evidence_add_${index}" class="addKeyword evidenceTableAddKeyword" title="Add term"></p>
                     </td>`;
 
     //link publications with pubmed
@@ -468,12 +468,12 @@ function createEvidenceTableBody ( tableData, doAppend = false )
 
 
     // Count of all matching genes
-    tableBody += `  <td ><span style="margin-right:.5rem;">${totalGenesSize}</span> <span data-type="${conceptType}" data-description="${name}" class="accession-download" onclick="openGeneListPopup(${nodeId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${nodeId}"></div></td>\n`;
+    tableBody += `  <td ><span style="margin-right:.5rem;">${totalGenesSize}</span> <span data-type="${conceptType}" data-description="${name}" class="accession-download" onclick="openGeneListPopup(${ondexId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${ondexId}"></div></td>\n`;
 
     // launch evidence network with them, if they're not too many.
-    tableBody += `  <td><button data-genelist="${userGenesSize}" style="${geneList == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${nodeId},this,${totalGenesSize})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${index}">${userGenesSize}</button></td>\n`;
+    tableBody += `  <td><button data-genelist="${userGeneAccessions}" style="${userGenesSize == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${ondexId},this,${totalGenesSize})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${index}">${userGenesSize}</button></td>\n`;
 
-    var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${index}" type="checkbox" name= "evidences" value="${nodeId}:${userGeneAccessions}">`;
+    var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${index}" type="checkbox" name= "evidences" value="${ondexId}:${userGeneAccessions}">`;
     tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
   })
   
