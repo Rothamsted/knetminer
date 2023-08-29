@@ -65,8 +65,7 @@ function createGenesTable ( tableData, keyword )
 		
 		$("#tablesorter").tablesorter( tableSorterOpts );
 
-		geneTableFilterUi.renderFilterUis();
-		geneTableFilterMgr.saveTableData(tableData);
+		geneTableFilterMgr.setup(tableData);
 
 
 
@@ -100,6 +99,7 @@ function createGenesTable ( tableData, keyword )
 	 */
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(tableData, keyword,); // redraw table
+		$("body").data("data", {resultsTable: tableData});
 		$('#resultsTable').data({ keys: [] });
 		
 	});
@@ -389,7 +389,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 	// Main loop over the resulting genes.
 	for (var row = fromRow; row < toRow; row++)
 	{	
-		var {nodeId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
+		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
 		table += '<tr>';
 
 		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
@@ -403,7 +403,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
 			? '<td></td>'
 			// else, gene name column, with synonym expansion
-			: '<td><span class="gene_name">' + name + '</span> <span onclick="createGeneNameSynonyms(this,' + nodeId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
+			: '<td><span class="gene_name">' + name + '</span> <span onclick="createGeneNameSynonyms(this,' + ondexId + ')" class="genename_info"><i class="fas fa-angle-down"></i></span> <div class="gene_name_synonyms"></div></td>';
 
 		// Currently not shown
 		var scoreTd = '<td>' + Number(score).toFixed(2) + '</td>';
@@ -566,19 +566,34 @@ function openAccessionNetworkView(event,genesAccessions){
 }
 
 
-
-
 // toggles distance filter popup modal 
  function toggleFilterIcons(element){
 
-	const targetClass = $(element).attr('data-id'); 
+	const targetClass = $(element).attr('data-id');
+
+
+	const oppsiteClass = ['knetscore','distance'].find(view => view !== targetClass);
+
+	closeOppositeModal(oppsiteClass)
+
 	const view = $(`.${targetClass}-view`)
 	const viewButtonId = $(`#${targetClass}-filter-button`)
+	const overlay = $(`.${targetClass}-view-overlay`)
+
 	const isDistanceFilterVisible = view.is(":visible")
 
 	$(view).toggleClass('show-block', !isDistanceFilterVisible)
 	$(viewButtonId).toggleClass('bg-gray',!isDistanceFilterVisible )
+	$(overlay).toggleClass('show-block',!isDistanceFilterVisible)
 	
+ }
+
+//  closes opposite modal
+ function closeOppositeModal(oppsiteClass){
+
+	$(`.${oppsiteClass}-view`).removeClass('show-block')
+	$(`.${oppsiteClass}-view-overlay`).removeClass('show-block')
+	$(`#${oppsiteClass}-filter-button`).removeClass('bg-gray')
  }
 
 // TEMPORARY SOLUTION WILL BE REPLACED IN COMING DAYS
@@ -586,3 +601,4 @@ function openAccessionNetworkView(event,genesAccessions){
  function resetTable(){
 	$("#revertGeneView").click();
  }
+

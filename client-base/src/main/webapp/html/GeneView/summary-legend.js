@@ -39,6 +39,9 @@ function _filterKnetTableByType (
       
       // Select what required, using the helper
       var filteredTable = tableData.filter ( row => rowFilterPredicate ( selectedTypes, row ) )
+    
+     // Setsup genetable filters for filtered data   
+      if(tableId === "resultsTable") geneTableFilterMgr.setData(filteredTable)
 
       if (filteredTable.length > 0)
         renderingFun ( filteredTable, tableId )
