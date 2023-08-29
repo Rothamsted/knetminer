@@ -101,7 +101,13 @@ public class KnetMinerInitializer
 	 * 
 	 */
 	public void initKnetMinerData ( boolean doReset )
-	{	
+	{
+		String profileIdProp = "maven.profileId";
+		// This is set by the profile in the POM
+		String result = System.getProperty ( profileIdProp, null );
+		log.info("____________________________________________________");
+		log.info("Profile: " + result);
+		log.info("____________________________________________________");
 		this.initGenesCount ();
 		this.initLuceneData ( doReset );
 		this.initSemanticMotifData ( doReset );
