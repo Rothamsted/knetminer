@@ -219,34 +219,30 @@ function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   let genomicViewTitle;
   let status;
   
-
-
-
   let { geneCount, geneTable, evidenceTable, gviewer, queryseconds } = data;
-
 
   if (geneCount == 0) {
     status = true;
     if (keyword.length > 0) { // msg for keyword search error
-      messageNode = `<b>${keyword}</b> did not match any genes or documents. Check for typos and try different or more general keywords.`;
+      messageNode = `<b>${keyword}</b> had no matches. Check for typos and try different or more general keywords.`;
       genomicViewTitle = createGenomicViewTitle(messageNode, status);
 
       if (geneList_size > 0) {
         // msg for keyword + genelist search error
-        messageNode = 'did not match any genes. Try different or more general keywords. Make sure that only one gene per line is entered. Try gene names (eg. TPS1)'
+        messageNode = 'had no matches. Try different or more general keywords. Make sure that only one gene per line is entered.'
         genomicViewTitle = createGenomicViewTitle(messageNode, status);
       }
     }
 
     if (keyword.length < 2 && geneList_size > 0) {
       // msg for "gene list only" search error
-      messageNode = 'did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1).';
+      messageNode = 'had no matches. Make sure that only one accession is entered per line. Try some Example Queries for formatting help.';
       genomicViewTitle = createGenomicViewTitle(messageNode, status);
     }
 
     if (searchMode === "qtl") {
       // msg for QTL search error
-      messageNode = 'did not match any genes. Make sure that only one gene per line is entered. Try gene names (eg. TPS1). Provide valid QTLs';
+      messageNode = 'had no matches. Please check your search formatting and provide valid QTLs. Try some Example Queries for formatting help.';
       genomicViewTitle = createGenomicViewTitle(messageNode, status)
     }
 
