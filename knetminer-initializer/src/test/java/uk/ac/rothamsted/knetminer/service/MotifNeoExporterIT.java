@@ -3,8 +3,12 @@ package uk.ac.rothamsted.knetminer.service;
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assume;
@@ -24,7 +28,16 @@ import org.neo4j.driver.*;
  */
 public class MotifNeoExporterIT
 {
-	private static KnetMinerInitializer knetInitializer;
+	/**
+	 * For performance reasons, we test a reduced random subset of the semantic motifs in the 
+	 * test dataset. This is its size
+	 */
+	final static int MOTIFS_SAMPLE_SIZE = 100;
+	
+	/**
+	 * This is the random subset of motifs we actually save and test.
+	 */
+	private static Map<Pair<Integer, Integer>, Integer> testMotifs; 
 	private static Driver neoDriver;
 
 	private Logger log = LogManager.getLogger ();
@@ -40,47 +53,60 @@ public class MotifNeoExporterIT
 	@BeforeClass
 	public static void init ()
 	{
+		/* TODO: remove. the test plug-ins are already configured to log the 
+		 * begin and end of each test automatically.
 		slog.info("____________________________________________________");
 		slog.info("The MotifNeoExporterIT class initialization started.");
 		slog.info("____________________________________________________");
+		 */
+		
 		// This is not always reported by test runners, so...
 		if ( !isMavenNeo4jMode () )
-		{
 			slog.info (
-					"Not in Neo4j mode, tests in {} will be ignored",
-					MotifNeoExporterIT.class.getSimpleName ()
+				"Not in Neo4j mode, tests in {} will be ignored",
+				MotifNeoExporterIT.class.getSimpleName ()
 			);
-		}
 
 		Assume.assumeTrue (
-				format (
-						"Not in Neo4j mode, tests in %s will be ignored",
-						MotifNeoExporterIT.class.getSimpleName () ),
-				isMavenNeo4jMode()
+			format (
+				"Not in Neo4j mode, tests in %s will be ignored",
+				MotifNeoExporterIT.class.getSimpleName () ),
+			isMavenNeo4jMode()
 		);
 
 
 		slog.info ( "Getting k-initialiser with existing semantic motif data" );
 
 		// As said above, with false, it just reloads the already generated data
-		knetInitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false );
+		KnetMinerInitializer knetInitializer = KnetMinerInitializerTest
+			.createKnetMinerInitializer ( false );
 
 
 		slog.info ( "Initialising Neo4j connection to test DB" );
 
 		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
 		neoDriver = GraphDatabase.driver (
-				"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
+			"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
 		);
 
 
 		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
 
 		var smData = knetInitializer.getGenes2PathLengths ();
+		
+		/**
+		 * The original test set is too big and takes too much time, let's reduce it
+		 */
+		double relSampleSize = MOTIFS_SAMPLE_SIZE / smData.size (); 
+		
+		testMotifs = smData.entrySet ()
+		.stream ()
+		.filter ( e -> RandomUtils.nextDouble ( 0, 1 ) < relSampleSize )
+		.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) );
 
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriver );
-		motifNeoExporter.saveMotifs ( smData );
+		motifNeoExporter.saveMotifs ( testMotifs );
 	}
 
 	public static void closeDriver ()
@@ -90,6 +116,12 @@ public class MotifNeoExporterIT
 			neoDriver.close ();
 	}
 
+	/*
+	 *  TODO: remove. 
+	 *  - We already had testRelationsExist() for this
+	 *  - Test methods are usually named testXXX() and we can't afford random names around test classes
+	 *  - this is not how I was proposing to verify edges, see below
+	 *  
 	@Test
 	public void hasEdge(){
 		//log.info("The Genes2PathLengths map: " + knetInitializer.getGenes2PathLengths().toString());
@@ -100,18 +132,26 @@ public class MotifNeoExporterIT
 			log.info("Edge: " + edge);
 			assertEquals("[Record<{r.graphDistance: 1}>]", edge);
 		}
-	}
+	}*/
 
 	@Test
 	public void testSavedSize ()
 	{
-		/* TODO: Use the neoDriver for something like:
-		 *
-		 * MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
-		 * RETURN COUNT(r) AS smRelsCount
-		 *
-		 * and verify that smRelsCount matches knetInitializer.getGenes2PathLengths().size()
-		 */
+		try ( Session session = neoDriver.session() ) 
+		{
+			String cySmRelsSz = """
+				MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
+				RETURN COUNT(r) AS smRelsCount
+				""";
+			Result result = session.run( cySmRelsSz );
+			int neoCount = result.next ().get ( 0 ).asInt ();
+			
+			assertEquals ( 
+				"Count of saved Neo relations doesn't match the original semantic motif size!", 
+				testMotifs.size(), neoCount 
+			);
+		}
+		
 	}
 
 	@Test
@@ -121,20 +161,15 @@ public class MotifNeoExporterIT
 		 *
 		 * run cypher:
 		 *   MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
-		 *   RETURN g.ondexId AS geneId, r.graphDistance AS distance, c.ondexId AS conceptId,
-		 *     rand() AS rnd
-		 *   ORDER BY rnd
-		 *   LIMIT 100
+		 *   RETURN g.ondexId AS geneId, r.graphDistance AS distance, c.ondexId AS conceptId
 		 *
-		 * This fetches 100 SM relations randomly.
-		 * Loop over the cypher results and, for each, verify that:
-		 *
-		 * smData = knetInitializer.getGenes2PathLengths ()
-		 *
+		 * Verify that the Cypher result has MOTIFS_SAMPLE_SIZE tuples.
+		 * 
+		 * Then, verify each of them:
+		 * 
 		 * for each result from cypher:
 		 *   key = Pair.of ( geneId, conceptId )
-		 *   smData.get ( key ) == distance
-		 *
+		 *   testMotifs.get ( key ) exists and == distance
 		 */
 	}
 

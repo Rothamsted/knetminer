@@ -75,7 +75,10 @@ public class MotifNeoExporter {
 							  """;
 			tx.run(cyRelations, Map.of("smRelRows", smRelationsBatch));
 			tx.commit();
-			log.info("Cypher transaction is committed.");
+			// TODO: remove or use a lower level, like trace
+			// This is going to happen tens of times, we don't 
+			// want the log to be so verbose
+			// log.info("Cypher transaction is committed.");
 		}
 	}
 }

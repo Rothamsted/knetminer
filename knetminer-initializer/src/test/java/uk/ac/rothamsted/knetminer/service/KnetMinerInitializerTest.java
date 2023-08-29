@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.sourceforge.ondex.core.ONDEXGraph;
@@ -98,14 +99,14 @@ public class KnetMinerInitializerTest
 		assertEquals ( "Dataset path is wrong!", datasetPath, config.getDatasetDirPath () );
 
 		assertEquals (
-				"Wrong value for StateMachineFilePath property!",
-				new File( "file:///" + datasetPath + "/config/SemanticMotifs.txt").getPath(),
-				new File ( config.getGraphTraverserOptions ().getString ( "StateMachineFilePath" )).getPath()
+			"Wrong value for StateMachineFilePath property!",
+			new File( "file:///" + datasetPath + "/config/SemanticMotifs.txt").getPath(),
+			new File ( config.getGraphTraverserOptions ().getString ( "StateMachineFilePath" )).getPath()
 		);
 
 		assertTrue(
-				"Wrong value for StateMachineFilePath config property!",
-				config.getServerDatasetInfo().containsTaxId ( "4565" )
+			"Wrong value for StateMachineFilePath config property!",
+			config.getServerDatasetInfo().containsTaxId ( "4565" )
 		);
 	}
 
@@ -123,10 +124,8 @@ public class KnetMinerInitializerTest
 
 	@Test
 	public void testInitSemanticMotifData ()
-	{
-		String profileIdProp = "maven.profileId";
-		String result = System.getProperty ( profileIdProp, null );
-		BiConsumer<String, Map<?, ?>> verifier = (name, map) ->
+	{				
+		BiConsumer<String, Map<?, ?>> verifier = (name, map) -> 
 		{
 			assertNotNull ( String.format ( "%s is null!", name ), map );
 			assertFalse ( format ( "%s is empty!", name ), map.isEmpty () );
@@ -139,14 +138,13 @@ public class KnetMinerInitializerTest
 
 
 		Stream.of ( "concepts2Genes", "genes2Concepts", "genes2PathLengths"  )
-				.map ( name -> datasetPath + "/data/" + name + ".ser" )
-				.forEach ( path ->
-						assertTrue (
-								format ( "Traverser File '%s' not created!", path ),
-								new File ( path ).exists ()
-						)
-				);
-
+			.map ( name -> datasetPath + "/data/" + name + ".ser" )
+			.forEach ( path ->
+				assertTrue (
+					format ( "Traverser File '%s' not created!", path ),
+					new File ( path ).exists ()
+				)
+			);
 	}
 
 	/**
@@ -169,38 +167,4 @@ public class KnetMinerInitializerTest
 		// Same as testLuceneFilesReuse
 	}
 
-	@Test
-	public void exporterTest(){
-		log.info ( "Initialising Neo4j connection to test DB" );
-
-		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
-		log.info("Bolt port: " + boltPort);
-		Driver neoDriver = GraphDatabase.driver (
-				"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" ));
-
-		log.info ( "Saving semantic motifs endpoints into Neo4j" );
-
-		var smData = initializer.getGenes2PathLengths ();
-		log.info("Map size: " + smData.size());
-		var motifNeoExporter = new MotifNeoExporter ();
-		motifNeoExporter.setDatabase ( neoDriver );
-		motifNeoExporter.saveMotifs ( smData );
-
-		try (Session session = neoDriver.session()) {
-			String cqlQuery = "MATCH (g:Gene) RETURN count(g)";
-			Result result = session.run(cqlQuery);
-			String count = result.list().get(0).get(0).toString();
-			log.info("Count: " + count);
-			assertEquals(smData.size(), count);
-		}
-
-		//log.info("The Genes2PathLengths map: " + knetInitializer.getGenes2PathLengths().toString());
-		try (Session session = neoDriver.session()) {
-			String cqlQuery = "MATCH (g:Gene)-[r:hasMotifLink]->(c:Concept) WHERE g.ondexId = 6644177 AND g.ondexId = 6644176 RETURN r.graphDistance";
-			Result result = session.run(cqlQuery);
-			String edge = result.list().toString();
-			log.info("Edge: " + edge);
-			assertEquals("[Record<{r.graphDistance: 1}>]", edge);
-		}
-	}
 }
