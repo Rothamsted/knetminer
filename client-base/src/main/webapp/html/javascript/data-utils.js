@@ -10,9 +10,10 @@ async function genomeApi (request, requestParams)
         },
         body: JSON.stringify(requestParams),
         timeout: 1000000,
-      }).then((response) => {
-        let data = response.json(); 
-        let querytime = performance.now() - startTime; // query response time        
+      }).then(async (response) => {
+        let data = await response.json(); 
+        let querytime = performance.now() - startTime; 
+        // query response time        
 
 		// TODO: this is bad practice. Rounding should be a UI concern,
 		// it should be done by a UI component or some other closely
@@ -23,7 +24,8 @@ async function genomeApi (request, requestParams)
 		// rond() functions for that
 		//
         let queryseconds = (querytime / 1000).toFixed(2);
-        data['queryseconds'] = queryseconds; 
+        data["queryseconds"] = queryseconds; 
+  
         return data; 
       })
       return genomeData
@@ -216,12 +218,9 @@ function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   let messageNode;
   let genomicViewTitle;
   let status;
+  
 
-  // TODO: I thought we decided to remove this and keep the 'ondexId' label, 
-  // can we disable this?
-  // TEMPORARY HACK TO REPLACE ONDEXID WITH NODEID 
-  data.geneTable = replaceOndexId(data.geneTable);
-  data.evidenceTable = replaceOndexId(data.evidenceTable);
+
 
   let { geneCount, geneTable, evidenceTable, gviewer, queryseconds } = data;
 
