@@ -2,6 +2,7 @@ package uk.ac.rothamsted.knetminer.service;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,6 +83,8 @@ public class MotifNeoExporterIT
 		KnetMinerInitializer knetInitializer = KnetMinerInitializerTest
 			.createKnetMinerInitializer ( false );
 
+		// Let's reuse test data produced during regular tests.
+		knetInitializer.initKnetMinerData ( false );
 
 		slog.info ( "Initialising Neo4j connection to test DB" );
 
@@ -93,17 +97,19 @@ public class MotifNeoExporterIT
 		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
 
 		var smData = knetInitializer.getGenes2PathLengths ();
+		assertTrue ( "No semantic motif test data!", smData.size () > 0 );
 		
 		/**
 		 * The original test set is too big and takes too much time, let's reduce it
 		 */
-		double relSampleSize = MOTIFS_SAMPLE_SIZE / smData.size (); 
-		
 		testMotifs = smData.entrySet ()
 		.stream ()
-		.filter ( e -> RandomUtils.nextDouble ( 0, 1 ) < relSampleSize )
+		.filter ( e -> RandomUtils.nextInt ( 0, smData.size () ) < MOTIFS_SAMPLE_SIZE )
 		.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) );
 
+		assertTrue ( "semantic motif subset is empty!", testMotifs.size () > 0 );
+		
+		
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriver );
 		motifNeoExporter.saveMotifs ( testMotifs );
