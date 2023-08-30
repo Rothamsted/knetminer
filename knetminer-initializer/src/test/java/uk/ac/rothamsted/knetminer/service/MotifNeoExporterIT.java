@@ -160,7 +160,7 @@ public class MotifNeoExporterIT
 			log.info("Record items list size: {}", recordList.size());
 			int recordCount = 0;
 			for (Record record : recordList){
-				//This parsing of Integer in map key is necessary to obtain Integer object instead of int or String.
+				//This parsing of Integer in Neo4j values is necessary to obtain Integer object instead of int or String.
 				assertEquals (
 						"The graph distance returned from Neo4j does not match the graph distance in the map.",
 						testMotifs.get(Pair.of(Integer.parseInt(record.get(0).asString()),
@@ -197,7 +197,7 @@ public class MotifNeoExporterIT
 		// This is set by the profile in the POM
 		String result = System.getProperty ( profileIdProp, null );
 
-		//The profiles picked by the app are important information (and are usually diaplayed at the start of Spring Boot apps).
+		//The profiles picked by the app are important information (and are usually displayed at the start of Spring Boot apps).
 		slog.info("App is launched with profile: {}.", result);
 
 		if ( result == null )
