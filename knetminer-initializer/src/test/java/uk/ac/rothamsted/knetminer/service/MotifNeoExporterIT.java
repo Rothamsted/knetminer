@@ -36,7 +36,7 @@ public class MotifNeoExporterIT
 	 * For performance reasons, we test a reduced random subset of the semantic motifs in the 
 	 * test dataset. This is its size
 	 */
-	final static int MOTIFS_SAMPLE_SIZE = 100;
+	private final static int MOTIFS_SAMPLE_SIZE = 100;
 	
 	/**
 	 * This is the random subset of motifs we actually save and test.
