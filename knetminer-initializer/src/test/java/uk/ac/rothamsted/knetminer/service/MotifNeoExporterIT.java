@@ -202,8 +202,8 @@ public class MotifNeoExporterIT
 				var distance = cyRel.get ( "graphDistance" ).asInt ();
 				var expectedDistance = testMotifs.get ( Pair.of ( geneId, conceptId ) );
 				
-				log.trace ( "Read tuple: ({}, {}) -> {}", geneId, geneId, distance );
-				log.trace ( "Expected tuple: ({}, {}) -> {}", geneId, geneId, expectedDistance );
+				log.trace ( "Read tuple: ({}, {}) -> {}", geneId, conceptId, distance );
+				log.trace ( "Expected tuple: ({}, {}) -> {}", geneId, conceptId, expectedDistance );
 
 				assertEquals (
 					"The graph distance returned from Neo4j does not match the graph distance in the map",
