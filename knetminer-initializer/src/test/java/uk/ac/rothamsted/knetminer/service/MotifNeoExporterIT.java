@@ -4,7 +4,6 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -16,9 +15,12 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.neo4j.driver.*;
-import org.neo4j.driver.Record;
-import uk.ac.ebi.utils.time.XStopWatch;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
+
 
 /**
  * Tests for MotifNeoExporter.
