@@ -1045,3 +1045,28 @@ if (TEST_MODE) {
   testEvidenceTable2OldString()
 
 } // if TEST_MODE
+
+
+/**
+ * function create network for rows of gene View using genesAccessions.
+ * Called in createGenesTable and createEvidenceTableBody
+ * 
+ */
+function openAccessionNetworkView(concept,event){
+	
+	event.preventDefault();
+	var element = event.target; 
+
+	var keyword = trim($("#keywords").val());
+	var accessions = $(element).attr("data-genelist").trim().split(",");
+
+	var concept = !keyword.length ? 'ConceptID:' + concept : keyword; 
+	var networkParameter = { keyword: concept, isExportPlainJSON: false };
+	
+	// Generate Network in KnetMaps.
+	if(accessions.length) {
+		networkParameter["list"] = accessions; 
+		generateCyJSNetwork(api_url + '/network',networkParameter, false);
+	} 
+
+}

@@ -397,7 +397,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 		var geneAccNorm = upperCasedAccessions.replace(".", "_");
 
 		// Gene accession
-		var geneTd = `<td class="gene_accesion"><a href = "javascript:;" onclick="openAccessionNetworkView(event,'${accession}')" title="Display network in KnetMaps">${upperCasedAccessions}</a></td>`;
+		var geneTd = `<td class="gene_accesion"><a data-genelist="${accession}" onclick="openAccessionNetworkView(${ondexId},event)" title="Display network in KnetMaps">${upperCasedAccessions}</a></td>`;
 
 		var geneNameTd = name.toUpperCase() == accession
 			// In this case, the API has found one accession only as name, so we're sure we don't have synonyms to expand
@@ -504,8 +504,11 @@ function getInteractiveSummaryLegend(geneViewData) {
 	var evidencesArr= new Array();
 
 	geneViewData.forEach((geneData) => {
-		var key  = Object.keys(geneData.conceptEvidences)[0]; 
-		if (!evidencesArr.includes(key)) evidencesArr.push(key)
+		var keys  = Object.keys(geneData.conceptEvidences);
+
+		for(let key of keys){
+			if (!evidencesArr.includes(key)) evidencesArr.push(key)
+		}
 	})
 
   
@@ -531,39 +534,6 @@ function getInteractiveSummaryLegend(geneViewData) {
 	return legend;
 }
 
-/**
- * function create network for rows of gene View using genesAccessions.
- * called in createGenesTable
- * 
- * TODO: there is a function with the same name and different purpose in genomap.js, probably
- * this one needs a different name.
- */
-function openAccessionNetworkView(event,genesAccessions){
-	event.preventDefault();
-	var keyword = trim($("#keywords").val());
-
-	/**
-	 * TODO: remove after reading, this didn't work, 'list' remains empty if genesAccession is an array.
-	 * You couldn't see this bug, for the function is only used for the gene table,
-	 * single gene links. So,
-	 * 
-	 * TODO: (not urgent) see if there are other invocation points, where it might be useful
-	 * to use this function too, instead of the ugly generateCyJSNetwork()
-	 */ 
-	// var list = []; 
-	// if(typeof genesAccessions == 'string')list.push(genesAccessions)
-
-	let list = typeof genesAccessions == 'string'
-	  ? [ genesAccessions ]
-	  : genesAccessions
-	
-	// Generate Network in KnetMaps.
-	if(keyword.length && list.length){
-		var networkParameter = { list: list, keyword: keyword, isExportPlainJSON: false };
-		generateCyJSNetwork(api_url + '/network',networkParameter, false);
-	}
-
-}
 
 
 // toggles distance filter popup modal 

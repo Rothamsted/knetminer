@@ -198,19 +198,8 @@ function createEvidenceTable( tableData, doSortTable=false )
     evidenceTableScroller.setupScrollHandler ()
 }
 
-/*
- * Function to get the network of all "genes" related to a given evidence
- * 
- */
-function evidencePath(concept, targetElement, genesCount) {
-    
-    var genesList = $(targetElement).attr('data-genelist').trim().split(",");
-    var params = { keyword: 'ConceptID:' + concept };
-    if (genesList.length > 0) {
-        params.list = genesList;
-    }
-    if(genesCount > 0)generateCyJSNetwork(api_url + '/network', params, false);
-}
+
+
 
 
 /*
@@ -471,7 +460,7 @@ function createEvidenceTableBody ( tableData, doAppend = false )
     tableBody += `  <td ><span style="margin-right:.5rem;">${totalGenesSize}</span> <span data-type="${conceptType}" data-description="${name}" class="accession-download" onclick="openGeneListPopup(${ondexId},this)"><i class="fas fa-file-download"></i></span> <div id="concept${ondexId}"></div></td>\n`;
 
     // launch evidence network with them, if they're not too many.
-    tableBody += `  <td><button data-genelist="${userGeneAccessions}" style="${userGenesSize == 0 ? 'text-decoration:none;': null}" onclick="evidencePath(${ondexId},this,${totalGenesSize})"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${index}">${userGenesSize}</button></td>\n`;
+    tableBody += `  <td><button data-genelist="${userGeneAccessions}" style="${userGenesSize == 0 ? 'text-decoration:none;': null}" onclick="openAccessionNetworkView(${ondexId},event)"  class="userGenes_evidenceNetwork" title="Display in KnetMaps" id="userGenes_evidenceNetwork_${index}">${userGenesSize}</button></td>\n`;
 
     var select_evidence = `<input onchange="updateSelectedGenesCount('evidences', '#evidence-count', 'Term');" id="checkboxEvidence_${index}" type="checkbox" name= "evidences" value="${ondexId}:${userGeneAccessions}">`;
     tableBody += `  <td>${select_evidence}</td>\n`; // eviView select checkbox
