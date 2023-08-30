@@ -67,18 +67,15 @@ public class MotifNeoExporter {
 		try (Session session = driver.session()) {
 			Transaction tx = session.beginTransaction();
 			String cyRelations =
-				"""
-				UNWIND $smRelRows AS relRow 
-				MATCH ( s:Gene { ondexId: relRow.geneId } )
-			  MATCH ( t:Concept { ondexId: relRow.conceptId } )
-				CREATE (s) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (t)					
-				""";
+					"""
+        UNWIND $smRelRows AS relRow\s
+        MATCH ( s:Gene { ondexId: toString ( relRow.geneId )} )
+        MATCH ( t:Concept { ondexId: toString ( relRow.conceptId )} )
+        CREATE (s) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (t)				
+          """;
 			tx.run(cyRelations, Map.of("smRelRows", smRelationsBatch));
 			tx.commit();
-			// TODO: remove or use a lower level, like trace
-			// This is going to happen tens of times, we don't 
-			// want the log to be so verbose
-			// log.info("Cypher transaction is committed.");
+			log.trace("Cypher transaction is committed.");
 		}
 	}
 }

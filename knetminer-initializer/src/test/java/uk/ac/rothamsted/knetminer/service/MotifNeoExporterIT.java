@@ -4,6 +4,7 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -12,11 +13,12 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
+import uk.ac.ebi.utils.time.XStopWatch;
 
 /**
  * Tests for MotifNeoExporter.
@@ -55,13 +57,6 @@ public class MotifNeoExporterIT
 	@BeforeClass
 	public static void init ()
 	{
-		/* TODO: remove. the test plug-ins are already configured to log the 
-		 * begin and end of each test automatically.
-		slog.info("____________________________________________________");
-		slog.info("The MotifNeoExporterIT class initialization started.");
-		slog.info("____________________________________________________");
-		 */
-		
 		// This is not always reported by test runners, so...
 		if ( !isMavenNeo4jMode () )
 			slog.info (
@@ -89,10 +84,15 @@ public class MotifNeoExporterIT
 		slog.info ( "Initialising Neo4j connection to test DB" );
 
 		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
-		neoDriver = GraphDatabase.driver (
-			"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
-		);
 
+		//Timer to meter how fast the Neo4j driver gets built.
+		var driverBuildTime = XStopWatch.profile ( () -> neoDriver = GraphDatabase.driver (
+				"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
+		) );
+		slog.info("The driver building interval: {} milliseconds.", driverBuildTime);
+		//neoDriver = GraphDatabase.driver (
+		//	"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
+		//);
 
 		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
 
@@ -112,7 +112,11 @@ public class MotifNeoExporterIT
 		
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriver );
-		motifNeoExporter.saveMotifs ( testMotifs );
+		//motifNeoExporter.saveMotifs ( testMotifs );
+
+		//Timer to meter how fast the test genes2PathLengths map get processed.
+		var exportTime = XStopWatch.profile ( () -> motifNeoExporter.saveMotifs ( testMotifs ) );
+		slog.info("The map processing interval: {} milliseconds.", exportTime);
 	}
 
 	public static void closeDriver ()
@@ -121,24 +125,6 @@ public class MotifNeoExporterIT
 		if ( neoDriver != null && neoDriver.session ().isOpen () )
 			neoDriver.close ();
 	}
-
-	/*
-	 *  TODO: remove. 
-	 *  - We already had testRelationsExist() for this
-	 *  - Test methods are usually named testXXX() and we can't afford random names around test classes
-	 *  - this is not how I was proposing to verify edges, see below
-	 *  
-	@Test
-	public void hasEdge(){
-		//log.info("The Genes2PathLengths map: " + knetInitializer.getGenes2PathLengths().toString());
-		try (Session session = neoDriver.session()) {
-			String cqlQuery = "MATCH (g:Gene)-[r:hasMotifLink]->(c:Concept) WHERE g.ondexId = 6644177 AND g.ondexId = 6644176 RETURN r.graphDistance";
-			Result result = session.run(cqlQuery);
-			String edge = result.list().toString();
-			log.info("Edge: " + edge);
-			assertEquals("[Record<{r.graphDistance: 1}>]", edge);
-		}
-	}*/
 
 	@Test
 	public void testSavedSize ()
@@ -157,26 +143,44 @@ public class MotifNeoExporterIT
 				testMotifs.size(), neoCount 
 			);
 		}
-		
 	}
 
 	@Test
 	public void testRelationsExist ()
 	{
-		/* TODO: Use the neoDriver to run something like this:
-		 *
-		 * run cypher:
-		 *   MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
-		 *   RETURN g.ondexId AS geneId, r.graphDistance AS distance, c.ondexId AS conceptId
-		 *
-		 * Verify that the Cypher result has testMotifs.size() tuples.
-		 * 
-		 * Then, verify each of them:
-		 * 
-		 * for each result from cypher:
-		 *   key = Pair.of ( geneId, conceptId )
-		 *   testMotifs.get ( key ) exists and == distance
-		 */
+		try ( Session session = neoDriver.session() )
+		{
+			String cypherQuery =
+   		 """
+		 MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
+		 RETURN g.ondexId AS geneId, r.graphDistance AS graphDistance, c.ondexId AS conceptId, count(g)
+		""";
+			Result result = session.run( cypherQuery );
+			List<Record> recordList = result.list();
+			log.info("Record items list size: {}", recordList.size());
+			int recordCount = 0;
+			for (Record record : recordList){
+				//This parsing of Integer in map key is necessary to obtain Integer object instead of int or String.
+				assertEquals (
+						"The graph distance returned from Neo4j does not match the graph distance in the map.",
+						testMotifs.get(Pair.of(Integer.parseInt(record.get(0).asString()),
+								Integer.parseInt(record.get(2).asString()))), Integer.valueOf(record.get(1).asInt())
+				);
+				log.trace("OndexId of gene: {}. Graph distance: {}. OndexId of concept: {}.",
+						record.get(0), record.get(1), record.get(2));
+				log.trace("Graph distance in map: {}.",
+						testMotifs.get(Pair.of(Integer.parseInt(record.get(0).asString()),
+								Integer.parseInt(record.get(2).asString()))));
+				recordCount++;
+			}
+			log.info("Result items count: {}.", recordCount);
+			log.info("Map items count: {}.", testMotifs.size());
+
+			assertEquals (
+					"Count of saved Neo relations doesn't match the original semantic motif size!",
+					testMotifs.size(), recordCount
+			);
+		}
 	}
 
 
@@ -192,6 +196,9 @@ public class MotifNeoExporterIT
 		String profileIdProp = "maven.profileId";
 		// This is set by the profile in the POM
 		String result = System.getProperty ( profileIdProp, null );
+
+		//The profiles picked by the app are important information (and are usually diaplayed at the start of Spring Boot apps).
+		slog.info("App is launched with profile: {}.", result);
 
 		if ( result == null )
 			slog.warn ( "Property {} is null, Neo4j-related tests will be skipped", result );
