@@ -85,14 +85,19 @@ public class MotifNeoExporterIT
 
 		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
 
+		/* TODO: remove we already have an idea of how long time it takes, we're not testing this here
+		 * Also, we usually don't need '.' in short messages
+		 *  
 		//Timer to meter how fast the Neo4j driver gets built.
 		var driverBuildTime = XStopWatch.profile ( () -> neoDriver = GraphDatabase.driver (
 				"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
 		) );
 		slog.info("The driver building interval: {} milliseconds.", driverBuildTime);
-		//neoDriver = GraphDatabase.driver (
-		//	"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
-		//);
+		*/
+
+		neoDriver = GraphDatabase.driver (
+		  "bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
+		);
 
 		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
 
@@ -112,11 +117,15 @@ public class MotifNeoExporterIT
 		
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriver );
-		//motifNeoExporter.saveMotifs ( testMotifs );
+		motifNeoExporter.saveMotifs ( testMotifs );
 
+		/* TODO: remove, again, we're not testing performance here, the logs already allow for
+		 * seeing how much time it takes and a proper performance test would require more data.
+		 * 
 		//Timer to meter how fast the test genes2PathLengths map get processed.
 		var exportTime = XStopWatch.profile ( () -> motifNeoExporter.saveMotifs ( testMotifs ) );
 		slog.info("The map processing interval: {} milliseconds.", exportTime);
+		*/
 	}
 
 	public static void closeDriver ()
@@ -150,36 +159,57 @@ public class MotifNeoExporterIT
 	{
 		try ( Session session = neoDriver.session() )
 		{
+			/* TODO: remove. What's count(g) for?!
 			String cypherQuery =
-   		 """
-		 MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
-		 RETURN g.ondexId AS geneId, r.graphDistance AS graphDistance, c.ondexId AS conceptId, count(g)
-		""";
+   		"""
+			 MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
+			 RETURN g.ondexId AS geneId, r.graphDistance AS graphDistance, c.ondexId AS conceptId, count(g)
+			""";
+			*/
+			
+			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
+			String cypherQuery =
+	   		"""
+				 MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
+				 RETURN toInteger ( g.ondexId ) AS geneId, toInteger ( c.ondexId ) AS conceptId,
+				   r.graphDistance AS graphDistance
+				""";
 			Result result = session.run( cypherQuery );
-			List<Record> recordList = result.list();
+			
+			/** TODO: remove, there are separated checks for counts and sizes
+			 * Also, 'record' has become a reserved Java keyword.
+			 * 
 			log.info("Record items list size: {}", recordList.size());
 			int recordCount = 0;
-			for (Record record : recordList){
-				//This parsing of Integer in Neo4j values is necessary to obtain Integer object instead of int or String.
-				assertEquals (
-						"The graph distance returned from Neo4j does not match the graph distance in the map.",
-						testMotifs.get(Pair.of(Integer.parseInt(record.get(0).asString()),
-								Integer.parseInt(record.get(2).asString()))), Integer.valueOf(record.get(1).asInt())
-				);
-				log.trace("OndexId of gene: {}. Graph distance: {}. OndexId of concept: {}.",
-						record.get(0), record.get(1), record.get(2));
-				log.trace("Graph distance in map: {}.",
-						testMotifs.get(Pair.of(Integer.parseInt(record.get(0).asString()),
-								Integer.parseInt(record.get(2).asString()))));
-				recordCount++;
-			}
-			log.info("Result items count: {}.", recordCount);
-			log.info("Map items count: {}.", testMotifs.size());
+			*/
+						
+			result.forEachRemaining ( cyRel ->
+			{				
+				/* TODO: remove after reading, don't do record.get ( 0 ) when 
+				   you can use more expressive key names.
+				   
+				   We're not writing Turing Machines, record indexes are hard to read and 
+				   sensitive to the slightest change in the list of RETURNed fields.
+				   
+				   Also, use intermediate vars to make the code simpler
+				  
+				 */ 
 
-			assertEquals (
-					"Count of saved Neo relations doesn't match the original semantic motif size!",
-					testMotifs.size(), recordCount
-			);
+				var geneId = cyRel.get ( "geneId" ).asInt ();
+				var conceptId = cyRel.get ( "conceptId" ).asInt ();
+				var distance = cyRel.get ( "graphDistance" ).asInt ();
+				var expectedDistance = testMotifs.get ( Pair.of ( geneId, conceptId ) );
+				
+				log.trace ( "Read tuple: ({}, {}) -> {}", geneId, geneId, distance );
+				log.trace ( "Expected tuple: ({}, {}) -> {}", geneId, geneId, expectedDistance );
+
+				assertEquals (
+					"The graph distance returned from Neo4j does not match the graph distance in the map",
+					(int) expectedDistance,
+					distance
+				);
+				
+			});
 		}
 	}
 
