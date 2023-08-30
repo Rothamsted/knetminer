@@ -115,7 +115,7 @@ let  KnetScoreFilter = {
             </form>
 
 
-            <div class='distance-unit distance-button'>
+            <div class='filter-footer'>
             <span onclick="resetTable()">Reset</span>
             <button data-id="knetscore" onclick="geneTableFilterMgr.filterByDistanceAndScore(event)" class='knetscore-button'>Apply</button>
             </div>
@@ -145,7 +145,7 @@ let graphDistanceFilter = {
         }
     }
             
-    let selectElement =   `<select id="select-distance">`
+    let selectElement =   `<select id="select-distance" style="margin:0px;">`
 
         for(let index = 0; index <= this.maxNumber; index++){
             selectElement += `<option value='${index + 1}' ${index === this.maxNumber ? 'selected': ''}>${index + 1}</option>`

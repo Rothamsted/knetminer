@@ -27,7 +27,7 @@
         <link rel="stylesheet" type="text/css" href="html/css/button.css"/>
 
         <!-- genes distance css -->
-        <link rel="stylesheet" type="text/css" href="html/css/genes-distance.css"/>
+        <link rel="stylesheet" type="text/css" href="html/css/genes-table-filtering.css"/>
 
          <!-- KnetMiner common style.css -->
         <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
