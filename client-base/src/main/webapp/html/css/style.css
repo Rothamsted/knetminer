@@ -1390,6 +1390,8 @@ a.contact-button :hover {
     flex-wrap: wrap
 }
 
+
+
 .evidenceSummary .evidenceSummaryItem {
     position: relative;
     float: left;
@@ -1402,6 +1404,10 @@ a.contact-button :hover {
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     background-color: #FFFFFF;
+}
+
+.evidenceSummaryBtns, .active-legend{
+    cursor: pointer;
 }
 
 .evidenceSummary .active-legend{
@@ -1443,7 +1449,6 @@ a.contact-button :hover {
 
 /* Evidence View: interactive evidence summary filter */
 #evidenceSummary1 {
-    cursor: pointer;
     padding-top: 5px;
     padding-bottom: 5px;
 }

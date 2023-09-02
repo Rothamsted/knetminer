@@ -237,7 +237,7 @@ const geneTableFilterMgr = function() {
         renderFilteredTable(table){
             genesTableScroller.setTableData (table)
             createGeneTableBody(table) 
-            $("body").data("data", {resultsTable: table});
+            geneViewConceptFilter.updateTable(table)
         },
         toggleTableState(dataLength){
             if(dataLength <= 0)$('#filterMessage').text('Your filter is returning no results');

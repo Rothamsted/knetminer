@@ -2,12 +2,14 @@
  * Function generate Geneview table and it shows once data is returned from function search keyword ajax calls
  *
  */
+
 function createGenesTable ( tableData, keyword )
 {
 	var table = "";
+		geneViewConceptFilter.setup(tableData,"resultsTable")
 	if (tableData.length > 0 )
 	{
-		genesTableScroller.setTableData ( tableData )
+		genesTableScroller.setTableData ( tableData  )
 		const firstPageEnd = genesTableScroller.getPageEnd ()
 		// Gene View: interactive summary legend for evidence types.
 		var interactiveSummaryLegend = getInteractiveSummaryLegend(tableData);
@@ -99,8 +101,9 @@ function createGenesTable ( tableData, keyword )
 	 */
 	$("#revertGeneView").click(function (e) {
 		createGenesTable(tableData, keyword,); // redraw table
-		$("body").data("data", {resultsTable: tableData});
-		$('#resultsTable').data({ keys: [] });
+		geneViewConceptFilter.setup(tableData,"resultsTable",)
+		// resets filtered state for geneview table
+		conceptFilter.filtered = false
 		
 	});
 
@@ -390,6 +393,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 	for (var row = fromRow; row < toRow; row++)
 	{	
 		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
+		console.log(conceptEvidences);
 		table += '<tr>';
 
 		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
@@ -434,6 +438,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 				for (const evidence of thisTypeEvidences )
 				{
 					let evidenceLabel = evidence.conceptLabel
+					let graphDistance = evidence.graphDistance
 					
 					let evidenceValueTd = ''
 
@@ -445,7 +450,7 @@ function createGeneTableBody ( tableData, doAppend = false )
 					else
 						evidenceValueTd = evidenceLabel;
 
-					evidenceTd += '<p>' + evidenceValueTd + '</p>';
+					evidenceTd += '<p>' + evidenceValueTd +' ('+graphDistance + ')</p>';
 				}
 				evidenceTd += '</div>';
 				evidenceTd += '</div> <span style="margin-right:.5rem">' + thisTypeEvidences.length + '</span></div>';
@@ -499,7 +504,11 @@ function createGeneTableBody ( tableData, doAppend = false )
   * @returns the <div> containing the interactive Gene View summary legend.
   * 
   */
+
+
 function getInteractiveSummaryLegend(geneViewData) {
+
+	
 
 	var evidencesArr= new Array();
 
@@ -524,8 +533,8 @@ function getInteractiveSummaryLegend(geneViewData) {
 
 			  summaryText += 
 			    `<div style="font-weight:600;" 
-			          onclick = "filterGeneTableByType ( event, '${contype}' );"
-			          class = "evidenceSummaryItem">`
+			          onclick = "geneViewConceptFilter.filterGeneTableByType( this, '${contype}' );"
+			          class = "evidenceSummaryItem evidenceSummaryBtns">`
 			  + `<div class="evidence-icons evidence_item evidence_item_${key}" title = "${key}"></div> ${key}</div>`;
 	});
   

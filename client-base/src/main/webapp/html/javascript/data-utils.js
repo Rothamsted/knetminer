@@ -376,7 +376,10 @@ function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   handleDelimintedCta.setApiData(data);
 
   knetWidgets.drawMap('drawRaw', data.gviewer);
-  $("body").data("data", { evidenceTable: evidenceTable, keyword: keyword, resultsTable: geneTable });
+
+  evidenceViewConceptFilter.setup(evidenceTable, "evidenceTable")
+
+  $("body").data("data", {keyword: keyword});
 
   //  using css toggle 
   $('#selectUser').toggleClass('show', geneList_size > 0)
@@ -666,11 +669,11 @@ function downloadFile(fileName){
  */
 function createEvidenceView() {
   $('#evidenceTable_button').addClass('created');
-  var data = $('body').data().data
+  var data = evidenceViewConceptFilter.getTableData(); 
 
   // Finally, render the table. 
   // Testing with doSortTable = false and sorting coming from the server
-  createEvidenceTable(data.evidenceTable, false);
+  createEvidenceTable(data, false);
 }
 
 
