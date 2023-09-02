@@ -203,7 +203,7 @@
 				</div>
 				<div onmouseleave="hidePopupOnLeave('#delimiter-menu')" id="delimiter-menu">
 				   	<a class="delimited-cta export_button" style="border-bottom: .3px solid silver">Tabular Format</a>
-				   	<a  class="delimited-cta-noevidence export_button" style="border-bottom: .3px solid silver">Tabular Format (excl. evidence)</a>
+				   	<a  class="delimited-cta-noevidence export_button" style="border-bottom: .3px solid silver">TABULAR</a>
 					<a class="delimited-json export_button">JSON</a>
 				</div>
 			</div>
