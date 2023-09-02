@@ -180,13 +180,12 @@
           let geneTable = formatJsonToTsv(response.geneTable);
           geneTable = geneTable.split("\n")
           
-          // removes the first time of the array (title)
-          geneTable.shift(); 
 
+            super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})
+            data = geneTable
+          
           // extended method registers cache request and response objects (geneTable and headers)
-          super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})
 
-          data = geneTable
         })
         .fail(function (xhr, status, errolog) {
           jboxNotice('An error occured, kindly try again', 'red', 300, 2000);

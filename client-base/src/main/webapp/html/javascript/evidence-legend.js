@@ -29,8 +29,8 @@ function getEvidencesLegend( evidenceTable )
   eviLegend.forEach(function (value, key, map) {
     var contype = key.trim();
     summaryText += 
-    	`<div onclick = "filterEvidenceTableByType ( event, '${contype}' );"   class="evidenceSummaryItem">
-    	 <div class="evidence-icons evidence_item evidence_item_${key}"  title="${key}"></div>
+    	`<div onclick = "evidenceViewConceptFilter.filterEvidenceTableByType ( this, '${contype}' );"   class="evidenceSummaryItem evidenceSummaryBtns">
+    	 <div class="evidence-icons evidence_item evidence_item_${key} "  title="${key}"></div>
     	 <span style="font-weight:600; margin-right:.5rem;">${key}</span> <span> (${value}) </span></div>`
   });
 

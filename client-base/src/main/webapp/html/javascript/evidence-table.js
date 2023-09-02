@@ -184,7 +184,6 @@ function createEvidenceTable( tableData, doSortTable=false )
      */
     $("#revertEvidenceView").click(function (e) {
         createEvidenceTable(tableData,false); // redraw table
-        $('#evidenceTable').data({ keys: [] });
     });
 
     $("#revertEvidenceView").mouseenter(function (e) {
@@ -572,8 +571,11 @@ class AccessionPopupManager
         var tableBodyNode = this.#tableNode.createTBody();
         var genesCount = this.#setPagination()
 
-        for(var nodeIndex = 0; nodeIndex <  genesCount; nodeIndex++){
-            var accessionDataArray = this.#accessionData[nodeIndex].split("\t").slice(1, 5); 
+        var bodyData =  this.#accessionData;
+       bodyData.shift(); // removes the first time of the array (title)
+
+        for(var nodeIndex = 0; nodeIndex <  genesCount -1; nodeIndex++){
+            var accessionDataArray = bodyData[nodeIndex].split("\t").slice(1, 5); 
             
             // removes third items from the array (TAXID)
             accessionDataArray.splice(accessionDataArray.length -2, 1)
