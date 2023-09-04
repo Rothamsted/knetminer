@@ -286,7 +286,7 @@ async function openGeneListPopup(conceptId, element)
         var accessionList = []
         for (var accessionColumn = 0; accessionColumn < accessionData.length; accessionColumn++) {
             var accessionItem = accessionData[accessionColumn].split("\t").slice(1, 2);
-
+ 
             accessionList.push(accessionItem.join("\t"))
         }
 
@@ -714,7 +714,20 @@ class AccessionPopupManager
      */
     #encodeData(){
 
-        var utf8Bytes = encodeURIComponent(this.#accessionData.join("\n")).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+        // Array to house refined data performed in the operation below
+        var refinedAccessionData=[]
+
+        // loops through accessionData to remove conceptEvidence and Qtl evidence columns
+        for(let index=0; index < this.#accessionData.length; index++){
+                var row = this.#accessionData[index].split('\t'); 
+                // Removes conceptEvidence and qtl evidence columns 
+                row.splice(8,2)
+
+                var refinedRow = row 
+                refinedAccessionData.push(refinedRow.join("\t"))
+        }
+
+        var utf8Bytes = encodeURIComponent(refinedAccessionData.join("\n")).replace(/%([0-9A-F]{2})/g, function (match, p1) {
             return String.fromCharCode('0x' + p1);
         })
 
