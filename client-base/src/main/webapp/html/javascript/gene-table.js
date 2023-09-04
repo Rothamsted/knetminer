@@ -393,7 +393,6 @@ function createGeneTableBody ( tableData, doAppend = false )
 	for (var row = fromRow; row < toRow; row++)
 	{	
 		var {ondexId, accession,chromosome, conceptEvidences, geneBeginBP,name,score} = tableData[row]; 
-		console.log(conceptEvidences);
 		table += '<tr>';
 
 		var upperCasedAccessions = accession.toUpperCase(); // always display gene ACCESSION in uppercase
