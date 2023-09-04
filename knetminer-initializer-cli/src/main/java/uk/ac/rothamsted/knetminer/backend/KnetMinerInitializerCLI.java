@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import net.sourceforge.ondex.parser.oxl.Parser;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
@@ -41,7 +44,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		required = true
 	)
 	private String oxlInputPath = null;
-	
+
 
 	@Option (
 		names = { "-d", "--data" },
@@ -64,8 +67,34 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			+ "whether data files exist and are more recent than the OXL file."
 	)
 	private boolean doForce = false;
-	
-	
+
+	@Option (
+			names = { "-n", "--neo4j"},
+			description = "Enables Neo4j exportation (requires specifying the Neo4j driver's URL, username, password)."
+	)
+	private boolean neo4jMode = false;
+
+	@Option (
+			names = { "-U", "--URL"},
+			paramLabel = "<URL:port>",
+			description = "The Neo4j's driver's URL with Bolt port."
+	)
+	private String neoURL;
+
+	@Option (
+			names = { "-u", "--username"},
+			paramLabel = "<username>",
+			description = "The Neo4j's driver's username."
+	)
+	private String username;
+
+	@Option (
+			names = { "-p", "--password"},
+			paramLabel = "<password>",
+			description = "The Neo4j's driver's password."
+	)
+	private String password;
+
 	private Logger log = LogManager.getLogger ( this.getClass () ); 
 	
 	
@@ -89,7 +118,16 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 		log.info ( "Doing the data initialisation" );
 		initializer.initKnetMinerData ( this.doForce );
-		
+
+		if (neo4jMode == true) {
+		log.info ( "The Neo4j exportation initialisation is ongoing." );
+		Driver neoDriver = GraphDatabase.driver (
+				neoURL, AuthTokens.basic ( username, password)
+		);
+		var motifNeoExporter = new MotifNeoExporter ();
+		motifNeoExporter.setDatabase ( neoDriver );
+		motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
+		}
 		return 0;
 	}
 
