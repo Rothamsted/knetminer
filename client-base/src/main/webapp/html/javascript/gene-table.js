@@ -167,7 +167,6 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 	$("#loadingNetwork_Div").replaceWith('<div id="loadingNetwork_Div"><b>Loading Network, please wait...</b></div>');
 
 	// Show loading spinner on 'tabviewer' div
-
 	$.post({
 		url: url,
 		timeout: 1000000,
@@ -183,8 +182,6 @@ function generateCyJSNetwork(url, requestParams, externalCall) {
 		console.log(server_error.detail);
 		alert(errorMsg);
 	}).success(function (data) {
-
-
 		// Network graph: JSON file.
 		try {
 			if (!externalCall) {
@@ -260,6 +257,8 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword, targetElement) {
 
 	var candidatelist = [];
 	var knetNotice;
+	var knetViewLimit = userAccessMgr.getGeneKnetLimit(); 
+	var isUserPro = userAccessMgr.isLimitEnforced()
 
 	var cb_list = $("input[name=candidates");
 	var cb_list_len = cb_list.length;
@@ -268,26 +267,20 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword, targetElement) {
 			candidatelist.push(cb_list[i].value);
 		}
 	}
+
 	//console.log(candidatelist.length +" gene(s) selected.");
-	if (candidatelist == "") {
-		knetNotice = "Please select candidate genes."
-		jboxNotice(knetNotice, 'red', 300, 2000);
+	if (candidatelist.length > knetViewLimit/*20*/) {
 
-	}
-	else if (candidatelist.length > knetview_limit/*20*/) {
-		if (enforce_genelist_limit === false) { // Pro plan user
-			knetNotice = '<span></span><b>Gene networks can only be created for up to max. ' + knetview_limit + ' genes.</b></span>'
-
+		if (!isUserPro) { // Pro plan user
+			knetNotice = '<span></span>Gene networks can only be created for up to max. ' + knetViewLimit + ' genes.</span>';
 		}
 		else { // Free plan user
-			knetNotice = '<span></span><b>Gene networks can only be created for up to max. ' + knetview_limit + ' genes.</b></span>'
-			'<span id="loadingNetworkDiv"><b>The KnetMiner Free Plan is limited to a network of ' + knetview_limit + ' genes. <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks for 200 genes</b></span>';
-
+			console.log('triggered Here')
+			knetNotice = '<div><p>The KnetMiner Free Plan is limited to a network of ' + knetViewLimit + ' genes.</p> <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks</div>';
 		}
 
-		jboxNotice(knetNotice, 'red', 300, 2000);
+		jboxNotice(knetNotice,'black',10 , 10000,400);
 		resetNetworkCall()
-
 	}
 	else {
 		generateCyJSNetwork(api_url + '/network', { keyword: keyword, list: candidatelist, isExportPlainJSON: false }, false);

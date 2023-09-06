@@ -16,11 +16,13 @@ class UserAccessManager{
 		
     #current = null; 
     #defaultGeneLimit = null; 
+    #defaultKnetViewLimit = null; 
     #isGeneLimitEnforced = null; 
 
     constructor(){
         this.#current = 'guest'
         this.#defaultGeneLimit = 20;
+        this.#defaultKnetViewLimit = 10; 
         this.#isGeneLimitEnforced = true;
     }
 
@@ -76,6 +78,7 @@ class UserAccessManager{
 
         }else if(this.#current === 'pro'){
             this.#isGeneLimitEnforced = false;
+            this.#defaultKnetViewLimit = 20
             // TODO: don't mix business logic and UI
             // Have a separated function/component, like refreshUIrestrictions() and 
             // call it outside of this class, after updates like setUserPlan() 
@@ -86,6 +89,10 @@ class UserAccessManager{
     // returns genelist search Limit 
     getGeneSearchLimit(){
       return this.#defaultGeneLimit
+    }
+
+    getGeneKnetLimit(){
+      return this.#defaultKnetViewLimit
     }
 
     // Checks if genes list limit is enforced or not. 
