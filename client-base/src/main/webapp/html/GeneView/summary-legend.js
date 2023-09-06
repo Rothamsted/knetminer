@@ -5,7 +5,7 @@
  */
 let conceptFilter =  {
 
-    table :[], // Table object houses geneview and evidence table data
+    table :[],
     tableId:'', // Stores tableId for the gene or evidence views
     selectedKeys:[], //Stores strings of currently selected concept
     filtered:false, // Boolean check for geneview table data aiming to see if additional filters (graphDistance and knetscore filters) have been triggered. 
@@ -30,7 +30,10 @@ let conceptFilter =  {
         if(isConceptActive){
             this.selectedKeys.push(concept)
         }else if(conceptIndex >= 0){
-            this.selectedKeys.splice(conceptIndex, 1);
+            let updatedKeys = this.selectedKeys;
+            updatedKeys.splice(conceptIndex, 1);
+
+            this.selectedKeys = updatedKeys; 
         }
 
     },
@@ -87,6 +90,8 @@ let conceptFilter =  {
     getConceptKeys(){
         return this.selectedKeys
     }, 
+    
+
 }
 
 /**
@@ -115,26 +120,47 @@ let geneViewConceptFilter = {
     async createFilteredGenesTable ( filteredTable )
     {
         conceptFilter.toggleKnetTablesDisplay ( true )
-        geneTableFilterMgr.setData(filteredTable)
-        
-        if ( filteredTable && filteredTable.length > 0 )
-            genesTableScroller.setTableData ( filteredTable )
-        
-        createGeneTableBody ( filteredTable )	
+
+        if ( filteredTable && filteredTable.length > 0 ){
+            geneTableFilterMgr.filterByDistanceAndScore(undefined,filteredTable)
+        }
+
+    
     },
     resetTable(){
         if(conceptFilter.filtered){
-            createGeneTableBody ( conceptFilter.table )
+            geneTableFilterMgr.filterByDistanceAndScore()
         }else{
             document.getElementById("revertGeneView").click();
         }
 
     },
-    updateTable(tableData){
-        conceptFilter.filtered = true;
-        this.table = tableData
-    },
+    filterbyData(tableData){
+        try{
+
+
+            if ($('#'+this.tableId).css('display') !== 'block') return 
+
+            const selectedConcepts = this.getConceptKeys()
     
+            if(!selectedConcepts.length){
+                this.resetTable()
+                return 
+            }  
+                  // Select what required, using the helper
+          var filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) )
+        
+           if (filteredTable.length > 0){
+            genesTableScroller.setTableData (filteredTable);
+            createGeneTableBody( filteredTable);
+
+           }else{
+            this.toggleKnetTablesDisplay ( false )
+           }
+        }catch(error){
+            console.error ( "Error while selecting from concept legend", error );
+        }
+    }
 }
 
 /**
