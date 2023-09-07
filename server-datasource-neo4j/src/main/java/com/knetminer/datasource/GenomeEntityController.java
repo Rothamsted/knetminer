@@ -29,7 +29,7 @@ public class GenomeEntityController {
                 .map(entity -> new GeneSearchResultEvidenceWithId(String.join(";", entity.getIdentifier()),
                         new GeneSearchResultEvidence("Concept",
                                 String.join(";", entity.getIdentifier()),
-                        String.join(";", entity.getPrefName()) +
+                        String.join(";", entity.getPrefName()) + ";" +
                                 String.join(";", entity.getAltName()),
                         entity.getScore())))
                 .collect(Collectors.toList());
