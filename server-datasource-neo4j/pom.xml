@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.1.2</version>
+	</parent>
+	<groupId>com.knetminer.test</groupId>
+	<artifactId>server-datasource-neo4j</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>server-datasource-neo4j</name>
+	<description>Neo4j-based alternative to server-datasource-ondexlocal.</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-neo4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j.driver</groupId>
+			<artifactId>neo4j-java-driver</artifactId>
+			<version>5.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j.test</groupId>
+			<artifactId>neo4j-harness</artifactId>
+			<version>5.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi</groupId>
+			<artifactId>jutils</artifactId>
+			<version>13.0</version>			
+		</dependency>		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<repositories>
+	  <repository>
+	  	<!-- For now, it's needed for jutils only  -->
+			<id>knetminer-repo</id>
+			<name>Knetminer Public Repository</name>
+			<url>https://knetminer.com/artifactory/repository/maven-public</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>true</enabled></releases>
+	  </repository>
+	</repositories>
+
+</project>
+
