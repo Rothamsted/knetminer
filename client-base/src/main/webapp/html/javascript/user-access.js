@@ -13,18 +13,14 @@ class UserAccessManager{
 		 * Should make things slightly more efficient.
 		 * 
 		 */
-		
-    #current = null; 
-    #defaultGeneLimit = null; 
-    #defaultKnetViewLimit = null; 
-    #isGeneLimitEnforced = null; 
+    #defaultGeneLimit = 20; 
+    #defaultKnetViewLimit = 10; 
+    #isGeneLimitEnforced = true; 
 
     constructor(){
-        this.#current = 'guest'
-        this.#defaultGeneLimit = 20;
-        this.#defaultKnetViewLimit = 10; 
-        this.#isGeneLimitEnforced = true;
+      UserRole.setUserRole('guest'); 
     }
+
 
     // Calls knetspace API endpoint and returns user current plan (free or pro) as a string. 
     setUserPlan()
@@ -35,8 +31,8 @@ class UserAccessManager{
         const data = await response.json();
           const userPlan = data.plan?.name.toLowerCase()
           if(userPlan?.length){
-            this.#current = userPlan
-            this.#setGeneSearchLimit();
+             UserRole.setUserRole(userPlan); 
+            this.setGeneSearchLimit();
           }
 
       })
@@ -44,7 +40,7 @@ class UserAccessManager{
 
     // Sets geneslist search limit based on current user plan.
     // 20 for guest, 100 for free and unlimited for pro users.
-    #setGeneSearchLimit()
+    setGeneSearchLimit()
     {
 			  /* 
 			   * TODO: this is logically wrong. Once you've introduced roles as 
@@ -69,20 +65,11 @@ class UserAccessManager{
 				 *  
 				 */
 			  
-        if( this.#current === 'free' ) 
-        {   
-          this.#defaultGeneLimit = 100;
-          
-          // sets current genelist limit
-          $('.genesCount').html(`0/${this.#defaultGeneLimit}`)
-
-        }else if(this.#current === 'pro'){
+        if(this.requires('free')) this.#defaultGeneLimit = 100;  
+        
+        if(this.requires('pro')){
             this.#isGeneLimitEnforced = false;
             this.#defaultKnetViewLimit = 20
-            // TODO: don't mix business logic and UI
-            // Have a separated function/component, like refreshUIrestrictions() and 
-            // call it outside of this class, after updates like setUserPlan() 
-            $('.genesCount').hide(); 
         } 
     }
 
@@ -121,7 +108,7 @@ class UserAccessManager{
 			   
 			   See above about #current, and see below about can()
 			 */
-      return  UserRole.can( this.#current, queryRole); 
+      return  UserRole.can(queryRole); 
     }
 
 
@@ -132,6 +119,7 @@ class UserAccessManager{
  */
 class UserRole {
     #level = null
+    userLevel = null; 
 
     static GUEST = new UserRole ( 1000 )
     static REGISTERED = new UserRole ( 500 )
@@ -151,12 +139,11 @@ class UserRole {
    * Compare by level, returns -1 | 0  | 1, ie, negative means this role is more
    * powerful than the other.
    */
-    static compare(role,queryRole){
+    static compare(queryRole){
 
-        if ( !role) return -1
-        let userLevel = UserRole.get(role)
+        if ( !this.userLevel) return -1
         let queryLevel = UserRole.get ( queryRole )
-        return  queryLevel - userLevel
+        return  queryLevel - this.userLevel
            
     }   
     
@@ -181,9 +168,9 @@ class UserRole {
    * True if the role parameter has the same or higher power of this role.
 	 * Param can be a UserRole or a string.
    */
-    static can ( role,queryRole )
+    static can (queryRole )
   {  
-    return  UserRole.compare(role,queryRole) >= 0;
+    return  UserRole.compare(queryRole) >= 0;
   }
 
   /**
@@ -205,6 +192,11 @@ class UserRole {
           throw new TypeError(`Unable to retrieve level for role '${roleStr}'`);
       }
       return result;
+  }
+
+  static setUserRole(roleStr){
+    const userLevel = UserRole.get(roleStr)
+    this.userLevel = userLevel
   }
 }
 
