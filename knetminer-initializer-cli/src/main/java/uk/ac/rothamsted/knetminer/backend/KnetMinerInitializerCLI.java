@@ -14,6 +14,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
 
 /**
  * A command-line (CLI) interface, which is another wrapper to the core. This allows for producing KnetMiner
@@ -68,32 +69,35 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	)
 	private boolean doForce = false;
 
+	/**
+	 * TODO: alternatively, pick the driver from the config.
+	 */
 	@Option (
-			names = { "-n", "--neo4j"},
-			description = "Enables Neo4j exportation (requires specifying the Neo4j driver's URL, username, password)."
+		names = { "-sm", "--neo-motifs"},
+		description = "Exports sematic motif endopoints to Neo4j (requires --neo-xxx options)."
 	)
-	private boolean neo4jMode = false;
+	private boolean doNeoMotifs = false;
 
 	@Option (
-			names = { "-U", "--URL"},
-			paramLabel = "<URL:port>",
-			description = "The Neo4j's driver's URL with Bolt port."
+		names = { "-nl", "--neo-url"},
+		paramLabel = "<bolt:// URL>",
+		description = "Neo4j BOLT URL for --neo-motifs."
 	)
-	private String neoURL;
+	private String neoUrl;
 
 	@Option (
-			names = { "-u", "--username"},
-			paramLabel = "<username>",
-			description = "The Neo4j's driver's username."
+		names = { "-nu", "--neo-user"},
+		paramLabel = "<user>",
+		description = "Neo4j user for --neo-motifs."
 	)
-	private String username;
+	private String neoUser;
 
 	@Option (
-			names = { "-p", "--password"},
-			paramLabel = "<password>",
-			description = "The Neo4j's driver's password."
+		names = { "-np", "--neo-password"},
+		paramLabel = "<neoPassword>",
+		description = "Neo4j neoPassword for --neo-motifs."
 	)
-	private String password;
+	private String neoPassword;
 
 	private Logger log = LogManager.getLogger ( this.getClass () ); 
 	
@@ -119,15 +123,18 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		log.info ( "Doing the data initialisation" );
 		initializer.initKnetMinerData ( this.doForce );
 
-		if (neo4jMode == true) {
-		log.info ( "The Neo4j exportation initialisation is ongoing." );
-		Driver neoDriver = GraphDatabase.driver (
-				neoURL, AuthTokens.basic ( username, password)
-		);
-		var motifNeoExporter = new MotifNeoExporter ();
-		motifNeoExporter.setDatabase ( neoDriver );
-		motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
+		if ( doNeoMotifs )
+		{
+			log.info ( "Connecting Neo4j for semantic motifs export" );
+			Driver neoDriver = GraphDatabase.driver (
+				neoUrl, AuthTokens.basic ( neoUser, neoPassword )
+			);
+
+			var motifNeoExporter = new MotifNeoExporter ();
+			motifNeoExporter.setDatabase ( neoDriver );
+			motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
 		}
+
 		return 0;
 	}
 

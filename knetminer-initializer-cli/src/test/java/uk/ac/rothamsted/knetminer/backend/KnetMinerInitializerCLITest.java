@@ -54,27 +54,4 @@ public class KnetMinerInitializerCLITest
 		assertTrue ( "Traverser output not found!", new File ( datasetPath + "/data/concepts2Genes.ser" ).exists () );
 	}
 
-
-//	@Test
-//	public void testAdvancedOpts () throws IOException
-//	{
-//		testCaseOut = testCasePath + "/output-cli-advanced";
-//		FileUtils.deleteQuietly ( new File ( testCaseOut ) );
-//
-//		var exitCode = KnetMinerInitializerCLI.invoke (
-//			"-i", testCasePath + "/test-case/poaceae-sample.oxl", 
-//			"-d", testCaseOut, 
-//			"-o", "StateMachineFilePath=file:///" + testCasePath + "/SemanticMotifs.txt",  
-//			"--tax-id", "4565",
-//			"--tax-id", "3702",
-//			"-c" , testCasePath + "/config-test/dataset-cfg.yml"
-//		);
-//		
-//		Assert.assertEquals ( "Wrong exit code!", 0, exitCode );
-//				
-//		assertTrue ( "Lucene output not found!", new File ( testCasePath + "/config-test" + "/index" ).exists () );
-//		assertTrue ( "Traverser output not found!", new File ( testCasePath + "/config-test" + "/concepts2Genes.ser" ).exists () );
-//			
-//	}
-
 }
