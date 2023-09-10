@@ -187,16 +187,6 @@ public class MotifNeoExporterIT
 						
 			result.forEachRemaining ( cyRel ->
 			{				
-				/* TODO: remove after reading, don't do record.get ( 0 ) when 
-				   you can use more expressive key names.
-				   
-				   We're not writing Turing Machines, record indexes are hard to read and 
-				   sensitive to the slightest change in the list of RETURNed fields.
-				   
-				   Also, use intermediate vars to make the code simpler
-				  
-				 */ 
-
 				var geneId = cyRel.get ( "geneId" ).asInt ();
 				var conceptId = cyRel.get ( "conceptId" ).asInt ();
 				var distance = cyRel.get ( "graphDistance" ).asInt ();
