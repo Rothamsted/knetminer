@@ -63,10 +63,10 @@ let conceptFilter =  {
                 resetFun()
                 return 
             }
-    
-    
-                  // Select what required, using the helper
-          var filteredTable = this.table.filter ( row => rowFilterPredicate ( selectedConcepts, row ) )
+            
+
+        // Select what required, using the helper
+            const filteredTable = this.table.filter ( row => rowFilterPredicate ( selectedConcepts, row ) )
         
            if (filteredTable.length > 0){
             renderingFun ( filteredTable, this.tableId )
@@ -85,7 +85,7 @@ let conceptFilter =  {
             // NEEDS serious review for coherence!
             $('#filterMessage').toggleClass('show-block',!displayOn); 
             $('.num-genes-container').toggleClass('show-block',displayOn); 
-            $('#tablesorter').toggleClass('hide',!displayOn);
+            $('#geneTableBody').toggleClass('hide',!displayOn);
     },
     getConceptKeys(){
         return this.selectedKeys
@@ -121,15 +121,17 @@ let geneViewConceptFilter = {
     {
         conceptFilter.toggleKnetTablesDisplay ( true )
 
-        if ( filteredTable && filteredTable.length > 0 ){
-            geneTableFilterMgr.filterByDistanceAndScore(undefined,filteredTable)
-        }
+            genesTableScroller.setTableData (filteredTable); 
+            if(this.filtered){
+                geneTableFilterMgr.filterByDistanceAndScore(undefined,filteredTable)
+            }else{
+                createGeneTableBody(filteredTable)
+            }
 
-    
     },
     resetTable(){
         if(conceptFilter.filtered){
-            geneTableFilterMgr.filterByDistanceAndScore()
+            geneTableFilterMgr.filterByDistanceAndScore(undefined,this.tableData); 
         }else{
             document.getElementById("revertGeneView").click();
         }
@@ -139,28 +141,30 @@ let geneViewConceptFilter = {
         try{
 
 
-            if ($('#'+this.tableId).css('display') !== 'block') return 
+        if ($('#'+this.tableId).css('display') !== 'block') return 
 
-            const selectedConcepts = this.getConceptKeys()
-    
-            if(!selectedConcepts.length){
-                this.resetTable()
-                return 
-            }  
-                  // Select what required, using the helper
+            const selectedConcepts = this.getConceptKeys(); 
+
+        // Select what required, using the helper
           var filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) )
         
            if (filteredTable.length > 0){
+
             genesTableScroller.setTableData (filteredTable);
-            createGeneTableBody( filteredTable);
+            return filteredTable
 
            }else{
-            this.toggleKnetTablesDisplay ( false )
+            //  returns original data passed as paramter to function
+            this.selectedKeys = []
+            renderConceptkeys(tableData)
+            return tableData; 
+
            }
         }catch(error){
             console.error ( "Error while selecting from concept legend", error );
         }
-    }
+    },
+
 }
 
 /**

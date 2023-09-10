@@ -522,11 +522,16 @@ function getInteractiveSummaryLegend(geneViewData) {
 	{     
 		var key = evidence
 	  	var contype= key.trim();
+		// returns an array of string containing currently selected conceptypes
+		var activeConceptKeys = geneViewConceptFilter.getConceptKeys(); 
+		// Checks if current contype is present in the array of string activeConceptKeys
+		var isKeyactive = activeConceptKeys.includes(contype)
+
 
 			  summaryText += 
 			    `<div style="font-weight:600;" 
 			          onclick = "geneViewConceptFilter.filterGeneTableByType( this, '${contype}' );"
-			          class = "evidenceSummaryItem evidenceSummaryBtns">`
+			          class = " ${isKeyactive ? 'active-legend': ''} evidenceSummaryItem evidenceSummaryBtns">`
 			  + `<div class="evidence-icons evidence_item evidence_item_${key}" title = "${key}"></div> ${key}</div>`;
 	});
   
@@ -567,9 +572,14 @@ function getInteractiveSummaryLegend(geneViewData) {
 	$(`#${oppsiteClass}-filter-button`).removeClass('bg-gray')
  }
 
-// TEMPORARY SOLUTION WILL BE REPLACED IN COMING DAYS
+
 // resets geneview table
  function resetTable(){
 	$("#revertGeneView").click();
+ }
+
+ function renderConceptkeys(table){
+	const interactiveSummaryLegend = getInteractiveSummaryLegend(table);
+	$('#filters').html(interactiveSummaryLegend)
  }
 

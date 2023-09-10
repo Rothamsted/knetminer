@@ -187,9 +187,15 @@ const geneTableFilterMgr = function() {
                 }
         },
          // handles knetscore filtering
-         filterByDistanceAndScore: function(event = undefined, table = undefined) { 
-            
-            const data = !table ?  [...tableData] : [...table]
+         filterByDistanceAndScore: function(event, table) { 
+
+              // Checks if any concept evidence is selected. 
+              const isConceptActive = $('.evidenceSummaryItem').hasClass("active-legend"); 
+            // Sets Tabledata either from table parameter or state saved tableData.
+              const dataTable = table ? [...table] : [...tableData]; 
+
+            // Checks if evidence concepts are in active states to filter table data by selected concept evidence 
+            const data = !isConceptActive ?  dataTable : geneViewConceptFilter.filterbyData(dataTable);
 
             if(event){
                 const element = event.target;
@@ -235,36 +241,24 @@ const geneTableFilterMgr = function() {
             }
         
             if(filteredData.length) {
-                geneTableFilterMgr.renderFilteredTable(filteredData,event);
+                geneTableFilterMgr.renderFilteredTable(filteredData);
             }
         
             geneTableFilterMgr.toggleTableState(filteredData.length);
         },
-        renderFilteredTable(table,event){
+        renderFilteredTable(table){
 
-            // checks if any concept evidence is selected, if not it renders concepts available in the filtered table. 
-            const isConceptActive = $('.evidenceSummaryItem').hasClass("active-legend"); 
-            if(!isConceptActive){
-                const interactiveSummaryLegend = getInteractiveSummaryLegend(table);
-                $('#filters').html(interactiveSummaryLegend)
-            }
-
-            // checks if filter function (filterByDistanceAndScore) is called from a click event or 
-            // As a function (as called in summary-legend.js ln 125)
-            if(event){
-                geneViewConceptFilter.filterbyData(table);
-            }else{
-                genesTableScroller.setTableData (table); 
-                createGeneTableBody(table) 
-            }   
-    
+            genesTableScroller.setTableData (table); 
+            renderConceptkeys(table)
+            createGeneTableBody(table)
+          
         },
         toggleTableState(dataLength){
             if(dataLength <= 0)$('#filterMessage').text('Your filter is returning no results');
 
             $('#filterMessage').toggleClass('show-block',dataLength <= 0); 
             $('#geneTableBody').toggleClass('hide',dataLength <= 0);
-        },
+        }
     
     }
 }()
