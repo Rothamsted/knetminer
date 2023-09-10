@@ -1344,7 +1344,7 @@ a.contact-button :hover {
 
 .pGViewer_title_line {
     background-color: #F4F5F7;
-    color: #121212;
+    color: red;
     padding: 6px;
     line-height: 1.2rem;
 }
