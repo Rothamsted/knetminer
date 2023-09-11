@@ -1344,7 +1344,7 @@ a.contact-button :hover {
 
 .pGViewer_title_line {
     background-color: #F4F5F7;
-    color: red;
+    color: black;
     padding: 6px;
     line-height: 1.2rem;
 }
@@ -2203,6 +2203,11 @@ a {
     -webkit-box-pack: end;
     -ms-flex-pack: end;
     justify-content: flex-end;
+    color:'red'
+}
+
+.msg-placement .pGViewer_title_line{
+    color: red;
 }
 
 .navbarselect-container {
