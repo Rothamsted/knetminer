@@ -40,7 +40,7 @@ let sleep = time => new Promise((resolve) => setTimeout(resolve, time));
  * @param {type} yPos
  * @returns {jBoxNotice}
  */
-function jboxNotice(content, colour, yPos, autoclose, width=autoclose,height=auto) {
+function jboxNotice(content, colour, yPos, autoclose, width='auto',height="auto") {
     new jBox('Notice', {
         content: content,
         color: colour,
