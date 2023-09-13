@@ -385,7 +385,7 @@ public class SearchService
 		Map<ONDEXConcept, Double> sortedGeneCandidates = scoredGeneCandidates.entrySet ()
 		.stream ()
 		.sorted ( Collections.reverseOrder ( Map.Entry.comparingByValue () ) )
-		// Duplicated genes don't happen (keys are always different, but we need something here
+		// Duplicated genes don't happen (keys are always different), but we need something here
 		.collect ( toMap ( 
 			Map.Entry::getKey, // key mapper
 			Map.Entry::getValue, // value mapper

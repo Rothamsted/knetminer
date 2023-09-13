@@ -2,7 +2,6 @@ package rres.knetminer.datasource.ondexlocal.service;
 
 import static java.util.Collections.emptyMap;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
