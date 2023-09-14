@@ -124,13 +124,15 @@ let geneViewConceptFilter = {
         // Select what required, using the helper
             const filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) );
 
+              // checks if filteredTable length is less than 0 to show no filter found message
+            geneTableFilterMgr.toggleTableState(filteredTable.length )
+
             if (filteredTable.length > 0 ){
                     genesTableScroller.setTableData (filteredTable);
                     createGeneTableBody(filteredTable)
             }
 
-        // checks if filteredTable length is less than 0 to show no filter found message
-        geneTableFilterMgr.toggleTableState(filteredTable.length )
+      
 
     }, 
 }

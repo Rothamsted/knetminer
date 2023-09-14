@@ -174,7 +174,7 @@ let graphDistanceFilter = {
 
 // Handles genes distance and knetscore filters 
 const geneTableFilterMgr = {
-    tableData:[],
+        tableData:[],
         // saves geneview table
         setup(data){
                 this.tableData = data;
@@ -265,7 +265,6 @@ const geneTableFilterMgr = {
             if(isConceptActive){
                 geneViewConceptFilter.filterbySelectedConcept(table);
             }else{
-                renderConceptKeys(table,filteredConcepts);
                 createGeneTableBody(table)
             }
         },

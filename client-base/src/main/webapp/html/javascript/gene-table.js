@@ -498,13 +498,11 @@ function createGeneTableBody ( tableData, doAppend = false )
   */
 
 
-function getInteractiveSummaryLegend(geneViewData, filteredData = null ) {
+function getInteractiveSummaryLegend(geneViewData) {
 
 	
 
 	var evidencesArr= new Array();
-	var selectedConcepts = filteredData !== null ? filteredData : []
-	geneViewConceptFilter.setConceptKeys(selectedConcepts)
 
 
 
@@ -531,14 +529,10 @@ function getInteractiveSummaryLegend(geneViewData, filteredData = null ) {
 		var key = evidence
 	  	var contype= key.trim();
 
-		// Checks if current contype is present in the array of string activeConceptKeys
-		var isKeyactive = selectedConcepts.includes(contype)
-
-
 			  summaryText += 
 			    `<div style="font-weight:600;" 
 			          onclick = "geneViewConceptFilter.filterGeneTableByType( this, '${contype}' );"
-			          class = " ${isKeyactive ? 'active-legend': ''} evidenceSummaryItem evidenceSummaryBtns">`
+			          class = "evidenceSummaryItem evidenceSummaryBtns">`
 			  + `<div class="evidence-icons evidence_item evidence_item_${key}" title = "${key}"></div> ${key}</div>`;
 	});
   
@@ -584,36 +578,3 @@ function getInteractiveSummaryLegend(geneViewData, filteredData = null ) {
  function resetTable(){
 	$("#revertGeneView").click();
  }
-
-//  function updates concept evidences keys when geneview table is filtered
- function renderConceptKeys(table, filteredConcepts = null ){
-
-	// removes active class from current 
-	// $('.evidenceSummaryItem').removeClass("active-legend"); 
-
-	// currently selected concepts
-	const selectedConcepts = geneViewConceptFilter.getConceptKeys(); 
-	let intersetConcepts = []; 
-	
-	if(filteredConcepts ){
-		intersetConcepts = findConceptsIntersection(filteredConcepts,selectedConcepts)
-	}
-
-	const interactiveSummaryLegend = intersetConcepts.length ? getInteractiveSummaryLegend(table, intersetConcepts) : getInteractiveSummaryLegend(table); 
-	
-	$('#filters').html(interactiveSummaryLegend)
- }
-
-//  function finds intersection between current selected concept evidences to concept key presents in filtered table
- function findConceptsIntersection (keys,currentConcepts){
-	let conceptArray = []; 
-	
-	keys.filter(key => {
-		const isKeyActive = currentConcepts.includes(key)
-		if(isKeyActive){conceptArray.push(key)}
-	} ); 
-
-	return conceptArray
- }
-
-
