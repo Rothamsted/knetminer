@@ -57,39 +57,30 @@ let conceptFilter =  {
 
             if ($('#'+this.tableId).css('display') !== 'block') return 
 
-            const selectedConcepts = this.getConceptKeys()
+            const selectedConcepts = this.getConceptKeys(); 
     
             if(!selectedConcepts.length) {
                 resetFun()
                 return 
             }
-            
+
 
         // Select what required, using the helper
             const filteredTable = this.table.filter ( row => rowFilterPredicate ( selectedConcepts, row ) )
         
            if (filteredTable.length > 0){
             renderingFun ( filteredTable, this.tableId )
-           }else{
-            this.toggleKnetTablesDisplay ( false )
            }
         }catch(error){
             console.error ( "Error while selecting from concept legend", error );
         }
     },
-    toggleKnetTablesDisplay ( displayOn ) 
-    {
-            // TODO: If there is only ONE instance for each of these, then WHY do we have DIFFERENT
-            // names/variables/objects that manage genes and evidence tables separately, as if there were
-            // TWO instances of them?!?
-            // NEEDS serious review for coherence!
-            $('#filterMessage').toggleClass('show-block',!displayOn); 
-            $('.num-genes-container').toggleClass('show-block',displayOn); 
-            $('#geneTableBody').toggleClass('hide',!displayOn);
-    },
     getConceptKeys(){
         return this.selectedKeys
     }, 
+    setConceptKeys(keys){
+        this.selectedKeys = keys
+    }
     
 
 }
@@ -100,12 +91,14 @@ let conceptFilter =  {
 let geneViewConceptFilter = {
     ...conceptFilter,
 
-    filterGeneTableByType ( event, conceptType )
+    async filterGeneTableByType ( event, conceptType )
     {
-        
-        this.filterTable( 
-           conceptType, event,this.rowFilterPred, this.createFilteredGenesTable, this.resetTable
-        )
+        this.updateKeys(conceptType,event)
+        try{
+            geneTableFilterMgr.filterByDistanceAndScore(null);
+        }catch(error){
+            console.log("Error while selecting from concept legend",error)
+        }
     },
     rowFilterPred( selectedTypes, tableRow )
     {
@@ -117,54 +110,29 @@ let geneViewConceptFilter = {
     const rowEvidences = Object.keys ( conceptEvidences )
     return selectedTypes.every ( t => rowEvidences.includes ( t ) ) 
     },
-    async createFilteredGenesTable ( filteredTable )
-    {
-        conceptFilter.toggleKnetTablesDisplay ( true )
-
-            genesTableScroller.setTableData (filteredTable); 
-            if(this.filtered){
-                geneTableFilterMgr.filterByDistanceAndScore(undefined,filteredTable)
-            }else{
-                createGeneTableBody(filteredTable)
-            }
-
-    },
     resetTable(){
         if(conceptFilter.filtered){
-            geneTableFilterMgr.filterByDistanceAndScore(undefined,this.tableData); 
+            geneTableFilterMgr.filterGeneTable(null); 
         }else{
             document.getElementById("revertGeneView").click();
         }
 
     },
-    filterbyData(tableData){
-        try{
-
-
-        if ($('#'+this.tableId).css('display') !== 'block') return 
-
+    filterbySelectedConcept(tableData){
+            if ($('#'+this.tableId).css('display') !== 'block') return 
             const selectedConcepts = this.getConceptKeys(); 
-
         // Select what required, using the helper
-          var filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) )
-        
-           if (filteredTable.length > 0){
+            const filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) );
 
-            genesTableScroller.setTableData (filteredTable);
-            return filteredTable
+            if (filteredTable.length > 0 ){
+                    genesTableScroller.setTableData (filteredTable);
+                    createGeneTableBody(filteredTable)
+            }
 
-           }else{
-            //  returns original data passed as paramter to function
-            this.selectedKeys = []
-            renderConceptkeys(tableData)
-            return tableData; 
+        // checks if filteredTable length is less than 0 to show no filter found message
+        geneTableFilterMgr.toggleTableState(filteredTable.length )
 
-           }
-        }catch(error){
-            console.error ( "Error while selecting from concept legend", error );
-        }
-    },
-
+    }, 
 }
 
 /**

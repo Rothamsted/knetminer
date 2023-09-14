@@ -498,11 +498,15 @@ function createGeneTableBody ( tableData, doAppend = false )
   */
 
 
-function getInteractiveSummaryLegend(geneViewData) {
+function getInteractiveSummaryLegend(geneViewData, filteredData = null ) {
 
 	
 
 	var evidencesArr= new Array();
+	var selectedConcepts = filteredData !== null ? filteredData : []
+	geneViewConceptFilter.setConceptKeys(selectedConcepts)
+
+
 
 	geneViewData.forEach((geneData) => {
 		var keys  = Object.keys(geneData.conceptEvidences);
@@ -517,15 +521,18 @@ function getInteractiveSummaryLegend(geneViewData) {
 
 	var legend= '<div id="concepts-view" class="evidenceSummary view active" title="Click to filter by type">';
 	var summaryText = '';
+
+	// returns an array of string containing currently selected conceptypes
+
+	
   
 	evidencesArr.forEach(function(evidence)
 	{     
 		var key = evidence
 	  	var contype= key.trim();
-		// returns an array of string containing currently selected conceptypes
-		var activeConceptKeys = geneViewConceptFilter.getConceptKeys(); 
+
 		// Checks if current contype is present in the array of string activeConceptKeys
-		var isKeyactive = activeConceptKeys.includes(contype)
+		var isKeyactive = selectedConcepts.includes(contype)
 
 
 			  summaryText += 
@@ -578,8 +585,35 @@ function getInteractiveSummaryLegend(geneViewData) {
 	$("#revertGeneView").click();
  }
 
- function renderConceptkeys(table){
-	const interactiveSummaryLegend = getInteractiveSummaryLegend(table);
+//  function updates concept evidences keys when geneview table is filtered
+ function renderConceptKeys(table, filteredConcepts = null ){
+
+	// removes active class from current 
+	// $('.evidenceSummaryItem').removeClass("active-legend"); 
+
+	// currently selected concepts
+	const selectedConcepts = geneViewConceptFilter.getConceptKeys(); 
+	let intersetConcepts = []; 
+	
+	if(filteredConcepts ){
+		intersetConcepts = findConceptsIntersection(filteredConcepts,selectedConcepts)
+	}
+
+	const interactiveSummaryLegend = intersetConcepts.length ? getInteractiveSummaryLegend(table, intersetConcepts) : getInteractiveSummaryLegend(table); 
+	
 	$('#filters').html(interactiveSummaryLegend)
  }
+
+//  function finds intersection between current selected concept evidences to concept key presents in filtered table
+ function findConceptsIntersection (keys,currentConcepts){
+	let conceptArray = []; 
+	
+	keys.filter(key => {
+		const isKeyActive = currentConcepts.includes(key)
+		if(isKeyActive){conceptArray.push(key)}
+	} ); 
+
+	return conceptArray
+ }
+
 

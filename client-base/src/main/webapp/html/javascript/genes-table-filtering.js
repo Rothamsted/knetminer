@@ -173,12 +173,11 @@ let graphDistanceFilter = {
 }
 
 // Handles genes distance and knetscore filters 
-const geneTableFilterMgr = function() {
-    let tableData = []
-   return { 
+const geneTableFilterMgr = {
+    tableData:[],
         // saves geneview table
         setup(data){
-                tableData = data;
+                this.tableData = data;
                 let filters = [graphDistanceFilter,KnetScoreFilter]
 
                 for(let filter of filters){
@@ -187,15 +186,15 @@ const geneTableFilterMgr = function() {
                 }
         },
          // handles knetscore filtering
-         filterByDistanceAndScore: function(event, table) { 
+        filterByDistanceAndScore: function(event, table) { 
 
               // Checks if any concept evidence is selected. 
-              const isConceptActive = $('.evidenceSummaryItem').hasClass("active-legend"); 
+            
             // Sets Tabledata either from table parameter or state saved tableData.
-              const dataTable = table ? [...table] : [...tableData]; 
+              let data = [...this.tableData]
 
-            // Checks if evidence concepts are in active states to filter table data by selected concept evidence 
-            const data = !isConceptActive ?  dataTable : geneViewConceptFilter.filterbyData(dataTable);
+
+            // Checks if evidence concepts are in active states to filter table data by selected concept
 
             if(event){
                 const element = event.target;
@@ -210,7 +209,9 @@ const geneTableFilterMgr = function() {
             const scoreMax = Number($('#score-max').val()); 
         
             let filteredData = [];
-        
+            let filteredConcepts =[];
+
+
             // Filter through data 
             for(let genes of data) {
                 // Deep clone the gene object to ensure we don't modify the original data
@@ -232,33 +233,50 @@ const geneTableFilterMgr = function() {
                         concepts[concept].conceptEvidences = evidence;
                     }
                 }
-        
-                // checks if object.Keys has length
-                const isConceptEmpty = Object.keys(concepts).length;
+
+
+                let keys = Object.keys( concepts)
+                const isConceptEmpty = keys.length;
+
                 if(isConceptEmpty > 0 && isScoreInRange){
+                    
                     filteredData.push(geneClone);
+
+                    for(let key of keys){
+                        if (!filteredConcepts.includes(key)) filteredConcepts.push(key);
+                    }
+
                 }
             }
+
+            geneTableFilterMgr.toggleTableState(filteredData.length);
         
             if(filteredData.length) {
-                geneTableFilterMgr.renderFilteredTable(filteredData);
+                geneTableFilterMgr.renderFilteredTable(filteredData,filteredConcepts);
             }
-        
-            geneTableFilterMgr.toggleTableState(filteredData.length);
+                
         },
-        renderFilteredTable(table){
+        renderFilteredTable(table,filteredConcepts){
+        
+            const isConceptActive = $('.evidenceSummaryItem').hasClass("active-legend"); 
 
             genesTableScroller.setTableData (table); 
-            renderConceptkeys(table)
-            createGeneTableBody(table)
-          
+
+            if(isConceptActive){
+                geneViewConceptFilter.filterbySelectedConcept(table);
+            }else{
+                renderConceptKeys(table,filteredConcepts);
+                createGeneTableBody(table)
+            }
         },
         toggleTableState(dataLength){
-            if(dataLength <= 0)$('#filterMessage').text('Your filter is returning no results');
+
+            console.log(dataLength); 
+
+            if(dataLength === 0)$('#filterMessage').text('Your filter is returning no results');
 
             $('#filterMessage').toggleClass('show-block',dataLength <= 0); 
             $('#geneTableBody').toggleClass('hide',dataLength <= 0);
         }
-    
     }
-}()
+
