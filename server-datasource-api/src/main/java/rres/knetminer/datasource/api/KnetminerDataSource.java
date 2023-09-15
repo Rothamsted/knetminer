@@ -92,9 +92,7 @@ public abstract class KnetminerDataSource {
 	public abstract QtlResponse qtl(String dsName, GenomeRequest request) throws IllegalArgumentException;
 
 	public abstract NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException;
-	
-	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-   	
+	   	
 	/**
 	 * Gets the Google Analytics configuration data.
 	 * 

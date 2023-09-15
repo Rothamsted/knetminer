@@ -37,7 +37,6 @@ import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
-import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
 import rres.knetminer.datasource.api.NetworkRequest;
 import rres.knetminer.datasource.api.NetworkResponse;
 import rres.knetminer.datasource.api.PlainJSONNetworkResponse;
@@ -49,7 +48,6 @@ import rres.knetminer.datasource.api.datamodel.GeneTableEntry;
 import rres.knetminer.datasource.ondexlocal.service.OndexServiceProvider;
 import rres.knetminer.datasource.ondexlocal.service.SemanticMotifsSearchResult;
 import rres.knetminer.datasource.ondexlocal.service.utils.ExportUtils;
-import rres.knetminer.datasource.server.datasetinfo.DatasetInfoService;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener;
 import uk.ac.rothamsted.knetminer.backend.graph.utils.GeneHelper;
@@ -397,29 +395,6 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		  : new JsonLikeNetworkResponse ( jsExport );
 
 		return response;
-	}
-
-	/**
-	 * Moved under {@link DatasetInfoService}.
-	 */
-	@Override
-	@Deprecated
-	public LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException
-	{
-		try 
-		{
-			LatestNetworkStatsResponse response = new LatestNetworkStatsResponse();
-			
-			var config = OndexServiceProvider.getInstance ().getDataService ().getConfiguration ();
-			var dataPath = config.getDataDirPath ();
-			
-			byte[] encoded = Files.readAllBytes ( Paths.get ( dataPath, "latestNetwork_Stats.tab" ) );
-			response.stats = new String(encoded, Charset.defaultCharset());
-			return response;
-		} 
-		catch (IOException ex) {
-	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
-	  }
 	}
 
 	

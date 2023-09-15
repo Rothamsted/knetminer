@@ -121,9 +121,9 @@ async function fetchStats() {
 
             releaseModal.open();
 
-        } // get(/latestNetworkStats)
+        } // get(/dataset-info/network-stats)
         ).fail(function (jqXHR, textStatus, errorThrown) {
-            logErrorFromRemoteCall("Error while invoking /latestNetworkStats:", jqXHR, textStatus, errorThrown);
+            logErrorFromRemoteCall("Error while invoking /dataset-info/network-stats:", jqXHR, textStatus, errorThrown);
         });
 }
 
