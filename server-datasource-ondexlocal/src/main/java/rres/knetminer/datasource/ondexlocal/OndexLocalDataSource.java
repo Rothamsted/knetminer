@@ -422,63 +422,6 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	    throw new UncheckedIOException ( "Error while fetching latest network view: " + ex.getMessage (), ex); 
 	  }
 	}
-   
-	/**
-	 * @deprecated see {@link KnetminerDataSource#dataSource(String, KnetminerRequest)}.
-	 */
-	@Deprecated
-	@Override
-  public GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException 
-  {
-    GraphSummaryResponse response = new GraphSummaryResponse();
-    
-		var ondexServiceProvider = OndexServiceProvider.getInstance ();
-		var dataService = ondexServiceProvider.getDataService ();
-		var config = dataService.getConfiguration ();
-		var dsetInfo = config.getServerDatasetInfo ();
-		
-		var oxlFile = new File ( config.getOxlFilePath () );
-		
-    // Parse the data into a JSON format & set the graphSummary as is.
-		// This data is obtained from the maven-settings.xml
-    JSONObject summaryJSON = new JSONObject();
-    summaryJSON.put ( "dbVersion", dsetInfo.getVersion () );
-    summaryJSON.put ( "sourceOrganization", dsetInfo.getOrganization () );
-    
-    // TODO, this was the rubbish it was previously producing, which is grossily wrong and 
-    // I don't know how to replace it, see #653
-
-    // For the moment, I'm taking the first specie (the undelining map is an HashLinkedMap)
-    String taxId = dsetInfo.getTaxIds ().iterator ().next ();
-    summaryJSON.put ( "speciesTaxid", taxId );
-    // Similarly to what said above, it isn't clear what the client expects, 
-    // the scientific (latin) name or the common name?
-    summaryJSON.put ( "speciesName", dsetInfo.getSpecie ( taxId ).getScientificName () );
-
-    // TODO: in future, this might come from OXL metadata (the graph descriptor)
-    var creationDateStr = dsetInfo.getCreationDate ();
-    if ( creationDateStr == null )
-    {
-    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
-    	creationDateStr = formatter.format ( oxlFile.lastModified () );
-    }
-    summaryJSON.put ( "dbDateCreated", creationDateStr );
-
-    summaryJSON.put ("provider", dsetInfo.getOrganization () );
-    
-    String jsonString = summaryJSON.toString();
-    
-    // Removing the pesky double quotes
-    // TODO: WHAT?! We need to clarify the above original comment, this actually eliminates
-    // the outer-most curly brackets '{}', presumably, because Spring adds its own ones.
-    //
-    jsonString = jsonString.substring ( 1, jsonString.length() - 1 );
-    log.info ( "response.dataSource= " + jsonString );
-    response.dataSource = jsonString;
-    
-    return response;
-      
-  }
 
 	
 	/**

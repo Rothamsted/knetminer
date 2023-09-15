@@ -94,14 +94,7 @@ public abstract class KnetminerDataSource {
 	public abstract NetworkResponse network(String dsName, NetworkRequest request) throws IllegalArgumentException;
 	
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-   
-	/**
-	 * @deprecated this is still in use, but we need to migrate to /dataset-info, which
-	 * is a more complete and correct version of the same function. 
-	 */
-	@Deprecated
-	public abstract GraphSummaryResponse dataSource(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-	
+   	
 	/**
 	 * @deprecated this is still in use, but we need to migrate to /dataset-info
 	 */
