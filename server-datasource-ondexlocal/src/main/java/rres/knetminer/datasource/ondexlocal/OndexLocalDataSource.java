@@ -35,7 +35,6 @@ import rres.knetminer.datasource.api.GenomeResponse;
 import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
-import rres.knetminer.datasource.api.KnetSpaceHost;
 import rres.knetminer.datasource.api.KnetminerDataSource;
 import rres.knetminer.datasource.api.KnetminerRequest;
 import rres.knetminer.datasource.api.LatestNetworkStatsResponse;
@@ -424,24 +423,6 @@ public class OndexLocalDataSource extends KnetminerDataSource
 	}
 
 	
-	/**
-	 * @deprecated We now use /dataset-info and this should be migrated (in the clients)
-	 */
-	@Deprecated
-	@Override
-  public KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException
-	{
-		KnetSpaceHost response = new KnetSpaceHost();
-		var knetSpaceURL = OndexServiceProvider.getInstance ()
-			.getDataService ()
-			.getConfiguration ()
-			.getKnetSpaceURL ();
-		
-		response.setKsHostUrl ( knetSpaceURL );
-		    
-		return response;
-  }
-
 	@Override
 	public GoogleAnalyticsConfiguration getGoogleAnalyticsApiConfig ()
 	{

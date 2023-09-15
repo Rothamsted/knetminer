@@ -96,12 +96,6 @@ public abstract class KnetminerDataSource {
 	public abstract LatestNetworkStatsResponse latestNetworkStats(String dsName, KnetminerRequest request) throws IllegalArgumentException;
    	
 	/**
-	 * @deprecated this is still in use, but we need to migrate to /dataset-info
-	 */
-	@Deprecated
-	public abstract KnetSpaceHost ksHost(String dsName, KnetminerRequest request) throws IllegalArgumentException;
-
-	/**
 	 * Gets the Google Analytics configuration data.
 	 * 
 	 * TODO: we need this bridge for {@code KnetminerServer}, until we unify the different Maven modules into

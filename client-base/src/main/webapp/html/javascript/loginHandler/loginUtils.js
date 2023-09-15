@@ -12,16 +12,13 @@
  * This will get the the API url asynchronously 
  * @returns {unresolved promise}
  */
-async function getKsAPI() {
+async function getKsAPI() 
+{
 		if ( !api_url ) {
 			throw ( "api_url isn't set, probably you're calling me prematurely" );
 		}
-    const response = await fetch(api_url + '/ksHost')
-            .then((r) => r.json())
-            .then((rData) => {
-                return rData.ksHostUrl; 
-                });
-    return response;
+    const knetSpaceUrl = (await fetch ( api_url + '/dataset-info/knetspace-url' )).text();
+    return knetSpaceUrl;
 }
 
 /* 
