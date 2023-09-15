@@ -84,9 +84,12 @@ public class ExportService
 	
 	/**
 	 * This table contains all possible candidate genes for given query, that is, the KnetMiner left-most
-	 * 'Gene View'.
+	 * 'Gene View'.<br/><br/>
 	 * 
-	 * TODO: too big! Split into separated functions.
+	 * TODO: too big! Split into separated functions.<br/><br/>
+	 * 
+	 * TODO: probably candidateGenes and searchResult.getGene2Score().keys are the same, to be
+	 * verified in OndexLocalDataSource.handleMainSearch().<br/><br/>
 	 * 
 	 */
 	public List<GeneTableEntry> exportGeneTable ( 
