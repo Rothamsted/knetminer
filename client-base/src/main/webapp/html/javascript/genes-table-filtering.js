@@ -209,9 +209,8 @@ const geneTableFilterMgr = {
             const scoreMax = Number($('#score-max').val()); 
         
             let filteredData = [];
-            let filteredConcepts =[];
 
-
+            
             // Filter through data 
             for(let genes of data) {
                 // Deep clone the gene object to ensure we don't modify the original data
@@ -242,21 +241,17 @@ const geneTableFilterMgr = {
                     
                     filteredData.push(geneClone);
 
-                    for(let key of keys){
-                        if (!filteredConcepts.includes(key)) filteredConcepts.push(key);
-                    }
-
                 }
             }
 
             geneTableFilterMgr.toggleTableState(filteredData.length);
         
             if(filteredData.length) {
-                geneTableFilterMgr.renderFilteredTable(filteredData,filteredConcepts);
+                geneTableFilterMgr.renderFilteredTable(filteredData);
             }
                 
         },
-        renderFilteredTable(table,filteredConcepts){
+        renderFilteredTable(table){
         
             const isConceptActive = $('.evidenceSummaryItem').hasClass("active-legend"); 
 
