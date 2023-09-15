@@ -270,8 +270,6 @@ const geneTableFilterMgr = {
         },
         toggleTableState(dataLength){
 
-            console.log(dataLength); 
-
             if(dataLength === 0)$('#filterMessage').text('Your filter is returning no results');
 
             $('#filterMessage').toggleClass('show-block',dataLength <= 0); 

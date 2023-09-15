@@ -80,7 +80,9 @@ let conceptFilter =  {
     }, 
     setConceptKeys(keys){
         this.selectedKeys = keys
-    }
+    }, 
+
+   
     
 
 }
@@ -119,14 +121,15 @@ let geneViewConceptFilter = {
 
     },
     filterbySelectedConcept(tableData){
-            if ($('#'+this.tableId).css('display') !== 'block') return 
-            const selectedConcepts = this.getConceptKeys(); 
+
+        if ($('#'+this.tableId).css('display') !== 'block') return 
+        const selectedConcepts = this.getConceptKeys(); 
+
         // Select what required, using the helper
-            const filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) );
+        const filteredTable = tableData.filter ( row => this.rowFilterPred ( selectedConcepts, row ) );
 
-              // checks if filteredTable length is less than 0 to show no filter found message
-            geneTableFilterMgr.toggleTableState(filteredTable.length )
-
+        // Checks if filteredTable length is less than 0 to show no filter found message
+        geneTableFilterMgr.toggleTableState(filteredTable.length )
             if (filteredTable.length > 0 ){
                     genesTableScroller.setTableData (filteredTable);
                     createGeneTableBody(filteredTable)
@@ -146,15 +149,12 @@ let evidenceViewConceptFilter = {
 
     async createFilteredEvidenceTable ( filteredTable )
     {
-        conceptFilter.toggleKnetTablesDisplay ( true )
-        
         if ( filteredTable && filteredTable.length > 0)
             evidenceTableScroller.setTableData ( filteredTable )
         
         createEvidenceTableBody ( filteredTable )
     },
-
-     filterEvidenceTableByType ( event, conceptType )
+    filterEvidenceTableByType ( event, conceptType )
     {
               
         this.filterTable( 
@@ -169,7 +169,7 @@ let evidenceViewConceptFilter = {
     },
     resetTable(){
         document.getElementById("revertEvidenceView").click();
-    }
+    }, 
 
 }
 
