@@ -62,9 +62,8 @@ public class KnetminerConfigurationTest
 			cfgDir + "/data/knowledge-network.oxl",
 			cfg.getOxlFilePath ()
 		);
-		assertEquals ( "releaseNotesFilePath is wrong!", 
-			cfgDir + "/config/my-release-notes.html", 
-			cfg.getServerDatasetInfo ().getReleaseNotesFilePath ()
+		assertEquals ( 
+			"title wasn't overridden!", "Aratiny dataset", cfg.getServerDatasetInfo ().getTitle ()
 		);
 	}
 	

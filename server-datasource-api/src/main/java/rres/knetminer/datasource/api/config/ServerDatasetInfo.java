@@ -104,10 +104,7 @@ public class ServerDatasetInfo implements DatasetInfo
 			
 	@JsonProperty ( "sampleQueries" )
 	private String sampleQueriesFilePath;
-	
-	@JsonProperty ( "releaseNotes" )
-	private String releaseNotesFilePath;
-	
+		
 	@JsonProperty ( "backgroundImage" )
 	private String backgroundImageFilePath;
 	
@@ -136,13 +133,6 @@ public class ServerDatasetInfo implements DatasetInfo
 			dsetPath, sampleQueriesFilePath 
 		);
 		
-		
-		if ( this.releaseNotesFilePath == null ) releaseNotesFilePath = defaultCfgPath + "/release-notes.html";
-		
-		releaseNotesFilePath = KnetminerConfiguration.buildPath ( 
-			dsetPath, releaseNotesFilePath 
-		);
-
 		
 		if ( this.backgroundImageFilePath == null ) backgroundImageFilePath = defaultCfgPath + "/background.jpg";
 
@@ -306,24 +296,6 @@ public class ServerDatasetInfo implements DatasetInfo
 		return IOUtils.readFile ( this.sampleQueriesFilePath );
 	}
 	
-	/**
-	 * A release notes file. TODO: We still have to review what exists, the client version of this
-	 * file and how to do the injection of stats.
-	 */
-	public String getReleaseNotesFilePath ()
-	{
-		return releaseNotesFilePath;
-	}
-
-	/**
-	 * Reads {@link #getReleaseNotesFilePath()} and returns its contents as a string.
-	 * 
-	 * Used in {@link DatasetInfoService#releaseNotesHTML()}. Note this isn't a YAML field, only the path is.
-	 */
-	public String getReleaseNotesHTML ()
-	{
-		return IOUtils.readFile ( this.releaseNotesFilePath );
-	}
 	
 	/**
 	 * The path to the UI background. TODO: Still in use? 

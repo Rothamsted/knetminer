@@ -86,17 +86,7 @@ public class DatasetInfoService
 			.getSpecie ( taxId )
 			.getChromosomeIds ();
 	}
-	
-	@RequestMapping ( path = "/release-notes.html", produces = MediaType.TEXT_HTML_VALUE )
-	public String releaseNotesHTML ()
-	{
-		return OndexServiceProvider.getInstance ()
-			.getDataService ()
-			.getConfiguration ()
-			.getServerDatasetInfo ()
-			.getReleaseNotesHTML ();
-	}
-	
+		
 	@RequestMapping ( path = "/background-image" ) 
 	public ResponseEntity<byte[]> backgroundImage () // TODO: do we need taxId?
 	{

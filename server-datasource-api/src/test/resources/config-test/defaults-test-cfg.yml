@@ -29,8 +29,7 @@ dataset:
   title: Aratiny dataset
   organization: Rothamsted Research
   # sampleQueries: config/sample-queries.xml Another case of auto-config
-  releaseNotes: config/my-release-notes.html # to test that defaults can be overridden
-  backgroundImage: config/background.jpg 
+  backgroundImage: config/background.jpg
   
   species:
   - taxId: 3702

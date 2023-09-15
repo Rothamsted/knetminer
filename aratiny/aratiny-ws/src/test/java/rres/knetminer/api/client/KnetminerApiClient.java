@@ -230,14 +230,6 @@ public class KnetminerApiClient
 	{
 		return invokeApiStr ( "dataset-info/sample-query.xml", null );
 	}
-
-	/**
-	 * Counterpart of {@link DatasetInfoService#releaseNotesHtml()}.
-	 */
-	public String releaseNotesHtml ()
-	{
-		return invokeApiStr ( "dataset-info/release-notes.html", null );
-	}
 	
 	/**
 	 * Counterpart of {@link DatasetInfoService#backgroundImage()}.

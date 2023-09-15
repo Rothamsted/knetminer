@@ -102,16 +102,6 @@ public class DatasetInfoServiceIT
 		assertTrue  ( "SampleQuery XML is wrong", queries.contains ( "<sampleQueries>" ) );
 	}
 	
-	/**
-	 * Testing release-notes.html.
-	 * TODO: to be removed.
-	 */
-	@Test @Ignore ( "/release-notes.html is to be removed" )
-	public void testReleaseNotes ()
-	{
-		String notes = CLI.releaseNotesHtml ();
-		assertTrue  ( "Wrong result from /release-notes.html", notes.contains ( "<strong>ENSEMBL PLANTS (Arabidopsis thaliana)</strong>") );
-	}
 	
 	/**
 	 * Testing BackgroundImage
