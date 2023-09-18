@@ -117,7 +117,7 @@
 		<knetminer.backend.version>4.0</knetminer.backend.version>
 		<!-- TODO: realign with rdf-common -->
 		<jutils.version>13.0</jutils.version>		
-		<springframework.version>6.0.11</springframework.version>
+		<springframework.version>6.0.12</springframework.version>
 
 		
 		<!-- We define these using the Jetty properties, so that they can be overridden from the 
