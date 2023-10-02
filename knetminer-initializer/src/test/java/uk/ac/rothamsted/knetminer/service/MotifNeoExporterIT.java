@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -87,16 +88,6 @@ public class MotifNeoExporterIT
 
 		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
 
-		/* TODO: remove we already have an idea of how long time it takes, we're not testing this here
-		 * Also, we usually don't need '.' in short messages
-		 *  
-		//Timer to meter how fast the Neo4j driver gets built.
-		var driverBuildTime = XStopWatch.profile ( () -> neoDriver = GraphDatabase.driver (
-				"bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
-		) );
-		slog.info("The driver building interval: {} milliseconds.", driverBuildTime);
-		*/
-
 		neoDriver = GraphDatabase.driver (
 		  "bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
 		);
@@ -120,16 +111,9 @@ public class MotifNeoExporterIT
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriver );
 		motifNeoExporter.saveMotifs ( testMotifs );
-
-		/* TODO: remove, again, we're not testing performance here, the logs already allow for
-		 * seeing how much time it takes and a proper performance test would require more data.
-		 * 
-		//Timer to meter how fast the test genes2PathLengths map get processed.
-		var exportTime = XStopWatch.profile ( () -> motifNeoExporter.saveMotifs ( testMotifs ) );
-		slog.info("The map processing interval: {} milliseconds.", exportTime);
-		*/
 	}
 
+	@AfterClass
 	public static void closeDriver ()
 	{
 		slog.info ( "Closing the Neo4j connection" );
@@ -160,15 +144,7 @@ public class MotifNeoExporterIT
 	public void testRelationsExist ()
 	{
 		try ( Session session = neoDriver.session() )
-		{
-			/* TODO: remove. What's count(g) for?!
-			String cypherQuery =
-   		"""
-			 MATCH (g:Gene) - [r:hasMotifLink] -> (c:Concept)
-			 RETURN g.ondexId AS geneId, r.graphDistance AS graphDistance, c.ondexId AS conceptId, count(g)
-			""";
-			*/
-			
+		{			
 			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
 			String cypherQuery =
 	   		"""

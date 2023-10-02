@@ -3,6 +3,7 @@ package uk.ac.rothamsted.knetminer.backend;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 
 import net.sourceforge.ondex.parser.oxl.Parser;
@@ -13,6 +14,9 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
+import uk.ac.rothamsted.knetminer.service.CypherInitializer;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
 
@@ -80,8 +84,8 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 	@Option (
 		names = { "-nl", "--neo-url"},
-		paramLabel = "<bolt:// URL>",
-		description = "Neo4j BOLT URL for --neo-motifs."
+		paramLabel = "<bolt:// URL>|config://",
+		description = "Neo4j BOLT URL for --neo-motifs. config:// to get Neo coordinates from --config (--neo-user and --neo-password are ignored)."
 	)
 	private String neoUrl;
 
@@ -98,7 +102,17 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		description = "Neo4j neoPassword for --neo-motifs."
 	)
 	private String neoPassword;
-
+	
+	@Option (
+		names = { "-cy", "--neo-init-script"},
+		paramLabel = "<path>|'config://'",
+		description =  
+			"Runs Cypher init commands from a file, (if config://, takes the path from --config customOptions/"
+			+ CypherInitializer.CY_INIT_SCRIPT_PROP + ")."
+	)
+	private String neoInitCypherPath = null;
+	
+	
 	private Logger log = LogManager.getLogger ( this.getClass () ); 
 	
 	
@@ -125,14 +139,24 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 		if ( doNeoMotifs )
 		{
-			log.info ( "Connecting Neo4j for semantic motifs export" );
-			Driver neoDriver = GraphDatabase.driver (
-				neoUrl, AuthTokens.basic ( neoUser, neoPassword )
-			);
+			log.info ( "Populating Neo4j with semantic motif summaries" );
 
 			var motifNeoExporter = new MotifNeoExporter ();
-			motifNeoExporter.setDatabase ( neoDriver );
+			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
+		}
+		
+		if ( neoInitCypherPath != null )
+		{
+			log.info ( "Running Neo4j initialisation script" );
+			
+			var cyInit = new CypherInitializer ();
+			cyInit.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			
+			if ( !"config://".equals ( neoInitCypherPath ) )
+				cyInit.runCypher ( neoInitCypherPath );
+			else
+				cyInit.runCypher ( initializer );
 		}
 
 		return 0;

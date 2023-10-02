@@ -21,16 +21,10 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  * <dl><dt>Date:</dt><dd>25 Aug 2023</dd></dl>
  *
  */
-public class MotifNeoExporter 
+public class MotifNeoExporter extends NeoInitComponent
 {
-	private Driver driver;
-
 	private Logger log = LogManager.getLogger();
 	
-	public void setDatabase(Driver driver) {
-		this.driver = driver;
-	}
-
 	public void saveMotifs ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
 	{
 		try 

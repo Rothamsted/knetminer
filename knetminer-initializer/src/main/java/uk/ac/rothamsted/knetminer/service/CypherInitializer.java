@@ -1,0 +1,90 @@
+package uk.ac.rothamsted.knetminer.service;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.nio.file.Path;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+
+/**
+ * TODO: comment me!
+ *
+ * @author brandizi
+ * <dl><dt>Date:</dt><dd>2 Oct 2023</dd></dl>
+ *
+ */
+public class CypherInitializer extends NeoInitComponent
+{
+	public static final String CY_INIT_SCRIPT_PROP = "cypherInitScript";
+	
+	private Logger log = LogManager.getLogger();
+	
+	public void runCypher ( String... cypherCommands )
+	{
+		try ( var session = driver.session () )
+		{
+			for ( var cypher: cypherCommands )
+			{
+				try {
+					session.run ( cypher );
+				}
+				catch ( RuntimeException ex ) {
+					ExceptionUtils.throwEx ( RuntimeException.class, ex, 
+						"Error while running Cypher query: $cause, query is:\n%s\n", cypher 
+					);
+				}
+			}
+		}
+	}
+	
+	public void runCypher ( Reader reader )
+	{
+		try
+		{
+			var cypher = IOUtils.toString ( reader );
+			var cyphers = cypher.split ( ";" );
+			runCypher ( cyphers );
+		}
+		catch ( IOException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UncheckedIOException.class, ex, "Error while reading Cypher query: $cause" 
+			);
+		}
+	}
+
+	public void runCypher ( Path path )
+	{
+		try
+		{
+			log.info ( "Running Cypher commands from: {}", path.toAbsolutePath () );
+			Reader reader = new FileReader ( path.toFile () );
+			runCypher ( reader );
+		}
+		catch ( FileNotFoundException ex )
+		{
+			throw ExceptionUtils.buildEx ( 
+				UncheckedIOException.class, ex, "Error while reading Cypher query from %s: $cause",
+				path.toAbsolutePath ()
+			);
+		}
+	}
+
+	public void runCypher ( KnetMinerInitializer kinitializer )
+	{
+		String cyInitScriptPath = kinitializer.getKnetminerConfiguration ()
+		.getCustomOptions ()
+		.getString ( CY_INIT_SCRIPT_PROP );
+		
+		if ( cyInitScriptPath == null ) return;
+		
+		this.runCypher ( cyInitScriptPath );
+	}
+}
