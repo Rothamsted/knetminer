@@ -12,13 +12,10 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
@@ -45,11 +42,31 @@ public class MotifNeoExporterIT
 	 * This is the random subset of motifs we actually save and test.
 	 */
 	private static Map<Pair<Integer, Integer>, Integer> testMotifs; 
-	private static Driver neoDriver;
 
+	@ClassRule
+	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
+	
 	private Logger log = LogManager.getLogger ();
 	private static Logger slog = LogManager.getLogger ();
 
+	
+	static void ensureNeo4jMode ( Class<?> testCls )
+	{
+		// This is not always reported by test runners, so...
+		if ( !neoDriverResource.isMavenNeo4jMode () )
+			slog.info (
+				"Not in Neo4j mode, tests in {} will be ignored",
+				testCls.getSimpleName ()
+			);
+
+		Assume.assumeTrue (
+			format (
+				"Not in Neo4j mode, tests in %s will be ignored",
+				testCls.getSimpleName () ),
+			neoDriverResource.isMavenNeo4jMode()
+		);		
+	}
+	
 	/**
 	 * Initialises the test instance.
 	 *
@@ -60,21 +77,8 @@ public class MotifNeoExporterIT
 	@BeforeClass
 	public static void init ()
 	{
-		// This is not always reported by test runners, so...
-		if ( !isMavenNeo4jMode () )
-			slog.info (
-				"Not in Neo4j mode, tests in {} will be ignored",
-				MotifNeoExporterIT.class.getSimpleName ()
-			);
-
-		Assume.assumeTrue (
-			format (
-				"Not in Neo4j mode, tests in %s will be ignored",
-				MotifNeoExporterIT.class.getSimpleName () ),
-			isMavenNeo4jMode()
-		);
-
-
+		ensureNeo4jMode ( MotifNeoExporterIT.class );
+		
 		slog.info ( "Getting k-initialiser with existing semantic motif data" );
 
 		// As said above, with false, it just reloads the already generated data
@@ -83,14 +87,6 @@ public class MotifNeoExporterIT
 
 		// Let's reuse test data produced during regular tests.
 		knetInitializer.initKnetMinerData ( false );
-
-		slog.info ( "Initialising Neo4j connection to test DB" );
-
-		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
-
-		neoDriver = GraphDatabase.driver (
-		  "bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
-		);
 
 		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
 
@@ -109,21 +105,15 @@ public class MotifNeoExporterIT
 		
 		
 		var motifNeoExporter = new MotifNeoExporter ();
-		motifNeoExporter.setDatabase ( neoDriver );
+		motifNeoExporter.setDatabase ( neoDriverResource.getDriver () );
 		motifNeoExporter.saveMotifs ( testMotifs );
-	}
-
-	@AfterClass
-	public static void closeDriver ()
-	{
-		slog.info ( "Closing the Neo4j connection" );
-		if ( neoDriver != null && neoDriver.session ().isOpen () )
-			neoDriver.close ();
 	}
 
 	@Test
 	public void testSavedSize ()
 	{
+		var neoDriver = neoDriverResource.getDriver ();
+		
 		try ( Session session = neoDriver.session() ) 
 		{
 			String cySmRelsSz = """
@@ -143,6 +133,8 @@ public class MotifNeoExporterIT
 	@Test
 	public void testRelationsExist ()
 	{
+		var neoDriver = neoDriverResource.getDriver ();
+
 		try ( Session session = neoDriver.session() )
 		{			
 			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
@@ -179,28 +171,6 @@ public class MotifNeoExporterIT
 				
 			});
 		}
-	}
-
-
-	/**
-	 * Tells if we're running Maven with the neo4j profile. This is used to establish if the tests
-	 * in this class have to be run or not.
-	 *
-	 * TODO: copy-pasted from ApiIT, to be factorised into a utility class.
-	 *
-	 */
-	private static boolean isMavenNeo4jMode ()
-	{
-		String profileIdProp = "maven.profileId";
-		// This is set by the profile in the POM
-		String result = System.getProperty ( profileIdProp, null );
-
-		//The profiles picked by the app are important information (and are usually displayed at the start of Spring Boot apps).
-		slog.info("App is launched with profile: {}.", result);
-
-		if ( result == null )
-			slog.warn ( "Property {} is null, Neo4j-related tests will be skipped", result );
-		return "neo4j".equals ( result );
 	}
 
 }
