@@ -1,5 +1,6 @@
 package uk.ac.rothamsted.knetminer.backend;
 
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.Logger;
@@ -154,7 +155,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			cyInit.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			
 			if ( !"config://".equals ( neoInitCypherPath ) )
-				cyInit.runCypher ( neoInitCypherPath );
+				cyInit.runCypher ( Path.of ( neoInitCypherPath ) );
 			else
 				cyInit.runCypher ( initializer );
 		}
