@@ -51,20 +51,18 @@ public abstract class NeoInitComponent
 	
 	public void setDatabase ( KnetMinerInitializer kinitializer )
 	{
-		final String msgPrefx = "--neo-url config://";
-
 		var traverser = kinitializer.getGraphTraverser ();
-		Validate.notNull ( traverser, "%s is used, but no graph traverse is configured", msgPrefx );
+		Validate.notNull ( traverser, "No semantic motif traverser is configured, can't get DB coordinates" );
 
 		if ( !(traverser instanceof CypherGraphTraverser ) )
 			ExceptionUtils.throwEx ( 
 				IllegalArgumentException.class, 
-				"%s is used, but the configured graph traverser isn't CypherGraphTraverser", msgPrefx 
+				"The configured traverser isn't a CypherGraphTraverser, can't get DB coordinates" 
 		);
 		
 		var cyTraverser = (CypherGraphTraverser) traverser;
 		var driver = cyTraverser.getNeo4jDriver ();
-		Validate.notNull ( driver, "%s is used, but the configuration doesn't define a Neo4j driver" );
+		Validate.notNull ( driver, "No Neo4j driver configured in the traverser's configuration" );
 		
 		this.setDatabase ( driver );		
 	}

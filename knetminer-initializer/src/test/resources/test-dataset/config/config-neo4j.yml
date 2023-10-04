@@ -1,0 +1,10 @@
+# This is used in tests, by the neo4j profile.
+#
+"@includes":
+- config.yml
+  
+"graphTraverser @merge":
+  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
+
+customOptions:
+  cypherInitScript: "${mydir}/neo4j/neo-init.cypher"

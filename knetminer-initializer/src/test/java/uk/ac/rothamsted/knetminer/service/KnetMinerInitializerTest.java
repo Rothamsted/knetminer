@@ -57,12 +57,15 @@ public class KnetMinerInitializerTest
 	 *
 	 * In {@link MotifNeoExporterIT}, it is invoked with doReset = false, so that the initialisation
 	 * isn't repeated.
+	 * 
+	 * isNeo4jMode is sued by Neo4j initialisation-related tests, to tell this method it should 
+	 * load the Neo4j mode test configuration.
 	 *
 	 * Both the OXL and the support data are either to be created or loaded in both cases, since
 	 * the integration tests (*IT.java) have to happen after regular tests and are run by a
 	 * different JVM process.
 	 */
-	static KnetMinerInitializer createKnetMinerInitializer ( boolean doReset )
+	static KnetMinerInitializer createKnetMinerInitializer ( boolean doReset, boolean isNeo4jMode )
 	{
 		var mavenBuildPath = System.getProperty ( "maven.buildDirectory", "target" );
 		mavenBuildPath = Path.of ( mavenBuildPath ).toAbsolutePath ().toString ();
@@ -76,13 +79,25 @@ public class KnetMinerInitializerTest
 
 		ONDEXGraph graph = Parser.loadOXL ( oxlPath );
 
+		var configFName = "config";
+		if ( isNeo4jMode ) configFName += "-neo4j";
+		configFName += ".yml";
+		
 		var initializer = new KnetMinerInitializer ();
 		initializer.setGraph ( graph );
-		initializer.setKnetminerConfiguration ( datasetPath + "/config/config.yml" );
+		initializer.setKnetminerConfiguration ( datasetPath + "/config/" + configFName );
 
 		initializer.initKnetMinerData ( doReset );
 		//System.out.println("The Genes2PathLengths map: " + initializer.getGenes2PathLengths().toString());
 		return initializer;
+	}
+
+	/**
+	 * Defaults to no Neo4j mode.
+	 */
+	static KnetMinerInitializer createKnetMinerInitializer ( boolean doReset )
+	{
+		return createKnetMinerInitializer ( doReset, false );
 	}
 
 

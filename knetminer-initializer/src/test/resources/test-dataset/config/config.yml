@@ -1,5 +1,8 @@
-# See TODO for a description of the configuration format. If you want to test the CLI,
-# DO NOT use this file, use test-config.yml
+# See here for a description of the configuration format:
+# https://github.com/Rothamsted/knetminer/wiki/3.-Deploying-KnetMiner-with-Docker#configuring-knetminer
+#
+# TODO: we should have this copy only for config files and test files. aratiny-ws  
+# should pick up them from here
 #
 
 oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"

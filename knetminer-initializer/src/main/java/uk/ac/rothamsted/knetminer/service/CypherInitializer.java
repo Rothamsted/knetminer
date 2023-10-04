@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +54,13 @@ public class CypherInitializer extends NeoInitComponent
 		{
 			var cypher = IOUtils.toString ( reader );
 			var cyphers = cypher.split ( ";" );
+			
+			cyphers = Stream.of ( cyphers )
+			.filter ( cy -> cy != null )
+			.filter ( cy -> !StringUtils.isWhitespace ( cy ) )
+			.collect ( Collectors.toList () )
+			.toArray ( new String[ 0 ] );
+			
 			runCypher ( cyphers );
 		}
 		catch ( IOException ex )
@@ -85,6 +96,6 @@ public class CypherInitializer extends NeoInitComponent
 		
 		if ( cyInitScriptPath == null ) return;
 		
-		this.runCypher ( cyInitScriptPath );
+		this.runCypher ( Path.of ( cyInitScriptPath ) );
 	}
 }
