@@ -83,9 +83,7 @@
   				<execution>
   					<id>get-test-resources</id>
   					<phase>generate-test-resources</phase>
-  					<goals>
-  						<goal>unpack</goal>
-  					</goals>
+  					<goals><goal>unpack</goal></goals>
   					<configuration>
 	          	<artifactItems>
 
@@ -108,14 +106,36 @@
 									<classifier>tests</classifier>
 									<type>test-jar</type>
       	          <!-- excludes>**/*.class</excludes -->
-									<outputDirectory>${project.build.directory}/test-classes</outputDirectory>	               	
+									<outputDirectory>${project.build.directory}/dependency/test-resources</outputDirectory>	               	
 	             	</artifactItem>
-	             	
 	          	</artifactItems>
   					</configuration>
   				</execution>  					    
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>filter-n-copy-test-config</id>
+						<phase>process-test-resources</phase>
+						<goals><goal>copy-resources</goal></goals>
+						<configuration>
+              <resources>          
+                <resource>
+                  <directory>${project.build.directory}/dependency/test-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
