@@ -14,8 +14,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.neo4j.driver.Driver;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.runcontrol.ProgressLogger;
 
 /**
  * TODO: comment me!
@@ -30,14 +32,25 @@ public class CypherInitializer extends NeoInitComponent
 	
 	private Logger log = LogManager.getLogger();
 	
+
 	public void runCypher ( String... cypherCommands )
 	{
+		if ( cypherCommands == null || cypherCommands.length == 0 ) {
+			log.warn ( "Cypher initialiser called with empty command list, doing nothing" );
+			return;
+		}
+		
+		log.info ( "Cypher initialiser, running {} commands", cypherCommands.length );
+		
+		ProgressLogger progressLogger = new ProgressLogger ( "Cypher initialiser, {} commands processed", 10 );
+		
 		try ( var session = driver.session () )
 		{
 			for ( var cypher: cypherCommands )
 			{
 				try {
 					session.run ( cypher );
+					progressLogger.updateWithIncrement ();
 				}
 				catch ( RuntimeException ex ) {
 					ExceptionUtils.throwEx ( RuntimeException.class, ex, 
@@ -46,6 +59,7 @@ public class CypherInitializer extends NeoInitComponent
 				}
 			}
 		}
+		log.info ( "Cypher initialiser, finished" );
 	}
 	
 	public void runCypher ( Reader reader )
