@@ -2,7 +2,7 @@
 #
 
 "@includes":
-- defaults-cfg.yml
+- config.yml
 
 oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
   
