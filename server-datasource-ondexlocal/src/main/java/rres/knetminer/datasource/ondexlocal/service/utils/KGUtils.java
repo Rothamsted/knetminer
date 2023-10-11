@@ -61,49 +61,49 @@ public class KGUtils
    * Was named searchGenesByAccessionKeywords
    */
 	public static Set<ONDEXConcept> filterGenesByAccessionKeywords (
-			DataService dataService, SearchService searchService, List<String> accessions, String clientTaxId 
-		)
-		{
-			if ( accessions.size () == 0 ) return new HashSet<>();
-			var clientTaxIdNrm = StringUtils.trimToNull ( clientTaxId );
-			
-			var graph = dataService.getGraph ();
-			var config = dataService.getConfiguration ();
-			var dsetInfo = config.getServerDatasetInfo ();
-					
-			// TODO: probably it's not needed anymore
-			Set<String> normAccs = accessions.stream ()
-			.map ( acc -> 
-				acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
-				.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
-				.toUpperCase () 
-			).collect ( Collectors.toSet () );
-			
-			AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
-					
-			Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
-			.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
+		DataService dataService, SearchService searchService, List<String> accessions, String clientTaxId 
+	)
+	{
+		if ( accessions.size () == 0 ) return new HashSet<>();
+		var clientTaxIdNrm = StringUtils.trimToNull ( clientTaxId );
+		
+		var graph = dataService.getGraph ();
+		var config = dataService.getConfiguration ();
+		var dsetInfo = config.getServerDatasetInfo ();
+				
+		// TODO: probably it's not needed anymore
+		Set<String> normAccs = accessions.stream ()
+		.map ( acc -> 
+			acc.replaceAll ( "^[\"()]+", "" ) // remove initial \" \( or \)
+			.replaceAll ( "[\"()]+$", "" ) // remove the same characters as ending chars
+			.toUpperCase () 
+		).collect ( Collectors.toSet () );
+		
+		AttributeName attTAXID = ONDEXGraphUtils.getAttributeName ( graph, "TAXID" ); 
+				
+		Stream<Set<ONDEXConcept>> accStrm = normAccs.stream ()
+		.map ( acc -> searchService.searchConceptByTypeAndAccession ( "Gene", acc, false ) );
 
-			Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
-			.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
-			
-			Predicate<String> taxIdGeneFilter = clientTaxIdNrm == null 
-				? _taxId -> dsetInfo.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
-				: _taxId -> clientTaxIdNrm.equals ( _taxId ); // client-provided taxId
-			
-			Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
-			.flatMap ( Set::parallelStream )
-			.filter ( gene -> 
-			{
-				var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
-				return taxIdGeneFilter.test ( thisTaxId );
-			})
-			// Components like the semantic motif traverser need the original internal IDs.
-			.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
-			.collect ( Collectors.toSet () );
-			
-			return result;
-		}
+		Stream<Set<ONDEXConcept>> nameStrm = normAccs.stream ()
+		.map ( acc -> searchService.searchConceptByTypeAndName ( "Gene", acc, false ) );
+		
+		Predicate<String> taxIdGeneFilter = clientTaxIdNrm == null 
+			? _taxId -> dsetInfo.containsTaxId ( _taxId ) // No client-provided taxId, use the configured ones
+			: _taxId -> clientTaxIdNrm.equals ( _taxId ); // client-provided taxId
+		
+		Set<ONDEXConcept> result = Stream.concat ( accStrm, nameStrm )
+		.flatMap ( Set::parallelStream )
+		.filter ( gene -> 
+		{
+			var thisTaxId = getAttrValueAsString ( gene, attTAXID, false );
+			return taxIdGeneFilter.test ( thisTaxId );
+		})
+		// Components like the semantic motif traverser need the original internal IDs.
+		.map ( gene -> gene instanceof LuceneConcept ? ((LuceneConcept) gene).getParent () : gene )
+		.collect ( Collectors.toSet () );
+		
+		return result;
+	}
 	
 	
   /**
