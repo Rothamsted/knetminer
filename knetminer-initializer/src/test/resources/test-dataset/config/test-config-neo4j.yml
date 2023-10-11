@@ -1,0 +1,6 @@
+# This is used in tests, by the neo4j profile.
+#
+"@includes":
+- config-neo4j.yml
+  
+oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"

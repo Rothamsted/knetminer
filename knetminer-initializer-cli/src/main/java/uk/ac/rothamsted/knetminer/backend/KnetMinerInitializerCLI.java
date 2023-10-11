@@ -3,20 +3,14 @@ package uk.ac.rothamsted.knetminer.backend;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.sourceforge.ondex.parser.oxl.Parser;
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
-import uk.ac.ebi.utils.exceptions.ExceptionUtils;
-import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 import uk.ac.rothamsted.knetminer.service.CypherInitializer;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;

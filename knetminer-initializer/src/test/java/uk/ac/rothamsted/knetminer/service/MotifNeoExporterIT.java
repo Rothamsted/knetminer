@@ -2,6 +2,7 @@ package uk.ac.rothamsted.knetminer.service;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
@@ -103,7 +104,6 @@ public class MotifNeoExporterIT
 
 		assertTrue ( "semantic motif subset is empty!", testMotifs.size () > 0 );
 		
-		
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriverResource.getDriver () );
 		motifNeoExporter.saveMotifs ( testMotifs );
@@ -145,14 +145,7 @@ public class MotifNeoExporterIT
 				   r.graphDistance AS graphDistance
 				""";
 			Result result = session.run( cypherQuery );
-			
-			/** TODO: remove, there are separated checks for counts and sizes
-			 * Also, 'record' has become a reserved Java keyword.
-			 * 
-			log.info("Record items list size: {}", recordList.size());
-			int recordCount = 0;
-			*/
-						
+									
 			result.forEachRemaining ( cyRel ->
 			{				
 				var geneId = cyRel.get ( "geneId" ).asInt ();
@@ -163,6 +156,11 @@ public class MotifNeoExporterIT
 				log.trace ( "Read tuple: ({}, {}) -> {}", geneId, conceptId, distance );
 				log.trace ( "Expected tuple: ({}, {}) -> {}", geneId, conceptId, expectedDistance );
 
+				assertTrue ( String.format ( 
+					"The returned semantic motif pair ({}, {}) doesn't exist!", geneId, conceptId ),
+					testMotifs.containsKey ( Pair.of ( geneId, conceptId ) )
+				);
+				
 				assertEquals (
 					"The graph distance returned from Neo4j does not match the graph distance in the map",
 					(int) expectedDistance,

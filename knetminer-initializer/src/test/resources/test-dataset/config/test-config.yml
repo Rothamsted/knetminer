@@ -1,0 +1,8 @@
+# This is used for unit tests only. See config.yml and defaults-cfg.yml 
+#
+
+"@includes":
+- defaults-cfg.yml
+
+oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
+  

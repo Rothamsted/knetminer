@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 
@@ -29,6 +28,8 @@ public class MotifNeoExporter extends NeoInitComponent
 	{
 		try 
 		{
+			deleteOldLinks ();
+			
 			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
 			
 			final int batchSize = 2000;
@@ -75,17 +76,37 @@ public class MotifNeoExporter extends NeoInitComponent
 	private void processBatch ( List<Map<String, Object>> smRelationsBatch )
 	{
 		try ( Session session = driver.session() ) 
-		{
+		{			
 			Transaction tx = session.beginTransaction();
 			String cyRelations =
 				"""
         UNWIND $smRelRows AS relRow\s
-        MATCH ( s:Gene { ondexId: toString ( relRow.geneId )} )
-        MATCH ( t:Concept { ondexId: toString ( relRow.conceptId )} )
-        CREATE (s) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (t)				
+        MATCH ( gene:Gene { ondexId: toString ( relRow.geneId )} )
+        MATCH ( concept:Concept { ondexId: toString ( relRow.conceptId )} )
+        CREATE (gene) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (concept)				
         """;
 			tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
 			tx.commit();
+		}
+	}
+	
+	private void deleteOldLinks ()
+	{
+		log.info ( "Deleting old semantic motif endpoints" );
+		
+		try ( Session session = driver.session() ) 
+		{
+			// The transactions trick comes from https://neo4j.com/developer/kb/large-delete-transaction-best-practices-in-neo4j/
+			String cyDelete =
+				"""
+        MATCH ( gene:Gene ) - [link:hasMotifLink] -> ( concept:Concept )
+        CALL {
+          WITH link
+          DELETE link
+        }
+        IN TRANSACTIONS OF 10000 ROWS
+        """;
+			session.run ( cyDelete );
 		}
 	}
 }
