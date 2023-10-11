@@ -19,6 +19,8 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
+
 
 /**
  * Tests for MotifNeoExporter.
@@ -48,24 +50,6 @@ public class MotifNeoExporterIT
 	
 	private Logger log = LogManager.getLogger ();
 	private static Logger slog = LogManager.getLogger ();
-
-	
-	static void ensureNeo4jMode ( Class<?> testCls )
-	{
-		// This is not always reported by test runners, so...
-		if ( !neoDriverResource.isMavenNeo4jMode () )
-			slog.info (
-				"Not in Neo4j mode, tests in {} will be ignored",
-				testCls.getSimpleName ()
-			);
-
-		Assume.assumeTrue (
-			format (
-				"Not in Neo4j mode, tests in %s will be ignored",
-				testCls.getSimpleName () ),
-			neoDriverResource.isMavenNeo4jMode()
-		);		
-	}
 	
 	/**
 	 * Initialises the test instance.
@@ -77,7 +61,7 @@ public class MotifNeoExporterIT
 	@BeforeClass
 	public static void init ()
 	{
-		ensureNeo4jMode ( MotifNeoExporterIT.class );
+		neoDriverResource.ensureNeo4jMode ();
 		
 		slog.info ( "Getting k-initialiser with existing semantic motif data" );
 

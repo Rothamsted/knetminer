@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
+
 /**
  * TODO: comment me!
  *
@@ -24,7 +26,7 @@ public class CypherInitializerIT
 	@BeforeClass
 	public static void init ()
 	{
-		MotifNeoExporterIT.ensureNeo4jMode ( CypherInitializerIT.class );
+		neoDriverResource.ensureNeo4jMode ();
 	}
 	
 	@Before

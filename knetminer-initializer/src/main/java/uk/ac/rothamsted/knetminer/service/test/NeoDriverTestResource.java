@@ -1,8 +1,13 @@
-package uk.ac.rothamsted.knetminer.service;
+package uk.ac.rothamsted.knetminer.service.test;
+
+import static java.lang.String.format;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assume;
 import org.junit.rules.ExternalResource;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -71,4 +76,18 @@ public class NeoDriverTestResource extends ExternalResource
 		return isMavenNeo4jMode = "neo4j".equals ( mavenProfileId );
 	}
 	
+	/**
+	 * Uses {@link Assume#assumeTrue(String, boolean)} to stop a test when !{@link #isMavenNeo4jMode()}. 
+	 * 
+	 * @param testCls the test class from which you want to run this, 
+	 */
+	public void ensureNeo4jMode ()
+	{
+		final String msg = "Not in Neo4j mode, tests in this class will be skipped";
+		
+		// This is not always reported by test runners, so...
+		if ( !isMavenNeo4jMode () ) log.info ( msg );
+
+		Assume.assumeTrue ( msg, isMavenNeo4jMode() );		
+	}	
 }
