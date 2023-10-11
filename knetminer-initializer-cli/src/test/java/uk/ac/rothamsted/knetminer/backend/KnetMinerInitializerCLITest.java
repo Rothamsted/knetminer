@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
+
 /**
  * Junit test class for KnetMinerInitializerCLI
  * 
@@ -24,9 +25,9 @@ import org.junit.Test;
 public class KnetMinerInitializerCLITest
 {
 	private static String datasetPath;
-
 	private static String oxlPath;
-	
+
+
 	@BeforeClass
 	public static void init() throws IOException
 	{
