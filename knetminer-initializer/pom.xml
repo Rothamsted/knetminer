@@ -112,11 +112,11 @@
 	      <artifactId>maven-failsafe-plugin</artifactId>
 	      <configuration>
 	      	<systemProperties>
+						<!-- sent to Java -->
 	      		<maven.profileId>${maven.profileId}</maven.profileId>
 		        <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
 	      	</systemProperties>
 	      </configuration>
-	      
 			</plugin>
 			
 	  	<plugin>
@@ -169,7 +169,7 @@
 	<profiles>
 		
 		<!-- 
-		You need mvn -Pneo4j to run the tests in MotifNeoExporterIT
+		You need mvn -Pneo4j to run Neo4j-related tests (those using NeoDriverTestResource).
 		
 		TODO: this is a copy from aratiny-ws. For the moment, it will do, but 
 		I need to organise it better, like starting the neo server plug-in 

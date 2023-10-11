@@ -1,13 +1,9 @@
 package uk.ac.rothamsted.knetminer.service.test;
 
-import static java.lang.String.format;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assume;
 import org.junit.rules.ExternalResource;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -24,6 +20,7 @@ public class NeoDriverTestResource extends ExternalResource
 	private Boolean isMavenNeo4jMode;
 	
 	private Driver driver;
+	private int boltPort = -1;
 
 	private Logger log = LogManager.getLogger ();
 	
@@ -37,7 +34,7 @@ public class NeoDriverTestResource extends ExternalResource
 		
 		log.info ( "Initialising Neo4j connection to test DB" );
 
-		var boltPort = System.getProperty ( "neo4j.server.boltPort" );
+		this.boltPort = Integer.valueOf ( System.getProperty ( "neo4j.server.boltPort" ) );
 
 		driver = GraphDatabase.driver (
 		  "bolt://localhost:" + boltPort, AuthTokens.basic ( "neo4j", "testTest" )
@@ -54,6 +51,10 @@ public class NeoDriverTestResource extends ExternalResource
 		return driver;
 	}
 		
+	public int getBoltPort () {
+		return boltPort;
+	}
+	
 	/**
 	 * Tells if we're running Maven with the neo4j profile. This is used to establish if the 
 	 * Neo4j-related tests have to be run or not. Here, it's also used to decide if to try to get
@@ -89,5 +90,5 @@ public class NeoDriverTestResource extends ExternalResource
 		if ( !isMavenNeo4jMode () ) log.info ( msg );
 
 		Assume.assumeTrue ( msg, isMavenNeo4jMode() );		
-	}	
+	}
 }

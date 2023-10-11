@@ -79,8 +79,7 @@ public class KnetMinerInitializerTest
 
 		ONDEXGraph graph = Parser.loadOXL ( oxlPath );
 
-		var configFName = "config";
-		if ( isNeo4jMode ) configFName += "-neo4j";
+		var configFName = isNeo4jMode ?  "test-config-neo4j" : "config";
 		configFName += ".yml";
 		
 		var initializer = new KnetMinerInitializer ();

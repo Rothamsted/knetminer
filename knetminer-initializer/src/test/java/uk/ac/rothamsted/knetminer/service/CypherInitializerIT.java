@@ -62,7 +62,7 @@ public class CypherInitializerIT
 			"CREATE (:Foo{ id: 'cyinitTest02', descr: 'Created by unit test' })"
 		);
 		
-		verify ( cyinit );
+		verify ();
 	}
 	
 	@Test
@@ -74,7 +74,7 @@ public class CypherInitializerIT
 
 		cyinit.runCypher ( kinitializer );
 	
-		verify ( cyinit );
+		verify ();
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class CypherInitializerIT
 
 		cyinit.runCypher ( kinitializer );
 	
-		verify ( cyinit );
+		verify ();
 	}
 	
 	@Test
@@ -98,11 +98,11 @@ public class CypherInitializerIT
 
 		cyinit.runCypher ( kinitializer );
 	
-		verify ( cyinit );
+		verify ();
 	}
 	
 	
-	private void verify ( CypherInitializer cyinit )
+	private void verify ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 		try ( Session session = neoDriver.session() ) 

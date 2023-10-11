@@ -10,6 +10,10 @@
   <!-- For all the rest, the defaults should be fine -->
 	<import resource = "defaults-cfg.xml" />
 	
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "bolt://localhost:${neo4j.server.boltPort}" />
+  </bean> 
+
 	<bean name = "semanticMotifsQueries" 
 				class = "uk.ac.ebi.utils.collections.ListUtils" factory-method = "union" >
 		<constructor-arg>

@@ -24,8 +24,8 @@ import org.junit.Test;
  */
 public class KnetMinerInitializerCLITest
 {
-	private static String datasetPath;
-	private static String oxlPath;
+	public static String datasetPath;
+	public static String oxlPath;
 
 
 	@BeforeClass

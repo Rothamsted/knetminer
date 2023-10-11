@@ -40,8 +40,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Option (
 		names = { "-i", "--input", "--in" },
 		paramLabel = "<path/to/oxl>",		
-		description = "The path of the OXL to start from",
-		required = true
+		description = "The path of the OXL to start from"
 	)
 	private String oxlInputPath = null;
 
@@ -56,8 +55,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Option (
 		names = { "-c", "--config"},
 		paramLabel = "<path/to/YML>",
-		description = "The KnetMiner YML configuration file where to get options like traverser semantic motifs file.",
-		required = true
+		description = "The KnetMiner YML configuration file where to get options like traverser semantic motifs file."
 	)
 	private String configYmlPath;
 	
@@ -114,28 +112,40 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Override
 	public Integer call ()
 	{
-		KnetMinerInitializer initializer = new KnetMinerInitializer ();
-		log.info ( "Loading Knetminer configuration from: \"{}\"", this.configYmlPath );
-		initializer.setKnetminerConfiguration ( configYmlPath );
+		KnetMinerInitializer initializer = null;
 
-		if ( this.dataPath != null )
+		if ( configYmlPath != null )
 		{
-			log.info ( "Setting data dir to: \"{}\"", dataPath );
-			initializer.setDatDirPath ( dataPath );
+			initializer = new KnetMinerInitializer ();
+			log.info ( "Loading Knetminer configuration from: \"{}\"", this.configYmlPath );
+			initializer.setKnetminerConfiguration ( configYmlPath );
+	
+			if ( this.dataPath != null )
+			{
+				log.info ( "Setting data dir to: \"{}\"", dataPath );
+				initializer.setDatDirPath ( dataPath );
+			}
+				
+			String oxlPath = this.oxlInputPath;
+			if ( oxlPath == null ) oxlPath = initializer.getOxlFilePath ();
+			
+			log.info ( "Loading the OXL from: \"{}\"", this.oxlInputPath );
+			initializer.setOxlFilePath ( oxlPath );
+			var graph = Parser.loadOXL ( oxlPath );
+			initializer.setGraph ( graph );
+	
+			log.info ( "Doing the data initialisation" );
+			initializer.initKnetMinerData ( this.doForce );
 		}
-		
-		log.info ( "Loading the OXL from: \"{}\"", this.oxlInputPath );
-		initializer.setOxlFilePath ( oxlInputPath );
-		var graph = Parser.loadOXL ( oxlInputPath );
-		initializer.setGraph ( graph );
-
-		log.info ( "Doing the data initialisation" );
-		initializer.initKnetMinerData ( this.doForce );
 
 		if ( doNeoMotifs )
 		{
 			log.info ( "Populating Neo4j with semantic motif summaries" );
 
+			if ( initializer == null ) throw new IllegalArgumentException (
+				"--neo-motifs can't be used without --config"
+			);
+			
 			var motifNeoExporter = new MotifNeoExporter ();
 			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
