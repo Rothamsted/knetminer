@@ -1,8 +1,3 @@
-/**
- * TODO: There is an identical file in server-base. WTH?! We need to review and factorise.
- * DO NOT change/diverge any of these files before that!
- */
-
 /* 
  * Functions for logging into KnetSpace using the jBox libs
  * Author: hearnshawj, singha

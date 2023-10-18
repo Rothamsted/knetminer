@@ -2,6 +2,9 @@
  * Util Object handles geneview and evidence table data state management and concept filtering.
  * 
  * @param {displayOn} a boolean
+ * 
+ * TODO: where is displayOn used? Is it still used? Update the comment accordingly 
+ * (and remove this TODO too).
  */
 let conceptFilter =  {
 

@@ -404,15 +404,6 @@ function createEvidenceTableBody ( tableData, doAppend = false )
 	const fromRow = evidenceTableScroller.getPageStart ()
 	const toRow = evidenceTableScroller.getPageEnd ()
 
-	/**
-	 * TODO: how can this work, if before we were looping on the fromRow/toRow window?
-	 * 
-	 * Is it because it now gets the rendered window only? If yes, remove fromRow, toRow declarations, 
-	 * but then what's evidenceTableScroller for? 
-	 * 
-	 * if it's a bug, fix it with a loop over the right window 
-	 */
-
     for(var row = fromRow; row < toRow; row++){
  
     let {conceptType, name, pvalue, totalGenesSize, ondexId, userGenesSize, userGeneAccessions } = tableData[row]

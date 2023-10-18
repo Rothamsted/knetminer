@@ -896,10 +896,33 @@ function replaceOndexId(tableData) {
   return refinedTableData
 }
 
+/**
+ * function create network for rows of gene View using genesAccessions.
+ * Called in createGenesTable and createEvidenceTableBody
+ * 
+ */
+function openAccessionNetworkView(concept,event){
+	
+	event.preventDefault();
+	var element = event.target; 
+
+	var keyword = trim($("#keywords").val());
+	var accessions = $(element).attr("data-genelist").trim().split(",");
+
+	var concept = !keyword.length ? 'ConceptID:' + concept : keyword; 
+	var networkParameter = { keyword: concept, isExportPlainJSON: false };
+	
+	// Generate Network in KnetMaps.
+	if(accessions.length) {
+		networkParameter["list"] = accessions; 
+		generateCyJSNetwork(api_url + '/network',networkParameter, false);
+	} 
+
+}
 
 /* 
  * TODO: see init-utils.js 
- * Keep this test/provisional code ad the end of files.
+ * ==> Keep this test/provisional code ad the end of files.
  */
 if (TEST_MODE) {
 	
@@ -1049,27 +1072,3 @@ if (TEST_MODE) {
 
 } // if TEST_MODE
 
-
-/**
- * function create network for rows of gene View using genesAccessions.
- * Called in createGenesTable and createEvidenceTableBody
- * 
- */
-function openAccessionNetworkView(concept,event){
-	
-	event.preventDefault();
-	var element = event.target; 
-
-	var keyword = trim($("#keywords").val());
-	var accessions = $(element).attr("data-genelist").trim().split(",");
-
-	var concept = !keyword.length ? 'ConceptID:' + concept : keyword; 
-	var networkParameter = { keyword: concept, isExportPlainJSON: false };
-	
-	// Generate Network in KnetMaps.
-	if(accessions.length) {
-		networkParameter["list"] = accessions; 
-		generateCyJSNetwork(api_url + '/network',networkParameter, false);
-	} 
-
-}

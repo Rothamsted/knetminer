@@ -187,6 +187,11 @@ class UserRole {
           throw new TypeError(`Invalid user role '${roleStr}'`);
       }
 
+			/*
+			   TODO: this is wrong. get( str ) must return a UserRole INSTANCE, NOT
+			   its numeric level, see the description in #768 
+			 */ 
+
       const result = UserRole[roleStr].#level;
       if (!result) {
           throw new TypeError(`Unable to retrieve level for role '${roleStr}'`);
@@ -194,6 +199,12 @@ class UserRole {
       return result;
   }
 
+	/*
+	   TODO: this is TOTALLY wrong. The business of UserRole IS NOT keeping track of the current
+	   user, for it should only be an immutable object, representing a role.
+	   
+	   The place for the current user is UserAccessManager, as it was initially done.
+	*/
   static setUserRole(roleStr){
     const userLevel = UserRole.get(roleStr)
     this.userLevel = userLevel
