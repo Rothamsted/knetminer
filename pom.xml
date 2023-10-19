@@ -113,7 +113,7 @@
 		<java.version>17</java.version>
 
 		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>7.0</ondex.version>
+		<ondex.version>7.0.1-SNAPSHOT</ondex.version>
 		<knetminer.backend.version>4.0</knetminer.backend.version>
 		<!-- TODO: realign with rdf-common -->
 		<jutils.version>13.0</jutils.version>		
@@ -180,7 +180,7 @@
 				<plugin>
 				  <groupId>org.eclipse.jetty</groupId>
 				  <artifactId>jetty-maven-plugin</artifactId>
-			    <version>11.0.15</version>
+			    <version>11.0.17</version>
 				  <executions>
 				  	<execution>
 				  		<id>start</id>
