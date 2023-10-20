@@ -107,50 +107,43 @@
 
   class WebCacheWrapper
   {
-      cacheName = null
+      #cacheName = null
     
       constructor(cacheName){
-        this.cacheName = cacheName
+        this.#cacheName = cacheName
       }
-
-      // Method get cached data if available or calls API endpoints 
-      async requestHandler(request, options){
-
-        let data = await this.get(request)
-
-        if(!data)
-        {
-          data = await $.get({ url:request, data: '', timeout: 100000 })
-          .done( response => this.openCache(request,response,options))
-          .fail(function (xhr, status, errolog) {
-            jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
-            return null
-          })
-        }
-
-        return data;
-        
-      }
-
 
       // Method checks request url to determine if it's cached from previous API call.
-      async get(request){
-        // if request is cached, cached data is returned
-        const cachedData = await caches.match(request);
-
-        if(!cachedData) return null 
-
-        const response = cachedData.json(); 
-        return response; 
-      
+      async get ( requestUrl, options = { data: '', timeout: 100000 } )
+      {
+        let result = await caches.match ( requestUrl, options )
+        if ( result ) return result.json ()
+        
+        result = await this._apiHandler ( requestUrl, options );
+        
+        caches.open ( this.#cacheName ).then ( (cache) => 
+        {
+          // TODO: do we need to serialize/unserialize JSON, can't we just store and return 'result'?
+          //   
+          cache.put ( requestUrl, new Response ( JSON.stringify ( result ), options ) )
+        })
+        
+        return result
       }
 
       // Method puts cached data in browser API
-      openCache(request,response,options)
+      async _apiHandler ( requestUrl, options )
       {
-        caches.open(this.cacheName).then((cache) => {
-          cache.put(request,new Response(JSON.stringify(response),options))
-        })
+        try {
+          const result = await $.get( { url:requestUrl, ...options } )
+          return result
+        }
+        catch ( err )
+        {
+          // TODO: report the error
+          jboxNotice ( 'An error occured, kindly try again', 'red',  300, 2000 );
+          return null
+        }
       }
       
   }
@@ -160,40 +153,22 @@
   {
 
     // gets cached data and calls for API endpoint when cache request is not 
-    async apiHandler(conceptId){
-      // api request string
-      let request =  api_url+'/genome?keyword=ConceptID:'+ conceptId
-
-      // gets cached request
-      let data = await super.get(request); 
+    async get ( conceptId )
+    {
+      return super.get ( 
+        api_url + '/genome?keyword=ConceptID:' + conceptId,
+        { data: '', timeout: 100000, headers: { 'Content-Type': 'text/plain' } }
+      )
+    }
+  
+    async _apiHandler ( requestUrl, options )
+    {
+      let result = await super._apiHandler ( requestUrl, options )
+      if ( !result ) return result;
+      let geneTable = formatJsonToTsv(result.geneTable)
+      geneTable = geneTable.split("\n")
       
-      // calls API endpoints when request is not 
-      if(!data)
-      {
-        await $.get({url:request,timeout:100000})
-        .done((response) => {
-
-          // TODO: WILL BE REMOVED IN COMING DAYS
-          // TODO: Sounds like this should stay for the purpose of evidence genes download
-          // possibly, remove the comments.
-          
-          let geneTable = formatJsonToTsv(response.geneTable);
-          geneTable = geneTable.split("\n")
-          
-
-            super.openCache(request,geneTable,{headers: {'Content-Type': 'text/plain'}})
-            data = geneTable
-          
-          // extended method registers cache request and response objects (geneTable and headers)
-
-        })
-        .fail(function (xhr, status, errolog) {
-          jboxNotice('An error occured, kindly try again', 'red', 300, 2000);
-          return null
-        })
-      }
-
-      return data; 
+      return geneTable
     }
 
   }

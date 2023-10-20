@@ -268,7 +268,8 @@ async function openGeneListPopup(conceptId, element)
     let accessionCache = new EvidenceAccessionCache('accession-cache');
     
     // TODO: As explained, this is too poor to get into the 5.7
-    let accessionData =  await accessionCache.apiHandler(conceptId); 
+    let accessionData =  await accessionCache.get(conceptId);
+
 	
 	if ( accessionData ){
         var accessionPopup = new AccessionPopupManager(element, conceptId, accessionData); 
@@ -472,7 +473,6 @@ function createEvidenceTableBody ( tableData, doAppend = false )
     $('#evidenceTotal').html ( tableData.length )
   }
 }
-
 
 // a helper class to manage evidenceview genes Column Popup
 class AccessionPopupManager

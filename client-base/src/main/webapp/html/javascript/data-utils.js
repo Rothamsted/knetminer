@@ -23,8 +23,8 @@ async function genomeApi (request, requestParams)
 		// Plus, this is a kindergarten way to do it, there are dedicated
 		// rond() functions for that
 		//
-        let queryseconds = (querytime / 1000).toFixed(2);
-        data["queryseconds"] = queryseconds; 
+
+        data["querytime"] = querytime; 
   
         return data; 
       })
@@ -219,7 +219,8 @@ function genomicViewContent(data, keyword, geneList_size, searchMode,list) {
   let genomicViewTitle;
   let status;
   
-  let { geneCount, geneTable, evidenceTable, gviewer, queryseconds } = data;
+  let { geneCount, geneTable, evidenceTable, gviewer, querytime } = data;
+  const queryseconds =   ( querytime / 1000).toFixed(2);
 
   if (geneCount == 0) {
     status = true;
