@@ -39,7 +39,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
 public class ServerDatasetInfo implements DatasetInfo 
 {
 	/**
-	 * Used internally, to provide a vie for {@link ServerDatasetInfo#asDatasetInfo()}.
+	 * Used internally, to provide a view for {@link ServerDatasetInfo#asDatasetInfo()}.
 	 */
 	private class DatasetInfoDelegate implements DatasetInfo
 	{		
