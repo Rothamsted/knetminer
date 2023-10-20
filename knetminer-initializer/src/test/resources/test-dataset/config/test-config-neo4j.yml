@@ -1,4 +1,4 @@
-# This is distributed with the CLI as an example.
+# This is used for tests.
 #
 "@includes":
 - config-neo4j.yml

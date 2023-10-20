@@ -22,7 +22,7 @@ import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
  * <dl><dt>Date:</dt><dd>11 Oct 2023</dd></dl>
  *
  */
-public class KnetMinerInitializerCliCypherInitIT
+public class KnetMinerInitializerCLICypherInitIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
@@ -98,7 +98,7 @@ public class KnetMinerInitializerCliCypherInitIT
 	public void testAllFromConfig ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
-			"-i", KnetMinerInitializerCLITest.oxlPath, 
+			// From config when omitted "-i", KnetMinerInitializerCLITest.oxlPath, 
 			"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
 		  "--neo-init-script", "config://",
 		  "--neo-url", "config://"

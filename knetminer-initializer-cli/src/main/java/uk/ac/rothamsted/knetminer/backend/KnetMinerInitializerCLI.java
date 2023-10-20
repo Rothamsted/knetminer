@@ -40,7 +40,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Option (
 		names = { "-i", "--input", "--in" },
 		paramLabel = "<path/to/oxl>",		
-		description = "The path of the OXL to start from"
+		description = "The path of the OXL to start from (default: taken from config when necessary)"
 	)
 	private String oxlInputPath = null;
 
@@ -129,7 +129,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			String oxlPath = this.oxlInputPath;
 			if ( oxlPath == null ) oxlPath = initializer.getOxlFilePath ();
 			
-			log.info ( "Loading the OXL from: \"{}\"", this.oxlInputPath );
+			log.info ( "Loading the OXL from: \"{}\"", oxlPath );
 			initializer.setOxlFilePath ( oxlPath );
 			var graph = Parser.loadOXL ( oxlPath );
 			initializer.setGraph ( graph );

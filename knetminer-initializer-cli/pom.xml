@@ -132,6 +132,25 @@
               <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
 						</configuration>
 					</execution>
+					<execution>
+						<!-- We copy it in test-classes, to reuse the config files coming from the 
+						     core project -->
+						<id>copy-oxl</id>
+						<phase>process-test-resources</phase>
+						<goals><goal>copy-resources</goal></goals>
+						<configuration>
+              <resources>          
+                <resource>
+                  <directory>${project.build.directory}/dependency</directory>
+                  <filtering>false</filtering>
+                  <includes>
+										<include>*.oxl</include>
+									</includes>                  
+                </resource>
+              </resources>              
+              <outputDirectory>${project.build.directory}/test-classes/test-dataset/data</outputDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 

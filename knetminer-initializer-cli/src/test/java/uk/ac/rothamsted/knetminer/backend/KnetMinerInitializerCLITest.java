@@ -38,7 +38,8 @@ public class KnetMinerInitializerCLITest
 		// Maven copies test files here.
 		datasetPath = mavenBuildPath + "/test-classes/test-dataset";
 		
-		// The maven-dependency plug-in downloads this here and I don't know any way to change it
+		// This is both here and in target/test-classes/test-dataset/data/poaceae-sample.oxl
+		// Using this path to test config overriding
 		oxlPath = mavenBuildPath + "/dependency/poaceae-sample.oxl";
 	}
 		
