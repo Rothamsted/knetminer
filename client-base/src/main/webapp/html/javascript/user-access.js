@@ -65,9 +65,9 @@ class UserAccessManager{
 				 *  
 				 */
 			  
-        if(this.requires('free')) this.#defaultGeneLimit = 100;  
-        
-        if(this.requires('pro')){
+        if(this.requires('free')){
+            this.#defaultGeneLimit = 100;  
+        }else if(this.requires('pro')){
             this.#isGeneLimitEnforced = false;
             this.#defaultKnetViewLimit = 20
         } 
@@ -208,6 +208,10 @@ class UserRole {
   static setUserRole(roleStr){
     const userLevel = UserRole.get(roleStr)
     this.userLevel = userLevel
+  }
+
+  static getUserRole(){
+    return this.userLevel
   }
 }
 
