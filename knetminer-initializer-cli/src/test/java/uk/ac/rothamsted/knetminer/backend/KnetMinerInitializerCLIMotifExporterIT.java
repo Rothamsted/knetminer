@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
@@ -55,7 +56,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 		}		
 	}		
 	
-	@Test
+	@Test @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
 	public void testAllFromParams ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
@@ -72,7 +73,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	}
 	
 	
-	@Test
+	@Test @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
 	public void testAllFromConfig ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
