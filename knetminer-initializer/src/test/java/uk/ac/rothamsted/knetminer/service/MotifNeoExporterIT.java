@@ -37,6 +37,7 @@ public class MotifNeoExporterIT
 	 * test dataset. This is its size
 	 */
 	private final static int MOTIFS_SAMPLE_SIZE = 100;
+	//private final static int MOTIFS_SAMPLE_SIZE = Integer.MAX_VALUE;
 	
 	/**
 	 * This is the random subset of motifs we actually save and test.
@@ -54,7 +55,6 @@ public class MotifNeoExporterIT
 	 *
 	 * As explained in {@link KnetMinerInitializerTest}, this reloads the data initialised
 	 * in that test and makes them available via {@link #knetInitializer}.
-	 *
 	 */
 	@BeforeClass
 	public static void init ()
@@ -75,15 +75,18 @@ public class MotifNeoExporterIT
 		var smData = knetInitializer.getGenes2PathLengths ();
 		assertTrue ( "No semantic motif test data!", smData.size () > 0 );
 		
-		/**
+		/*
 		 * The original test set is too big and takes too much time, let's reduce it
-		 */
+		 * 
+		 * Note that here we're not using MotifNeoExporter.setSampleSize(), because we need
+		 * to reuse the sample to verify the results.
+		 */		
 		testMotifs = smData.entrySet ()
 		.stream ()
 		.filter ( e -> RandomUtils.nextInt ( 0, smData.size () ) < MOTIFS_SAMPLE_SIZE )
 		.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) );
 
-		assertTrue ( "semantic motif subset is empty!", testMotifs.size () > 0 );
+		assertTrue ( "Semantic motif subset is empty!", testMotifs.size () > 0 );
 		
 		var motifNeoExporter = new MotifNeoExporter ();
 		motifNeoExporter.setDatabase ( neoDriverResource.getDriver () );

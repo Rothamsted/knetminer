@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,6 +16,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import uk.ac.rothamsted.knetminer.service.CypherInitializer;
+import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
@@ -33,6 +35,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	public static void init () throws IOException
 	{
 		KnetMinerInitializerCLICypherInitIT.init ();
+		MotifNeoExporter.setSampleSize ( 100 );
 	}
 	
 	@Before
@@ -56,12 +59,19 @@ public class KnetMinerInitializerCLIMotifExporterIT
 		}		
 	}		
 	
-	@Test @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
+	@AfterClass
+	public static void resetTestMode ()
+	{
+		// Just in case other classes needs it
+		MotifNeoExporter.resetSampleSize ();
+	}
+	
+	@Test // @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
 	public void testAllFromParams ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
 			"--neo-motifs",
-			KnetMinerInitializerCLITest.oxlPath, 
+			//"--input", KnetMinerInitializerCLITest.oxlPath, 
 			"--config", KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
 		  "--neo-url", "bolt://localhost:" + neoDriverResource.getBoltPort (),
 		  "--neo-user", "neo4j",
@@ -73,7 +83,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	}
 	
 	
-	@Test @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
+	@Test // @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
 	public void testAllFromConfig ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (

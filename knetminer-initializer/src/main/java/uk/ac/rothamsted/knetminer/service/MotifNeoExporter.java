@@ -1,15 +1,21 @@
 package uk.ac.rothamsted.knetminer.service;
 
-import java.util.ArrayList;
+import static reactor.core.scheduler.Schedulers.DEFAULT_BOUNDED_ELASTIC_SIZE;
+import static reactor.core.scheduler.Schedulers.newBoundedElastic;
+
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 
@@ -22,9 +28,22 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  */
 public class MotifNeoExporter extends NeoInitComponent
 {
+	/**
+	 * We use our scheduler only to set a low limit for queuedTaskCap, since the source here is
+	 * much faster and there is little point with queueing too much stuff.
+	 * 
+	 */
+	private static final Scheduler FLUX_SCHEDULER = newBoundedElastic ( 
+		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, MotifNeoExporter.class.getSimpleName () + ".scheduler" 
+	);
+
+	/** From the rdf2neo experience */
+	private static final int BATCH_SIZE = 2500;
+
+	private static int sampleSize = Integer.MAX_VALUE;
+	
 	private Logger log = LogManager.getLogger();
 	
-
 	public void saveMotifs ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
 	{
 		try 
@@ -33,37 +52,47 @@ public class MotifNeoExporter extends NeoInitComponent
 			
 			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
 			
-			final int batchSize = 2000;
+			if ( sampleSize < genes2PathLengths.size () )
+				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize 
+			);	
 			
 			PercentProgressLogger progressLogger = new PercentProgressLogger (
 				"{}% semantic motif endpoints processed",
 				genes2PathLengths.size()
 			);
 
-			List<Map<String, Object>> relsBatch = null;
-
-			for ( var smEntry: genes2PathLengths.entrySet() )
+			// Prepare a stream of records
+			//
+			Stream<Map<String, Object>> smRelsStream = genes2PathLengths.entrySet ()
+			.stream ()
+			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) )			
+			// Possibly, sample the input
+			.filter ( e -> RandomUtils.nextInt ( 0, genes2PathLengths.size () ) < sampleSize )
+			.map ( smEntry -> 
 			{
 				var gene2Concept = smEntry.getKey();
 				int geneId = gene2Concept.getLeft();
 				int conceptId = gene2Concept.getRight();
 				int distance = smEntry.getValue();
-
-				if (relsBatch == null) relsBatch = new ArrayList<>();
-
-				relsBatch.add ( Map.of (
+				
+				progressLogger.updateWithIncrement();
+				
+				return Map.of (
 					"geneId", geneId,
 					"conceptId", conceptId,
 					"graphDistance", distance
-				));
-
-				progressLogger.updateWithIncrement();
-
-				if ( relsBatch.size() == batchSize || progressLogger.getProgress() == genes2PathLengths.size() ) {
-					processBatch ( relsBatch );
-					relsBatch = null;
-				}
-			} // for smEntry
+				);
+			});
+			
+			// Then use Reactor to batch the source records
+			//
+			Flux.fromStream ( smRelsStream )
+			.buffer ( BATCH_SIZE )
+			.parallel ()
+			.runOn ( FLUX_SCHEDULER )
+			.doOnNext ( this::processBatch )
+			.sequential ()
+			.blockLast ();
 			
 			log.info ( "{}, done", this.getClass ().getSimpleName () );
 		} 
@@ -74,7 +103,7 @@ public class MotifNeoExporter extends NeoInitComponent
 		}
 	}
 
-	private void processBatch ( List<Map<String, Object>> smRelationsBatch )
+	private int processBatch ( List<Map<String, Object>> smRelationsBatch )
 	{
 		try ( Session session = driver.session() ) 
 		{			
@@ -89,6 +118,8 @@ public class MotifNeoExporter extends NeoInitComponent
 			tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
 			tx.commit();
 		}
+		log.trace ( "{} links stored", smRelationsBatch.size () );
+		return smRelationsBatch.size ();
 	}
 	
 	private void deleteOldLinks ()
@@ -109,5 +140,30 @@ public class MotifNeoExporter extends NeoInitComponent
         """;
 			session.run ( cyDelete );
 		}
+	}
+
+	/**
+	 * This is useful for tests, since usually there are many sample data to save, which slows everything down.
+	 * 
+	 * When this is smaller than the param of {@link #saveMotifs(Map)}, then a random sample from that
+	 * param of this size is the one that is actually saved. Default is {@link Integer#MAX_VALUE}, ie, 
+	 * saves everything.  
+	 */
+	public static int getSampleSize ()
+	{
+		return sampleSize;
+	}
+
+	public static void setSampleSize ( int sampleSize )
+	{
+		MotifNeoExporter.sampleSize = sampleSize;
+	}
+
+	/**
+	 * Wrapper of {@link Integer#MAX_VALUE}
+	 */
+	public static void resetSampleSize ()
+	{
+		setSampleSize ( Integer.MAX_VALUE );
 	}
 }

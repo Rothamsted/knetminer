@@ -80,6 +80,11 @@
 		<dependency>
 			<groupId>net.sourceforge.ondex.modules</groupId>
 			<artifactId>cyjs_json</artifactId>
+		</dependency>
+		
+		<dependency>
+		  <groupId>io.projectreactor</groupId>
+		  <artifactId>reactor-core</artifactId>
 		</dependency>		
 	  	   							
 		<dependency>
