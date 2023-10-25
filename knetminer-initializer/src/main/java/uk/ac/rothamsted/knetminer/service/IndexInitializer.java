@@ -5,7 +5,6 @@ package uk.ac.rothamsted.knetminer.service;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.neo4j.driver.Driver;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
@@ -17,22 +16,14 @@ public class IndexInitializer extends NeoInitComponent {
 
     private Logger log = LogManager.getLogger();
 
-    public IndexInitializer (){
-    }
-    public IndexInitializer (Driver driver){
-        this.driver = driver;
-    }
-
     public void createConceptsIndex ( Set<String> propertyBaseNames ) {
         Validate.notNull(propertyBaseNames, "Property base names have gotten to be not null.");
         Set<String> allDBProps = findAllConceptProperties();
         Set<String> indexedProps = expandBaseProperties(propertyBaseNames, allDBProps);
         var cyIndexer = createIndexingCypher(indexedProps);
-        //Result result;
         try (Session session = driver.session()) {
-            /*result = */session.run(cyIndexer);
+            session.run(cyIndexer);
         }
-        //return result.next().get(0).asInt();
     }
 
     private Set<String> findAllConceptProperties ()

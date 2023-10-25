@@ -12,7 +12,7 @@ import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class IndexInitializerIT {
 
@@ -34,14 +34,12 @@ public class IndexInitializerIT {
         var indexInitializer = new IndexInitializer();
         indexInitializer.setDatabase ( neoDriver );
 
-        //indexInitializer.runCypher ( "MATCH (f:Foo) DELETE f" );
-
         try ( Session session = neoDriver.session() )
         {
-            String cyVerify = """
+            String cypherQuery = """
 				MATCH (c:Concept) RETURN COUNT(c) AS ct
 				""";
-            Result result = session.run( cyVerify );
+            Result result = session.run( cypherQuery );
             int ct = result.next ().get ( 0 ).asInt ();
             log.info("Number of concepts in database: {}", ct);
         }
@@ -49,11 +47,9 @@ public class IndexInitializerIT {
 
     @Test
     public void testIndexInitializer(){
-        //IndexInitializer indexInitializer = new IndexInitializer();
         var neoDriver = neoDriverResource.getDriver ();
         var indexInitializer = new IndexInitializer();
         indexInitializer.setDatabase ( neoDriver );
-        /*int returnInt =*/ indexInitializer.createConceptsIndex(Set.of("prefName", "altName"));
-        //assertEquals("Return integer has gotten to be 0", returnInt, 0);
+        indexInitializer.createConceptsIndex(Set.of("prefName", "altName"));
     }
 }
