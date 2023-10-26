@@ -36,8 +36,10 @@ public class IndexInitializerIT {
      * Without this, we can't know if the verified index was created by the test 
      */
 
-    /* TODO: remove, what's the point? */
-    
+
+    /**
+     * TODO: remove, what's the point? 
+     */
     @Before
     public void getDBSize ()
     {
