@@ -64,7 +64,7 @@ public class IndexInitializerIT {
         var indexInitializer = new IndexInitializer();
         indexInitializer.setDatabase ( neoDriver );
         
-        /* We need to test properties like Phenotype, which have Phenotype_NN in the DB,
+        /* We need to test properties like Phenotype, which has Phenotype_NN in the DB,
          * else we wouldn'd have much test coverage.
          */
         indexInitializer.createConceptsIndex(Set.of ( "prefName", "altName", "Phenotype" ));
