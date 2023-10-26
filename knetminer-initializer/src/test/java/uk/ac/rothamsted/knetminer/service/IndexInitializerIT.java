@@ -1,5 +1,7 @@
 package uk.ac.rothamsted.knetminer.service;
 
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -8,25 +10,34 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
-
-import java.util.Set;
-
-import static org.junit.Assert.*;
 
 public class IndexInitializerIT {
 
     @ClassRule
     public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource ();
 
+    private Logger log = LogManager.getLogger();
+
+    /* TODO: (remove after reading) don't declare class members in random order.
+     * Usually, the order is: inner classes, fields, methods, and usually from the most abstract
+     * or most important to the least ones (eg, log is the latest in the fields section)
+     */
+    
     @BeforeClass
     public static void init ()
     {
         neoDriverResource.ensureNeo4jMode ();
     }
 
-    private Logger log = LogManager.getLogger();
+    /*
+     * TODO: clean existing index, see CypherInitializerIT.cleanTestData(). 
+     * Without this, we can't know if the verified index was created by the test 
+     */
 
+    /* TODO: remove, what's the point? */
+    
     @Before
     public void getDBSize ()
     {
@@ -44,12 +55,15 @@ public class IndexInitializerIT {
             log.info("Number of concepts in database: {}", ct);
         }
     }
-
+    
     @Test
-    public void testIndexInitializer(){
+    public void testIndexCreation () {
         var neoDriver = neoDriverResource.getDriver ();
         var indexInitializer = new IndexInitializer();
         indexInitializer.setDatabase ( neoDriver );
-        indexInitializer.createConceptsIndex(Set.of("prefName", "altName"));
+        indexInitializer.createConceptsIndex(Set.of ( "prefName", "altName", "Phenotype" ));
+        
+        // TODO: verify the index exists and that it contains the expected properties
+        // https://neo4j.com/docs/cypher-manual/current/indexes-for-search-performance/#indexes-list-indexes
     }
 }
