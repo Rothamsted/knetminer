@@ -7,8 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.rng.sampling.CollectionSampler;
+import org.apache.commons.rng.simple.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -74,18 +75,19 @@ public class MotifNeoExporterIT
 
 		var smData = knetInitializer.getGenes2PathLengths ();
 		assertTrue ( "No semantic motif test data!", smData.size () > 0 );
-		
+				
 		/*
 		 * The original test set is too big and takes too much time, let's reduce it
 		 * 
 		 * Note that here we're not using MotifNeoExporter.setSampleSize(), because we need
 		 * to reuse the sample to verify the results.
-		 */		
-		testMotifs = smData.entrySet ()
-		.stream ()
-		.filter ( e -> RandomUtils.nextInt ( 0, smData.size () ) < MOTIFS_SAMPLE_SIZE )
-		.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) );
-
+		 */	
+		testMotifs = MOTIFS_SAMPLE_SIZE < smData.size () 
+			? new CollectionSampler<> ( RandomSource.JDK.create (), smData.entrySet () )
+				.samples ( MOTIFS_SAMPLE_SIZE )
+				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )
+			: smData;
+			
 		assertTrue ( "Semantic motif subset is empty!", testMotifs.size () > 0 );
 		
 		var motifNeoExporter = new MotifNeoExporter ();
