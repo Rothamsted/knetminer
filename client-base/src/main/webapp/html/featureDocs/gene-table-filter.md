@@ -3,11 +3,12 @@
 
 This documentation aims to show you how Knetminer genes table filters work. It showcases the code structure in `gene-table-filter.js`. 
 
-## Genes-table-filtering.js 
-This file contains the JavaScript scripts that handle the knetscore and graph distance filters present in the knetminer's gene view. It houses three Objects: `knetscoreFilter`, `graphDistanceFilter` and `geneTableFilterMgr`, and can be found [here][10]
+## genes-table-filtering.js 
+This file contains the JavaScript scripts that handle the knetscore and graph distance filters present in the knetminer's gene view. It houses three Objects: `knetscoreFilter`, `graphDistanceFilter` and `geneTableFilterMgr`, and can be found [here][10].
 
-KnetScoreFilter object handles the functionalities associated with gene view knetscore filter.
-```
+`KnetScoreFilter` object handles the functionalities associated with gene view knetscore filter.
+
+```javascript
 // Detects min and max knetscore values from genetable data.
 detectRange (tableData)
 {
@@ -46,8 +47,9 @@ renderUi()
 };
 ```
 
-graphDistanceFilter object houses methods handling functionalities associated with gene view graph distance filter.
-```
+`graphDistanceFilter` object houses methods handling functionalities associated with gene view graph distance filter.
+
+```javascript
     // MaxNumber property used for comparison reasons to check for maximum distance within genetable data.
     maxNumber : -Infinity
 
@@ -68,8 +70,9 @@ graphDistanceFilter object houses methods handling functionalities associated wi
 
 ```
 
-geneTableFilterMgr object handles management of graph-distance and knetscore filters. 
-```
+`geneTableFilterMgr` object handles management of graph-distance and knetscore filters. 
+
+```javascript
 // TableData property used to store the genetable data.
 tableData:[]
 
