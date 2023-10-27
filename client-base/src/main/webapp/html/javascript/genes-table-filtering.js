@@ -1,3 +1,11 @@
+/**
+ * UI filters for the gene table.
+ * 
+ * The code in this file is documented here:
+ * https://github.com/Rothamsted/knetminer/wiki/%5BDevDoc%5D-Details-about-the-implementation-of-Gene-Evidence-table-UI-filters
+ * 
+ * Please, keep the two aligned.
+ */
 
 // Knetscore Filter Element
 let  knetScoreFilter = {
