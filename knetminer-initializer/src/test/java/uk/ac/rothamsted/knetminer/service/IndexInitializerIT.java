@@ -1,23 +1,24 @@
 package uk.ac.rothamsted.knetminer.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
-import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
-
+import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.*;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
+
+import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
+
+import static org.junit.Assert.assertEquals;
 
 public class IndexInitializerIT {
 
     @ClassRule
     public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource ();
+
+    private Logger log = LogManager.getLogger();
 
     @BeforeClass
     public static void init ()
@@ -25,10 +26,8 @@ public class IndexInitializerIT {
         neoDriverResource.ensureNeo4jMode ();
     }
 
-    private Logger log = LogManager.getLogger();
-
-    @Before
-    public void getDBSize ()
+    @AfterClass
+    public static void removeIndex ()
     {
         var neoDriver = neoDriverResource.getDriver ();
         var indexInitializer = new IndexInitializer();
@@ -37,19 +36,30 @@ public class IndexInitializerIT {
         try ( Session session = neoDriver.session() )
         {
             String cypherQuery = """
-				MATCH (c:Concept) RETURN COUNT(c) AS ct
+				DROP INDEX concept_index IF EXISTS
 				""";
-            Result result = session.run( cypherQuery );
-            int ct = result.next ().get ( 0 ).asInt ();
-            log.info("Number of concepts in database: {}", ct);
+            session.run( cypherQuery );
         }
     }
 
     @Test
-    public void testIndexInitializer(){
+    public void testIndexCreation () {
         var neoDriver = neoDriverResource.getDriver ();
         var indexInitializer = new IndexInitializer();
         indexInitializer.setDatabase ( neoDriver );
-        indexInitializer.createConceptsIndex(Set.of("prefName", "altName"));
+
+        indexInitializer.createConceptsIndex(Set.of ( "prefName", "altName", "Phenotype" ));
+
+        try ( Session session = neoDriver.session() )
+        {
+            String cypherQuery = """
+				SHOW ALL INDEXES WHERE name = "concept_index"
+				""";
+            Result result = session.run( cypherQuery );
+            var propertiesList = result.next().get("properties").asList();
+            log.info("Returned properties list: {}", propertiesList);
+            var basePropertiesList = List.of("Phenotype", "Phenotype_1", "altName", "prefName");
+            assertEquals("Returned properties list has gotten to be equal to the base properties list" ,propertiesList.toString(), basePropertiesList.toString());
+        }
     }
 }
