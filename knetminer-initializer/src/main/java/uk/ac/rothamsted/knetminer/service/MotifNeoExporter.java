@@ -5,10 +5,12 @@ import static reactor.core.scheduler.Schedulers.newBoundedElastic;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.rng.sampling.CollectionSampler;
+import org.apache.commons.rng.simple.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
@@ -51,23 +53,30 @@ public class MotifNeoExporter extends NeoInitComponent
 			deleteOldLinks ();
 			
 			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
-			
-			if ( sampleSize < genes2PathLengths.size () )
-				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize 
-			);	
-			
+
 			PercentProgressLogger progressLogger = new PercentProgressLogger (
 				"{}% semantic motif endpoints processed",
 				genes2PathLengths.size()
 			);
-
+		
 			// Prepare a stream of records
 			//
-			Stream<Map<String, Object>> smRelsStream = genes2PathLengths.entrySet ()
-			.stream ()
+			Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream;
+			
+			// Sampling
+			if ( sampleSize < genes2PathLengths.size () )
+			{
+				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize );
+				smRelsBaseStream	= new CollectionSampler<> ( RandomSource.JDK.create (), genes2PathLengths.entrySet () )
+				.samples ( sampleSize );				
+			}
+			else
+				smRelsBaseStream = genes2PathLengths.entrySet ().stream ();
+			
+			// Prepare a stream of records
+			//
+			Stream<Map<String, Object>> smRelsStream = smRelsBaseStream
 			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) )			
-			// Possibly, sample the input
-			.filter ( e -> RandomUtils.nextInt ( 0, genes2PathLengths.size () ) < sampleSize )
 			.map ( smEntry -> 
 			{
 				var gene2Concept = smEntry.getKey();

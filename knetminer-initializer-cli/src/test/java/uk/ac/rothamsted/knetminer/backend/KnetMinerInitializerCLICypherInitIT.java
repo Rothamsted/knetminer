@@ -13,6 +13,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import uk.ac.rothamsted.knetminer.service.CypherInitializer;
+import uk.ac.rothamsted.knetminer.service.CypherInitializerIT;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**

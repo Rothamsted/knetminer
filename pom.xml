@@ -116,7 +116,7 @@
 		<ondex.version>7.0</ondex.version>
 		<knetminer.backend.version>4.0.1-SNAPSHOT</knetminer.backend.version>
 		<!-- TODO: realign with rdf-common -->
-		<jutils.version>13.0</jutils.version>		
+		<jutils.version>14.0-SNAPSHOT</jutils.version>		
 		<springframework.version>6.0.11</springframework.version>
 
 		
