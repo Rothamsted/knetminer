@@ -83,26 +83,6 @@ public class IndexInitializer extends NeoInitComponent
 		.map ( pname -> "a." + pname )
 		.collect ( Collectors.joining ( ", " ) );
 
-		/* TODO: remove, we're not at a programming tutorial, use modern constructs like streams, 
-		 * joiners and functional programming
-		 * 
-		StringBuilder builder = new StringBuilder ();
-		for ( String index : indexedProps )
-		{
-			builder.append ( index ).append ( ", a." );
-		}
-		   This is particularly poor, even when you do it with a loop, the clean form is:
-		 * sep = ""
-		 * for each e:
-		 *   str += sep + "a." + e
-		 *   sep = ", "
-		 *   
-		 * without any ugly trail removing (which is unreadable, breaks when the input is empty, requires
-		 * that the loop body and the trail removal are kept aligned)
-		 *  
-		builder.delete ( builder.length () - 4, builder.length () );
-		*/
-
 		String cypherQuery = "CREATE FULLTEXT INDEX concept_index FOR (a:Concept) ON EACH [ " + cyProps  + " ]";
 		return cypherQuery;
 	}
