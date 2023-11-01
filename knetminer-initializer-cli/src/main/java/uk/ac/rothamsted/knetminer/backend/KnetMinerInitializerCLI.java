@@ -1,6 +1,10 @@
 package uk.ac.rothamsted.knetminer.backend;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
@@ -104,7 +108,22 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			+ CypherInitializer.CY_INIT_SCRIPT_PROP + ")."
 	)
 	private String neoInitCypherPath = null;
-	
+
+	@Option (
+			names = { "-ind", "--neo-init-index"},
+			description =
+					"Adds index based upon index properties (specified via --neo-index-properties) to Neo4j database."
+	)
+	private boolean neoIndexInit = false;
+
+	@Option (
+			names = { "-ip", "--neo-index-properties"},
+			paramLabel = "<neoIndexProperties>",
+			description =
+					"Index properties for --neo-init-index."
+	)
+	private String neoIndexProperties = null;
+
 	
 	private Logger log = LogManager.getLogger ( this.getClass () ); 
 	
@@ -164,6 +183,20 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 				cyInit.runCypher ( initializer );
 		}
 
+		if (neoIndexInit) {
+			if (neoIndexProperties != null) {
+				log.info("Adding Neo4j index with properties: {}", neoIndexInit);
+
+				var indInit = new IndexInitializer();
+				indInit.setDatabase(neoUrl, neoUser, neoPassword, initializer);
+
+				Set<String> neoIndexPropertiesSet = new HashSet<>();
+
+				Arrays.stream(neoIndexProperties.split(",")).map(neoIndexPropertiesSet::add);
+
+				indInit.createConceptsIndex(neoIndexPropertiesSet);
+			}
+		}
 		return 0;
 	}
 
