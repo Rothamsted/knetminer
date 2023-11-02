@@ -1,6 +1,10 @@
 package uk.ac.rothamsted.knetminer.backend;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -124,6 +128,14 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	)
 	private String neoIndexProperties = null;
 
+	@Option (
+			names = { "-ipp", "--neo-index-properties-path"},
+			paramLabel = "<neoIndexPropertiesPath>",
+			description =
+					"Index properties path for --neo-init-index."
+	)
+	private String neoIndexPropertiesPath = null;
+
 	
 	private Logger log = LogManager.getLogger ( this.getClass () ); 
 	
@@ -185,6 +197,28 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 		if (neoIndexInit) {
 			if (neoIndexProperties != null) {
+				log.info("Adding Neo4j index with properties: {}", neoIndexInit);
+
+				var indInit = new IndexInitializer();
+				indInit.setDatabase(neoUrl, neoUser, neoPassword, initializer);
+
+				Set<String> neoIndexPropertiesSet = new HashSet<>();
+
+				Arrays.stream(neoIndexProperties.split(",")).map(neoIndexPropertiesSet::add);
+
+				indInit.createConceptsIndex(neoIndexPropertiesSet);
+			}
+
+			if (neoIndexPropertiesPath != null) {
+
+				String neoIndexProperties = "";
+
+				try {
+					neoIndexProperties = Files.readString(Paths.get(neoIndexPropertiesPath));
+				} catch (IOException e) {
+					log.error("An IOException popped up when reading from file path: {}.", neoIndexPropertiesPath);
+				}
+
 				log.info("Adding Neo4j index with properties: {}", neoIndexInit);
 
 				var indInit = new IndexInitializer();
