@@ -1,11 +1,49 @@
 # Revision History
 
-*This file was last reviewed on 2023-07-28* **Please, keep this note updated** 
+*This file was last reviewed on 2023-11-06* **Please, keep this note updated** 
 
 <br>
 
 # 5.7-SNAPSHOT
-* Current snapshot (on master).
+
+## User Interface
+* Gene table new filtering options, including graph distance, score (#692).
+* Gene and Evidence table, continuous scrolling replaced old pagination.
+* User queries and sample queries tailored to user plan/permissions.
+* Sample queries visualisation based on currently selected specie and user role.
+* Sample query file format extended to support user role (which is required to access a sample, #774).
+* Some improvements to the genemap visualisation (#723).
+
+### UI internals
+* Evidence table, matching genes download improved for performance (using browser HTTP cache).
+* Refactoring of chromosome region selection code (moved to its own .js files).
+* Library for user management (#768).
+* Js that processes gene/evidence table from the API upgraded to comply with the new pure-JSON format (see #655).
+* Old release-notes.html removed (#657).
+
+### UI bugfixes
+* #773 Incorrect way to select rows during gene table filtering.
+* #777 Detail pop-up in the gene table with incorrect click event handling.
+* #780 Evidence table, pop-up gene list duplicated header.
+* #771 Gene list links in evidence view not working.
+* #778 Network view with too many genes for the current user role breaks the UI.
+
+## API
+* Gene table and Evidence table outputs now are pure JSON (cleaning and improving the "CSV inside JSON" old format). This makes improves the coding of API clients (#655).
+* Gene table output now includes the graph distance between genes and their evidences (based on semantic motifs, #743).
+* Deprecated API calls removed, `/dataSource` (#653), `/ksHost` (#792), /latestNetworkStats (#657).
+
+### API internals
+* More logging added to the the API client used for tests (#eebed3e).
+
+## Miscellanea
+* Migration to Java 17, new Java features available to developers.
+* Migration to recent versions of Tomcat and Jetty (used for building), with consequent migration 
+of old J2EE libraries (eg, `java.servlet` to Jakarta, #74f27f0)
+* Neo4j mode migrated to Neo4 5.10.x
+* Various dependencies upgrades.
+* Minor enhancements to demo/aratiny launching scripts and continuous integration scripts.
+
 
 # 5.6.0-SNAPSHOT
 * Current snapshot (on 5.6 branch).
