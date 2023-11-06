@@ -231,7 +231,11 @@
 							<configuration>
 								<properties>
 									<property>
-										<!-- WS scanning sometimes times out with the default (#551) -->
+										<!-- 
+											WS scanning sometimes times out with the default (#551) 
+											TODO: Is still needed with recent Jetty? Does it need a new
+											variable name?
+										-->
 										<name>org.eclipse.jetty.annotations.maxWait</name>
 										<value>600</value>
 									</property>
