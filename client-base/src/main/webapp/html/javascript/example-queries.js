@@ -102,7 +102,9 @@ const exampleQuery = function () {
 
         var { term, regions, genes, minimumUserRole } = targetQuery;
 
-        var isQueryRestricted = userAccessMgr.requires(minimumUserRole);
+        var userRole = minimumUserRole === '' ? 'guest' : minimumUserRole;
+
+        var isQueryRestricted = userAccessMgr.requires(userRole);
 
         // disables search button if query is restricted
         $('#searchBtn').toggleClass('button-disabled', !isQueryRestricted); 
@@ -133,12 +135,6 @@ const exampleQuery = function () {
 
         triggerInputsEvents()
 
-
-        //  if (trim(withinRegion) == 'true') {
-        //      $("input:radio[name=search_mode]").val(['qtl']);
-        //  } else {
-        //      $("input:radio[name=search_mode]").val(['genome']);
-        //  }
     }
 
     /**
@@ -231,10 +227,11 @@ const exampleQuery = function () {
 
        selectedQuery.forEach(function(query)
         {
-            var { minimumUserRole,description,index } = query;
-
+            var { minimumUserRole ,description,index } = query;
+        
             var queryRestriction;
-            var isQueryRestricted = userAccessMgr.requires(minimumUserRole);
+            var userRole = minimumUserRole === '' ? 'guest' : minimumUserRole;
+            var isQueryRestricted = userAccessMgr.requires(userRole);
             var isGeneListRestricted = userAccessMgr.isLimitEnforced();
 
             if (!isQueryRestricted) {
