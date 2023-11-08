@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-  	<version>4.0.1-SNAPSHOT</version>
+  	<version>5.0</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -112,12 +112,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
 
-		<lucene.version>6.6.0</lucene.version>
-		<ondex.version>7.0.1-SNAPSHOT</ondex.version>
-		<knetminer.backend.version>4.0</knetminer.backend.version>
-		<!-- TODO: realign with rdf-common -->
-		<jutils.version>13.0</jutils.version>		
-		<springframework.version>6.0.13</springframework.version>
+		<ondex.version>7.0.1</ondex.version>
+		<knetminer.backend.version>4.0.1</knetminer.backend.version>
 
 		
 		<!-- We define these using the Jetty properties, so that they can be overridden from the 
@@ -180,7 +176,7 @@
 				<plugin>
 				  <groupId>org.eclipse.jetty</groupId>
 				  <artifactId>jetty-maven-plugin</artifactId>
-			    <version>11.0.17</version>
+			    <version>11.0.18</version>
 				  <executions>
 				  	<execution>
 				  		<id>start</id>
@@ -222,7 +218,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>properties-maven-plugin</artifactId>
-					<version>1.2.0</version>
+					<version>1.2.1</version>
 					<executions>
 						<execution>
 							<goals>
@@ -334,32 +330,6 @@
 				<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 				<version>3.0.1</version>
 			</dependency>
-						
-			<!--
-			  TODO: Neither Tomcat nor Jetty seem to need this, consider enabling it if something
-			  doesn't work. 
-			  
-			  You'll need it in client-base only.
-			  
-			<dependency>
-				<groupId>jakarta.servlet.jsp</groupId>
-				<artifactId>jakarta.servlet.jsp-api</artifactId>
-				<version>3.1.1</version>
-			</dependency>
-			-->
-			
-			<!-- TODO: remove, were used by old containers, now they have replacements
-			
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>jstl</artifactId>
-				<version>1.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-spec</artifactId>
-				<version>1.2.5</version>
-			</dependency> -->
 
 	    <dependency>
 	      <groupId>net.sourceforge.ondex.core</groupId>
@@ -457,7 +427,6 @@
 				<version>4.13.2</version>
 			</dependency>
 
-						
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
