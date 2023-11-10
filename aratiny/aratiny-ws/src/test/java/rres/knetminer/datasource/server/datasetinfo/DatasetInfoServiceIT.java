@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -24,6 +23,15 @@ import rres.knetminer.datasource.api.config.SpecieInfo;
 
 public class DatasetInfoServiceIT
 {
+	/**
+	 * Calls {@link ApiIT#skipInConsoleMode()}, to ignore tests when in console mode.
+	 */
+	@BeforeClass
+	public static void skipInConsoleMode ()
+	{
+		ApiIT.skipInConsoleMode ();
+	}
+	
 	/**
 	 * A wrapper of {@link ApiIT#synchToServer()} to synch the server init.
 	 */

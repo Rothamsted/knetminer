@@ -1,0 +1,18 @@
+# Testing single specie config, see notes in
+# 
+"@includes":
+- test-cfg.yml
+
+"dataset @merge":
+  id: aratiny
+  title: Aratiny Single Specie
+  version: ${project.version}
+  keywords: "Aratiny, Arabidopsis, Knetminer Test"
+  description: >-
+    A test dataset derived from Aratiny, where only one specie is enabled,
+    to test this specific feature.
+  
+  species:
+  - taxId: 4565
+    scientificName: Triticum aestivum
+    commonName: Bread Wheat

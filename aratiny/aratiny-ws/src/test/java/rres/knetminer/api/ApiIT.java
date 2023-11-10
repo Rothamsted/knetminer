@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,6 +55,23 @@ public class ApiIT
 	 * Auto-initialised client instance to be used for the tests, here and in similar testing classes
 	 */
 	public static KnetminerApiClient CLI = new KnetminerApiClient ( System.getProperty ( "knetminer.api.url" ) );
+	
+	/**
+	 * A guard that checks {@link #getMavenProfileId()} and only runs the tests
+	 * if the current Maven profile is not "console".
+	 * 
+	 * This is used by {@link BlockingPseudoIT}, to stop the build and allows
+	 * for the run of /aratiny/manual-test.
+	 *  
+	 */
+	@BeforeClass
+	public static void skipInConsoleMode ()
+	{
+		Assume.assumeFalse (
+			"WARN, console mode, Tests in this class will be ignored",
+			"console".equals ( ApiIT.getMavenProfileId () ) 
+		); 
+	}
 	
 	@BeforeClass
 	/**
@@ -658,25 +676,6 @@ public class ApiIT
 			xpath.readString ( "/genome/feature[./label = '" + expectedGeneLabel + "']" )
 		);
 	}	
-
-	
-	
-	/**
-	 * It's a pseudo-test that works with the 'run' profile. It just stops the Maven build at the integration-test phase,
-	 * so that the test Jetty server is kept on for manual inspection.
-	 *  
-	 * See the POM for details.
-	 */
-	@Test
-	public void blockingPseudoTest () throws IOException
-	{
-		if ( !"console".equals ( getMavenProfileId () ) ) return;
-		
-		log.info ( "\n\n\n\t======= SERVER RUNNING MODE, Press [Enter] key to shutdown =======\n\n" );
-		log.info ( "The API should be available at " + CLI.getBaseUrl () );
-		log.info ( "NOTE: DON'T use Ctrl-C to stop the hereby process, I need to run proper shutdown" );
-		System.in.read ();
-	}
 	
 	
 	/**

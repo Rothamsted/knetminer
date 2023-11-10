@@ -23,6 +23,15 @@ public class GraphInfoApiIT
 	private Logger log = LogManager.getLogger ( this.getClass () );
 
 	/**
+	 * Calls {@link ApiIT#skipInConsoleMode()}, to ignore tests when in console mode.
+	 */
+	@BeforeClass
+	public static void skipInConsoleMode ()
+	{
+		ApiIT.skipInConsoleMode ();
+	}
+	
+	/**
 	 * Keeps probing the API server until it seems initialised. A wrapper of {@link ApiIT#synchToServer()}. 
 	 */
 	@BeforeClass

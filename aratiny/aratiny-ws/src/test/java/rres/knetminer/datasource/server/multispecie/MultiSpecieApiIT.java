@@ -17,9 +17,25 @@ import rres.knetminer.api.ApiIT;
 import rres.knetminer.api.client.CountHitsApiResult;
 import rres.knetminer.api.client.GenomeApiResult;
 
+/**
+ * Tests the multiple-specie data sets and functions that are parameterised over the taxId.
+ *
+ * @author brandizi
+ * <dl><dt>Date:</dt><dd>10 Nov 2023</dd></dl>
+ *
+ */
 public class MultiSpecieApiIT
 {
 	private Logger log = LogManager.getLogger ( this.getClass () );
+	
+	/**
+	 * Calls {@link ApiIT#skipInConsoleMode()}, to ignore tests when in console mode.
+	 */
+	@BeforeClass
+	public static void skipInConsoleMode ()
+	{
+		ApiIT.skipInConsoleMode ();
+	}
 	
 	/**
 	 * A wrapper of {@link ApiIT#synchToServer()} to synch the server init.

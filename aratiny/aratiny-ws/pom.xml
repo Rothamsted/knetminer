@@ -205,7 +205,6 @@
 	</build>
 	
 	<profiles>
-	
 		<profile>
 			<id>neo4j</id>
 			<properties>
@@ -358,8 +357,8 @@
 		<profile>
 			<id>console</id>
 			<properties>
-			  <!-- The pseudo-test mentioned above checks if this profile is active via System.getProperty() -->
-			<maven.profileId>console</maven.profileId>
+				<!-- The pseudo-test mentioned above checks if this profile is active via System.getProperty() -->
+				<maven.profileId>console</maven.profileId>
 			</properties>
 		</profile>
 			
@@ -380,7 +379,20 @@
 				</plugins>
 			</build>			
 		</profile>	
-		
+
+		<!--
+		  Used in /aratiny/manual-test/run-ws-single-specie.sh, 
+		  see details there. 
+		-->
+		<profile>
+			<id>singleSpecie</id>
+			<properties>
+				<!-- It must be used in console mode, so we set it to this -->
+				<maven.profileId>console</maven.profileId>
+				<knetminer.testConfigFileName>test-cfg-single-specie.yml</knetminer.testConfigFileName>		
+			</properties>
+		</profile>		
+	
 	</profiles>
 
 </project>
