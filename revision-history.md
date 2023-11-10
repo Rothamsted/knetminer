@@ -43,7 +43,7 @@ of old J2EE libraries (eg, `java.servlet` to Jakarta, #74f27f0)
 * Neo4j mode migrated to Neo4 5.10.x
 * Various dependencies upgrades.
 * Minor enhancements to demo/aratiny launching scripts and continuous integration scripts.
-
+* Maven build, option to run aratiny in single-specie mode added (#a387ee9, #cf23443). 
 
 # 5.6.0-SNAPSHOT
 * Current snapshot (on 5.6 branch).
