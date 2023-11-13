@@ -67,7 +67,9 @@ class UserAccessManager{
 			  
         if(this.requires('free')){
             this.#defaultGeneLimit = 100;  
-        }else if(this.requires('pro')){
+        }
+        
+        if(this.requires('pro')){
             this.#isGeneLimitEnforced = false;
             this.#defaultKnetViewLimit = 20
         } 

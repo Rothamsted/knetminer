@@ -244,7 +244,7 @@ const exampleQuery = function () {
 						   setting isGeneListRestricted? 
 						*/
 						
-            if (isGeneListRestricted && minimumUserRole == 'pro') {
+            if ( isGeneListRestricted && minimumUserRole === 'pro') {
                 queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
             }
 
