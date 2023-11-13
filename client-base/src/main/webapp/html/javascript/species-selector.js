@@ -121,7 +121,7 @@ const speciesSelector = function ()
             $('.navbar-select').css({
                 "height":"unset"
             })
-            return false
+            return true;
         }
     }
 
