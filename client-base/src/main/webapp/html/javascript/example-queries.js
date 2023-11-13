@@ -107,7 +107,7 @@ const exampleQuery = function () {
         var isQueryRestricted = userAccessMgr.requires(userRole);
 
         // disables search button if query is restricted
-        $('#searchBtn').toggleClass('button-disabled', !isQueryRestricted); 
+        $('#searchBtn').toggleClass('query-disabled', !isQueryRestricted); 
 
         if (!regions.length) {
             removeGeneRow()

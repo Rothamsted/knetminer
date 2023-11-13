@@ -802,13 +802,7 @@ class GenesListManager {
     $(".limit-message").toggleClass('show', !isLimitReached);
     $(".border").toggleClass('limit-border', !isLimitReached);
     $('.genesCount').toggleClass('genes-limit', !isLimitReached);
-
-    // checks if restriction is already based on search button
-    if(!searchButton.hasClass('button-disabled'))
-    {
-      searchButton.toggleClass('button-disabled', !isLimitReached);
-    }
-
+    searchButton.toggleClass('button-disabled', !isLimitReached);
     if (!isLimitReached) this.#showStatusMessage(isLimitReached);
 
   }
