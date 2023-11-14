@@ -1,18 +1,30 @@
 package uk.ac.rothamsted.knetminer.service;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.objects.XValidate;
 
 public class IndexInitializer extends NeoInitComponent
 {
+
+	public static final String INDEX_INIT_PROP = "IndexInitProperties";
 
 	private Logger log = LogManager.getLogger ();
 
@@ -34,6 +46,53 @@ public class IndexInitializer extends NeoInitComponent
 		createIndex ( cyIndexer );
 		
 		log.info ( "Concept full text indexing, all done" );
+	}
+
+	public void createConceptsIndex ( KnetMinerInitializer knetMinerInitializer ) {
+	String indexInitPropPath = knetMinerInitializer.getKnetminerConfiguration ()
+			.getCustomOptions ()
+			.getString ( INDEX_INIT_PROP );
+
+		if ( indexInitPropPath == null ) return;
+
+		this.createConceptsIndex ( Path.of ( indexInitPropPath ) );
+	}
+
+	public void createConceptsIndex ( Path path ) {
+		try
+		{
+			log.info ( "Retrieving index properties from: {}", path.toAbsolutePath () );
+			Reader reader = new FileReader ( path.toFile () );
+			createConceptsIndex ( reader );
+		}
+		catch ( FileNotFoundException ex )
+		{
+			throw ExceptionUtils.buildEx (
+					UncheckedIOException.class, ex, "Error while reading index properties from %s: $cause",
+					path.toAbsolutePath ()
+			);
+		}
+	}
+
+	public void createConceptsIndex ( Reader reader ) {
+		try
+		{
+			var propertiesListString = IOUtils.toString ( reader );
+			var properties = propertiesListString.split ( "," );
+
+			Set<String> propertiesSet = Stream.of ( properties )
+					.filter ( p -> p != null )
+					.filter ( p -> !StringUtils.isWhitespace ( p ) )
+					.collect ( Collectors.toSet () );
+
+			createConceptsIndex ( propertiesSet );
+		}
+		catch ( IOException ex )
+		{
+			throw ExceptionUtils.buildEx (
+					UncheckedIOException.class, ex, "Error while reading index properties: $cause"
+			);
+		}
 	}
 
 	private Set<String> findAllConceptProperties ()
