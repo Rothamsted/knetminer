@@ -116,7 +116,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Option (
 			names = { "-ind", "--neo-init-index"},
 			description =
-					"Adds index based upon index properties (specified via --neo-index-properties) to Neo4j database."
+					"Adds index based upon index properties path (specified via --neo-index-properties-path) to Neo4j database."
 	)
 	private boolean neoIndexInit = false;
 
@@ -124,7 +124,9 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			names = { "-ipp", "--neo-index-properties-path"},
 			paramLabel = "<neoIndexPropertiesPath>",
 			description =
-					"Index properties path for --neo-init-index."
+					"Index properties path for --neo-init-index. " +
+			"If the path is \"config://\", then there will be taken the path from --config customOptions/"
+			+ IndexInitializer.INDEX_INIT_PROP + ")."
 	)
 	private String neoIndexPropertiesPath = null;
 
@@ -189,7 +191,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 		if ( neoIndexInit ) {
 			if ( neoIndexPropertiesPath != null ) {
-
+/*
 				String configFile = "";
 
 				try {
@@ -201,15 +203,23 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 				String properties = configFile.split ("neo4j.properties: ")[1].split ("\n")[0];
 
 				log.info("Adding Neo4j index with properties: {}", properties);
+*/
+				log.info("Adding Neo4j index with properties from path: {}", neoIndexPropertiesPath);
 
 				var indInit = new IndexInitializer();
 				indInit.setDatabase (neoUrl, neoUser, neoPassword, initializer);
 
+				if ( !"config://".equals ( neoIndexPropertiesPath ) )
+					indInit.createConceptsIndex ( Path.of ( neoInitCypherPath ) );
+				else
+					indInit.createConceptsIndex ( initializer );
+/*
 				Set<String> neoIndexPropertiesSet = new HashSet<>();
 
 				Arrays.stream(neoIndexProperties.split (",")).map (neoIndexPropertiesSet::add);
 
 				indInit.createConceptsIndex (neoIndexPropertiesSet);
+ */
 			}
 		}
 		return 0;
