@@ -210,7 +210,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 				indInit.setDatabase (neoUrl, neoUser, neoPassword, initializer);
 
 				if ( !"config://".equals ( neoIndexPropertiesPath ) )
-					indInit.createConceptsIndex ( Path.of ( neoInitCypherPath ) );
+					indInit.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );
 				else
 					indInit.createConceptsIndex ( initializer );
 /*
