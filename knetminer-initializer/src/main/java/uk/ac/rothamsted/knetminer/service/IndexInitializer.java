@@ -84,6 +84,15 @@ public class IndexInitializer extends NeoInitComponent
 		createConceptsIndex ( propertiesSet );
 	}
 
+	public void createConceptsIndex ( BufferedReader reader ) {
+		Set<String> propertiesSet = reader.lines ()
+				.filter ( p -> p != null )
+				.filter ( p -> !StringUtils.isWhitespace ( p ) )
+				.collect( Collectors.toSet());
+
+		createConceptsIndex ( propertiesSet );
+	}
+
 	private Set<String> findAllConceptProperties ()
 	{
 		log.info ( "Fetching all DB concept properties" );
