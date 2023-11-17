@@ -7,7 +7,7 @@
 # 5.7-SNAPSHOT
 
 ## User Interface
-* Gene table new filtering options, including graph distance, score (#692).
+* Gene table includes new filtering options, including graph evidence distance and KnetScore (#692).
 * Gene and Evidence table, infinite scrolling replaced old pagination.
 * User queries and sample queries tailored to user plan/permissions.
 * Sample queries visualisation based on currently selected species and user role.
@@ -47,7 +47,8 @@ of old J2EE libraries (eg, `java.servlet` to Jakarta, #74f27f0)
 * Neo4j mode migrated to Neo4 5.10.x
 * Various dependencies upgrades.
 * Minor enhancements to demo/aratiny launching scripts and continuous integration scripts.
-* Maven build, option to run aratiny in single-specie mode added (#a387ee9, #cf23443). 
+* Maven build, option to run aratiny in single-specie mode added (#a387ee9, #cf23443).
+* Several new example queries added to better showcase updated user limits.
 
 # 5.6.0-SNAPSHOT
 * Current snapshot (on 5.6 branch).
