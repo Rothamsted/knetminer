@@ -20,6 +20,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
 import uk.ac.ebi.utils.objects.XValidate;
 
 public class IndexInitializer extends NeoInitComponent
@@ -59,7 +60,8 @@ public class IndexInitializer extends NeoInitComponent
 		this.createConceptsIndex ( Path.of ( indexInitPropPath ) );
 	}
 
-	public void createConceptsIndex ( Path path ) {
+	public void createConceptsIndex ( Path path )
+	{
 		try
 		{
 			log.info ( "Retrieving index properties from: {}", path.toAbsolutePath () );
@@ -69,19 +71,16 @@ public class IndexInitializer extends NeoInitComponent
 		catch ( FileNotFoundException ex )
 		{
 			throw ExceptionUtils.buildEx (
-					UncheckedIOException.class, ex, "Error while reading index properties from %s: $cause",
-					path.toAbsolutePath ()
+				UncheckedFileNotFoundException.class, ex,
+				"Index Property file \"%s\" not found: $cause",
+				path.toAbsolutePath ()
 			);
 		}
 	}
 
-	public void createConceptsIndex ( Reader reader ) {
-		Set<String> propertiesSet = new BufferedReader ( reader ).lines ()
-				.filter ( p -> p != null )
-				.filter ( p -> !StringUtils.isWhitespace ( p ) )
-				.collect( Collectors.toSet());
-
-		createConceptsIndex ( propertiesSet );
+	public void createConceptsIndex ( Reader reader )
+	{
+		createConceptsIndex ( new BufferedReader ( reader ) );
 	}
 
 	public void createConceptsIndex ( BufferedReader reader ) {
