@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
+import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
 import uk.ac.ebi.utils.runcontrol.ProgressLogger;
 
 /**
@@ -94,7 +95,8 @@ public class CypherInitializer extends NeoInitComponent
 		catch ( FileNotFoundException ex )
 		{
 			throw ExceptionUtils.buildEx ( 
-				UncheckedIOException.class, ex, "Error while reading Cypher query from %s: $cause",
+				UncheckedFileNotFoundException.class, ex, 
+				"Cypher command file \"%s\" not found: $cause",
 				path.toAbsolutePath ()
 			);
 		}
