@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-11-10* **Please, keep this note updated** 
+*This file was last reviewed on 2023-11-17* **Please, keep this note updated** 
 
 <br>
 
@@ -8,11 +8,14 @@
 
 ## User Interface
 * Gene table new filtering options, including graph distance, score (#692).
-* Gene and Evidence table, continuous scrolling replaced old pagination.
+* Gene and Evidence table, infinite scrolling replaced old pagination.
 * User queries and sample queries tailored to user plan/permissions.
-* Sample queries visualisation based on currently selected specie and user role.
+* Sample queries visualisation based on currently selected species and user role.
+* Sample queries box now has improved scaling.
 * Sample query file format extended to support user role (which is required to access a sample, #774).
 * Some improvements to the genemap visualisation (#723).
+* The input box for Gene List Search now displays a visual indicator reflecting user role limits: 20 for free users, 100 for registered users, and unlimited for Pro users.
+* Updated Concept Selector icon to better fit the interface.
 
 ### UI internals
 * Evidence table, matching genes download improved for performance (using browser HTTP cache).
@@ -20,6 +23,7 @@
 * Library for user management (#768).
 * Js that processes gene/evidence table from the API upgraded to comply with the new pure-JSON format (see #655).
 * Old release-notes.html removed (#657).
+* Added additional user role for Registered users which increases Gene List Search limit from 20 to 100.
 
 ### UI bugfixes
 * #773 Incorrect way to select rows during gene table filtering.
