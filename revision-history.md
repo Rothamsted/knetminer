@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last reviewed on 2023-11-17* **Please, keep this note updated** 
+*This file was last reviewed on 2023-11-20* **Please, keep this note updated** 
 
 <br>
 
@@ -13,7 +13,8 @@
 * Sample queries visualisation based on currently selected species and user role.
 * Sample queries box now has improved scaling.
 * Sample query file format extended to support user role (which is required to access a sample, #774).
-* Some improvements to the genemap visualisation (#723).
+* Some improvements to the genemap visualisation (Map View) for better container size support on larger resolutions (#723).
+* Added several additional centromere locations of various species for displaying as grey lines in genemap (Map View).
 * The input box for Gene List Search now displays a visual indicator reflecting user role limits: 20 for free users, 100 for registered users, and unlimited for Pro users.
 * Updated Concept Selector icon to better fit the interface.
 
