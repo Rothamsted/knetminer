@@ -82,8 +82,8 @@ const exampleQuery = function () {
         * 			> label		 	= STRING - region label
         * 		> mapGLWithoutRestriction 	= BOOLEAN - TRUE = map gene list to results / FALSE = map gene list without restrictions
         * 		> genes[]			= ARRAY of STRINGS - each string is an individual gene.
-        *       > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
-        *
+        *     > taxid             = STRING taxid (optional parameter - if not populated queries will appear on all species)
+				*     > minimumUserRole = STRING, min KnetSpace role required to run the query
         */
 
     /**
@@ -230,10 +230,7 @@ const exampleQuery = function () {
 					if ( !minimumUserRole ) minimumUserRole = 'guest';
 					
 					minimumUserRole = UserRole.get ( minimumUserRole );
-					
-					// TODO: remove
-					// var isGeneListRestricted = userAccessMgr.getGeneSearchLimit () < Number.MAX_SAFE_INTEGER;
-					
+										
 					var queryRestrictionHtml;
  
 					if ( !userAccessMgr.can ( minimumUserRole ) )

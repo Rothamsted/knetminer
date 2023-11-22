@@ -176,88 +176,8 @@ class UserAccessManager
 		if ( this.can ( UserRole.PRO ) ) return 20
 		return 10
 	}
-
-	/**
-	 * Methods prefixed with '_' are to be removed
-	 */
-
-  // Sets geneslist search limit based on current user plan.
-  // 20 for guest, 100 for free and unlimited for pro users.
-  _setGeneSearchLimit()
-  {
-		  /* 
-		   * TODO: this is logically wrong. Once you've introduced roles as 
-			 * abstract objects, you must be consistent with them vision and 
-			 * do these checkings in this way:
-			 * 
-			 * if ( this.#currentRole.can ( UserRole.PRO )))
-			 *   ...
-			 * else if ( this.#currentRole.can ( UserRole.FREE )) )
-			 *   ...
-			 * else
-			 *   // minimal role
-			 * 
-			 * You need to check things in priority/power order, since you need to apply the 
-			 * highest permissions the user has
-			 * 
-			 * Also, you need can(), you can't use '==', since a role grants access to its own 
-			 * permisssions plus the permissions of roles with lower power.
-			 * 
-			 * For instance with the current wrong code, an ADMIN role would be treated like 
-			 * a guest. 
-			 *  
-			 */
-		  
-      if(this.requires('free')){
-          this.#defaultGeneLimit = 100;  
-      }
-      
-      if(this.requires('pro')){
-          this.#isGeneLimitEnforced = false;
-          this.#defaultKnetViewLimit = 20
-      } 
-  }
-
-  // returns genelist search Limit 
-  _getGeneSearchLimit(){
-    return this.#defaultGeneLimit
-  }
-
-  _getGeneKnetLimit(){
-    return this.#defaultKnetViewLimit
-  }
-
-  // Checks if genes list limit is enforced or not. 
-  // Returns a boolean value to validate example queries restriction. 
-  // Primarily used to check if a user on a free or pro plan.
-  _isLimitEnforced(){
-    return this.#isGeneLimitEnforced
-  }
-
-	/**
-	 * TODO: no, this isn't about the genes list limit, it is about checking what the current
-	 * user can do. 
-	 * 
-	 * It doesn't matter if you wrote this for the genes list thing, it is not what it's doing,
-	 * don't write misleading comments or names.
-	 * 
-	 * Also, use a better name, such as can ( role )
-	 * 
-	 */
-  // Gets geneslist search limit
-  // Checks if query restriction should be added to example queries.
-  // Method compare user current role to the roles specified for each example queries. 
-  _requires(queryRole){
-		/* 
-		   TODO: This should be this.#currentRole.can ( queryRole )
-		   
-		   See above about #current, and see below about can()
-		 */
-    return  UserRole.can(queryRole); 
-  }
   
 }
-
 
 const userAccessMgr = new UserAccessManager()
 
