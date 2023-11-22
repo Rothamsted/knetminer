@@ -87,7 +87,6 @@ public class KnetMinerInitializerTest
 		initializer.setKnetminerConfiguration ( datasetPath + "/config/" + configFName );
 
 		initializer.initKnetMinerData ( doReset );
-		//System.out.println("The Genes2PathLengths map: " + initializer.getGenes2PathLengths().toString());
 		return initializer;
 	}
 

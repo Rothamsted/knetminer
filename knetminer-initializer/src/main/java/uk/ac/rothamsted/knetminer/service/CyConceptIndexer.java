@@ -1,18 +1,16 @@
 package uk.ac.rothamsted.knetminer.service;
 
+import static java.lang.String.format;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,10 +21,20 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
 import uk.ac.ebi.utils.objects.XValidate;
 
-public class IndexInitializer extends NeoInitComponent
+/**
+ * A Neo4j initialiser component to create a full-text index that supports
+ * keyword-based concept searches.
+ *
+ * @author Vitaly Vyurkov
+ * @author Marco Brandizi
+ * <dl><dt>Date:</dt><dd>22 Nov 2023</dd></dl>
+ *
+ */
+public class CyConceptIndexer extends NeoInitComponent
 {
-
-	public static final String INDEX_INIT_PROP = "IndexInitProperties";
+	public static final String CY_INDEX_NAME = "conceptIndex";
+	
+	public static final String INDEX_KEYS_PROP = "cypherConceptIndexProps";
 
 	private Logger log = LogManager.getLogger ();
 
@@ -49,11 +57,18 @@ public class IndexInitializer extends NeoInitComponent
 
 		log.info ( "Concept full text indexing, all done" );
 	}
+	
+	public void createConceptsIndex ( String... propertyBaseNames )
+	{
+		createConceptsIndex ( Set.of ( propertyBaseNames ) );
+	}
+	
 
-	public void createConceptsIndex ( KnetMinerInitializer knetMinerInitializer ) {
-	String indexInitPropPath = knetMinerInitializer.getKnetminerConfiguration ()
+	public void createConceptsIndex ( KnetMinerInitializer knetMinerInitializer )
+	{
+		String indexInitPropPath = knetMinerInitializer.getKnetminerConfiguration ()
 			.getCustomOptions ()
-			.getString ( INDEX_INIT_PROP );
+			.getString ( INDEX_KEYS_PROP );
 
 		if ( indexInitPropPath == null ) return;
 
@@ -72,7 +87,7 @@ public class IndexInitializer extends NeoInitComponent
 		{
 			throw ExceptionUtils.buildEx (
 				UncheckedFileNotFoundException.class, ex,
-				"Index Property file \"%s\" not found: $cause",
+				"Cypher Concept indexer, property base name file \"%s\" not found: $cause",
 				path.toAbsolutePath ()
 			);
 		}
@@ -83,15 +98,20 @@ public class IndexInitializer extends NeoInitComponent
 		createConceptsIndex ( new BufferedReader ( reader ) );
 	}
 
-	public void createConceptsIndex ( BufferedReader reader ) {
+	public void createConceptsIndex ( BufferedReader reader )
+	{
 		Set<String> propertiesSet = reader.lines ()
-				.filter ( p -> p != null )
-				.filter ( p -> !StringUtils.isWhitespace ( p ) )
-				.collect( Collectors.toSet());
+			.filter ( p -> p != null )
+			.filter ( p -> !StringUtils.isWhitespace ( p ) )
+			.filter ( p -> !p.startsWith ( "#" ) ) // Supports comments
+			.collect( Collectors.toSet() );
 
 		createConceptsIndex ( propertiesSet );
 	}
 
+	/**
+	 * Finds all the properties in the DB for nodes of type Concept.
+	 */
 	private Set<String> findAllConceptProperties ()
 	{
 		log.info ( "Fetching all DB concept properties" );
@@ -103,6 +123,7 @@ public class IndexInitializer extends NeoInitComponent
 			UNWIND KEYS(c) AS propName
 			RETURN DISTINCT propName
 		""";
+		
 		try ( Session session = driver.session () )
 		{
 			Result result = session.run ( cypherQuery );
@@ -113,10 +134,18 @@ public class IndexInitializer extends NeoInitComponent
 		return allProps;
 	}
 
+	/**
+	 * Expands the base property names to all properties in the DB that match.
+	 * 
+	 * This is necessary due to an Ondex limit, such that, we might have eg, for a base name like
+	 * 'Abstract', the actual properties 'Abstract_01', 'Abstract_02', ... which happens when the
+	 * Ondex Merge plug-in merge equivalent concepts having the same 'Abstract' property.
+	 * 
+	 */
 	private Set<String> expandBaseProperties ( Set<String> propertyBaseNames, Set<String> allDBProps )
 	{
-		log.info ( "Filtering {} DB properties from {} base names", allDBProps.size (), propertyBaseNames.size () );
-		log.debug ( "DB properties to filter are: {}", allDBProps );
+		log.info ( "Expanding {} DB properties from {} base names", allDBProps.size (), propertyBaseNames.size () );
+		log.trace ( "DB properties to filter: {}", allDBProps );
 
 		Set<String> expandedProps = allDBProps.parallelStream ()
 		.filter ( pname -> {
@@ -125,28 +154,37 @@ public class IndexInitializer extends NeoInitComponent
 		})
 		.collect ( Collectors.toSet () );
 
-		log.info ( "Retaining {} DB properties after base property filtering", expandedProps.size () );
-		log.debug ( "DB properties after filtering are: {}", expandedProps );
+		log.info ( "Returning {} DB properties after base property filtering", expandedProps.size () );
+		log.trace ( "DB properties after base property filtering: {}", expandedProps );
 
 		return expandedProps;
 	}
 
-	public String createIndexingCypher ( Set<String> indexedProps )
+
+	private String createIndexingCypher ( Set<String> indexedProps )
 	{
 		XValidate.notEmpty ( indexedProps, "Can't create index without properties" );
 
 		String cyProps = indexedProps.stream ()
-		.map ( pname -> "a." + pname )
+		.map ( pname -> "c." + pname )
 		.collect ( Collectors.joining ( ", " ) );
 
-		String cypherQuery = "CREATE FULLTEXT INDEX concept_index FOR (a:Concept) ON EACH [ " + cyProps  + " ]";
+		String cypherQuery = String.format ( 
+			"CREATE FULLTEXT INDEX %s FOR (c:Concept) ON EACH [ %s ]",
+			CY_INDEX_NAME, cyProps
+		); 
+
 		return cypherQuery;
 	}
 
 	private void createIndex ( String indexingCypher )
 	{
-		log.info ( "Creating full text index for concepts" );
-		try ( Session session = driver.session () ) {
+		try ( Session session = driver.session () ) 
+		{
+			log.info ( "Deleting old full index" );
+			session.run ( format ( "DROP INDEX %s IF EXISTS", CY_INDEX_NAME ) );
+			
+			log.info ( "Creating full text index for concepts" );
 			session.run ( indexingCypher );
 		}
 		log.info ( "Full text index for concepts created" );

@@ -19,6 +19,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
+import uk.ac.rothamsted.knetminer.service.CyConceptIndexer;
 import uk.ac.rothamsted.knetminer.service.CypherInitializer;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
@@ -106,27 +107,20 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 	@Option (
 		names = { "-cy", "--neo-init-script"},
-		paramLabel = "<path>|'config://'",
+		paramLabel = "<path>|config://",
 		description =
-			"Runs Cypher init commands from a file, (if config://, takes the path from --config customOptions/"
+			"Runs Cypher init commands from a file, (if config://, takes the path from --config, customOptions/"
 			+ CypherInitializer.CY_INIT_SCRIPT_PROP + ")."
 	)
 	private String neoInitCypherPath = null;
 
 	@Option (
-			names = { "-ind", "--neo-init-index"},
-			description =
-					"Adds index based upon index properties path (specified via --neo-index-properties-path) to Neo4j database."
-	)
-	private boolean neoIndexInit = false;
-
-	@Option (
-			names = { "-ipp", "--neo-index-properties-path"},
-			paramLabel = "<neoIndexPropertiesPath>",
-			description =
-					"Index properties path for --neo-init-index. " +
-			"If the path is \"config://\", then there will be taken the path from --config customOptions/"
-			+ IndexInitializer.INDEX_INIT_PROP + ")."
+		names = { "-cyx", "--neo-index"},
+		paramLabel = "<path>|config://",
+		description =
+		"Create index for full text concept search (see documentation). " +
+		"If the path is config://, takes the path from --config, customOptions/"
+		+ CyConceptIndexer.INDEX_KEYS_PROP + ")."
 	)
 	private String neoIndexPropertiesPath = null;
 
@@ -189,39 +183,19 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 				cyInit.runCypher ( initializer );
 		}
 
-		if ( neoIndexInit ) {
-			if ( neoIndexPropertiesPath != null ) {
-/*
-				String configFile = "";
+		if ( neoIndexPropertiesPath != null )
+		{
+			log.info ( "Creating Neo4j full text index for concepts" );
 
-				try {
-					configFile = Files.readString ( Paths.get ( neoIndexPropertiesPath ));
-				} catch ( IOException e ) {
-					log.error ( "An IOException popped up when reading from file path: {}.", neoIndexPropertiesPath );
-				}
+			var indexer = new CyConceptIndexer();
+			indexer.setDatabase (neoUrl, neoUser, neoPassword, initializer);
 
-				String properties = configFile.split ("neo4j.properties: ")[1].split ("\n")[0];
-
-				log.info("Adding Neo4j index with properties: {}", properties);
-*/
-				log.info("Adding Neo4j index with properties from path: {}", neoIndexPropertiesPath);
-
-				var indInit = new IndexInitializer();
-				indInit.setDatabase (neoUrl, neoUser, neoPassword, initializer);
-
-				if ( !"config://".equals ( neoIndexPropertiesPath ) )
-					indInit.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );
-				else
-					indInit.createConceptsIndex ( initializer );
-/*
-				Set<String> neoIndexPropertiesSet = new HashSet<>();
-
-				Arrays.stream(neoIndexProperties.split (",")).map (neoIndexPropertiesSet::add);
-
-				indInit.createConceptsIndex (neoIndexPropertiesSet);
- */
-			}
+			if ( !"config://".equals ( neoIndexPropertiesPath ) )
+				indexer.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );
+			else
+				indexer.createConceptsIndex ( initializer );
 		}
+
 		return 0;
 	}
 

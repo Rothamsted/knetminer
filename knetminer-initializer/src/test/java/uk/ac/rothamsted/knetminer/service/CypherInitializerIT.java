@@ -12,7 +12,7 @@ import org.neo4j.driver.Session;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * TODO: comment me!
+ * Tests for {@link CypherInitializer}
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>3 Oct 2023</dd></dl>

@@ -9,3 +9,4 @@
 
 customOptions:
   cypherInitScript: "${mydir}/neo4j/neo-init.cypher"
+  cypherConceptIndexProps: "${mydir}/neo4j/concept-index-properties.txt"

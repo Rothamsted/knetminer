@@ -9,7 +9,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser;
 
 /**
- * TODO: comment me!
+ * Common class for Neo4j initialisation components.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>2 Oct 2023</dd></dl>

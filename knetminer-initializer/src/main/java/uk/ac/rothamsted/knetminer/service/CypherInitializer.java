@@ -19,7 +19,7 @@ import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
 import uk.ac.ebi.utils.runcontrol.ProgressLogger;
 
 /**
- * TODO: comment me!
+ * Allows for sending Cypher commands to a Neo4j database, used as a DB initialisation option.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>2 Oct 2023</dd></dl>
