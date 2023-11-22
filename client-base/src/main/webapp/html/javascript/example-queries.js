@@ -101,13 +101,12 @@ const exampleQuery = function () {
         */ 
 
         var { term, regions, genes, minimumUserRole } = targetQuery;
+        if ( !minimumUserRole ) minimumUserRole = 'guest'
 
-        var userRole = minimumUserRole === '' ? 'guest' : minimumUserRole;
-
-        var isQueryRestricted = userAccessMgr.requires(userRole);
+        var isQueryAllowed = userAccessMgr.can ( minimumUserRole );
 
         // disables search button if query is restricted
-        $('#searchBtn').toggleClass('query-disabled', !isQueryRestricted); 
+        $('#searchBtn').toggleClass('query-disabled', !isQueryAllowed); 
 
         if (!regions.length) {
             removeGeneRow()
@@ -226,33 +225,32 @@ const exampleQuery = function () {
         // empty exiting examples 
 
        selectedQuery.forEach(function(query)
-        {
-            var { minimumUserRole ,description,index } = query;
-        
-            var queryRestriction;
-            var userRole = minimumUserRole === '' ? 'guest' : minimumUserRole;
-            var isQueryRestricted = userAccessMgr.requires(userRole);
-            var isGeneListRestricted = userAccessMgr.isLimitEnforced();
+       {
+					var { minimumUserRole ,description,index } = query;
+					if ( !minimumUserRole ) minimumUserRole = 'guest';
+					
+					minimumUserRole = UserRole.get ( minimumUserRole );
+					
+					// TODO: remove
+					// var isGeneListRestricted = userAccessMgr.getGeneSearchLimit () < Number.MAX_SAFE_INTEGER;
+					
+					var queryRestrictionHtml;
+ 
+					if ( !userAccessMgr.can ( minimumUserRole ) )
+						queryRestrictionHtml = userAccessMgr.getCurrentRole () == UserRole.GUEST
+						  // Anonymous/not logged user
+						  ? `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`
 
-            if (!isQueryRestricted) {
-                queryRestriction = `<a class='query-restriction-text' onclick="loginModalInit()">(Login)</a>`;
-            }
-
-						/* TODO: NO! roles need to be cheched via can(), see user-access.js
-						   
-						   Also, why are you checking minimumUserRole again, if it was already done upon 
-						   setting isGeneListRestricted? 
-						*/
-						
-            if ( isGeneListRestricted && minimumUserRole === 'pro') {
-                queryRestriction = `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
-            }
-
-            // Example query buttons
-            var sampleQueryButtons = !queryRestriction ?  `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a></li>`: `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a> ${queryRestriction}</li>`;
-            //Add example queries to page  
-
-            $('#eg_queries').append(sampleQueryButtons);
+							// It's a logged-in user, but this query still has restriction for them, propose to upgrade
+						  : `<a class='query-restriction-text' href="https://knetminer.com/pricing-plans" target="_blank" >(Upgrade)</a>`;
+												
+					// Example query buttons
+					var sampleQueryButtonsHtml = !queryRestrictionHtml
+					? `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a></li>`
+					: `<li class='exampleQuery'><a onclick="populateExamples(${index})" >${description}</a> ${queryRestrictionHtml}</li>`;
+					
+					// Add to the page  
+					$('#eg_queries').append ( sampleQueryButtonsHtml );
         })
     }
 

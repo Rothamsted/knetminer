@@ -176,8 +176,8 @@ async function searchKeyword() {
  */
 function setupGenesSearch() 
 {   			
-    userAccessMgr.setUserPlan(); 
-    const geneListLimit = userAccessMgr.getGeneSearchLimit()
+    userAccessMgr.initFromKnetSpace (); 
+    const geneListLimit = userAccessMgr.getGeneSearchLimit();
     $('genesCount').html(`0/${geneListLimit}`)	
 
     geneCounter()
@@ -747,8 +747,8 @@ class GenesListManager {
 
   constructor(listLength) {
     this.#listLength = listLength;
-    this.#listLimit = userAccessMgr.getGeneSearchLimit(); 
-    this.#isLimitEnforced = userAccessMgr.isLimitEnforced();
+    this.#listLimit = userAccessMgr.getGeneSearchLimit (); 
+    this.#isLimitEnforced = this.#listLimit < Number.MAX_SAFE_INTEGER;
   }
 
 

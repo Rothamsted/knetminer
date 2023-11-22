@@ -257,8 +257,7 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword, targetElement) {
 
 	var candidatelist = [];
 	var knetNotice;
-	var knetViewLimit = userAccessMgr.getGeneKnetLimit(); 
-	var isUserPro = userAccessMgr.isLimitEnforced()
+	var knetViewLimit = userAccessMgr.getNetworkViewLimit(); 
 
 	var cb_list = $("input[name=candidates");
 	var cb_list_len = cb_list.length;
@@ -269,15 +268,15 @@ function generateMultiGeneNetwork_forNewNetworkViewer(keyword, targetElement) {
 	}
 
 	//console.log(candidatelist.length +" gene(s) selected.");
-	if (candidatelist.length > knetViewLimit/*20*/) {
-
-		if (!isUserPro) { // Pro plan user
-			knetNotice = '<span></span>Gene networks can only be created for up to max. ' + knetViewLimit + ' genes.</span>';
-		}
-		else { // Free plan user
-			console.log('triggered Here')
-			knetNotice = '<div><p>The KnetMiner Free Plan is limited to a network of ' + knetViewLimit + ' genes.</p> <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a> to create networks</div>';
-		}
+	if (candidatelist.length > knetViewLimit)
+	{
+		if ( !userAccessMgr.can ( UserRole.PRO ) )
+			knetNotice = '<div><p>Anonymous and free plan users are limited to a network of max ' + knetViewLimit + ' genes.</p>'
+			  + ' <a href="https://knetminer.com/pricing-plans" target="_blank">Upgrade to Pro plan now</a>' 
+			  + ' to create bigger networks</div>';
+		else
+			// Pro plan user has its own limits too. TODO: see notes on user-access.js
+			knetNotice = '<span></span>Gene networks can only be created for up to max ' + knetViewLimit + ' genes.</span>';
 
 		jboxNotice(knetNotice,'black',10 , 10000,400);
 		resetNetworkCall()
