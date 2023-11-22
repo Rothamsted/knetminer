@@ -95,15 +95,7 @@ class UserRole
  */
 class UserAccessManager
 {
-   #currentRole = UserRole.GUEST;
-
-	/**
-	 * TODO: remove
-	 */
-  #defaultGeneLimit = 20; 
-  #defaultKnetViewLimit = 10; 
-  #isGeneLimitEnforced = true;
-
+  #currentRole = UserRole.GUEST;
 
   constructor(){
   }
