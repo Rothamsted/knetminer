@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-  	<version>4.0.1-SNAPSHOT</version>
+  	<version>5.0.1-SNAPSHOT</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -243,22 +243,6 @@
 
 			</plugins>		
 		</pluginManagement>
-		
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-			</plugin>
-
-		</plugins>
 	</build>
 
 
@@ -421,6 +405,12 @@
 				<artifactId>log4j-jcl</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
+			<!-- slf4j 2 needs this bridge -->
+			<dependency>
+			  <groupId>org.apache.logging.log4j</groupId>
+			  <artifactId>log4j-slf4j2-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>			
 			<dependency>
 			 	<groupId>org.apache.logging.log4j</groupId>
 			 	<artifactId>log4j-slf4j-impl</artifactId>
@@ -432,7 +422,7 @@
 						<artifactId>slf4j-api</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
+			</dependency>			
 			<!-- 
 				The old log4j v1.2 can be replaced by this, but only if the dependant is written well-enough.
 				(https://logging.apache.org/log4j/2.x/manual/migration.html)
