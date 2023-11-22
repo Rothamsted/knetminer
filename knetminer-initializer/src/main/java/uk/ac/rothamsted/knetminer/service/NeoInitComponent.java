@@ -1,6 +1,8 @@
 package uk.ac.rothamsted.knetminer.service;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
@@ -19,14 +21,23 @@ public abstract class NeoInitComponent
 {
 	protected Driver driver;
 	
+	private Logger log = LogManager.getLogger ();
+	
 	public void setDatabase ( Driver driver )
 	{
 		Validate.notNull ( "Can't setup a null driver for a %s", getClass ().getSimpleName () );
+		log.info ( "Setting Neo4j connection from driver parameter" );
 		this.driver = driver;
 	}
 	
 	public void setDatabase ( String neoUrl, String neoUser, String neoPassword )
 	{
+		log.info (
+			"{}, setting Neo4j connection {} from explicit parameters", 
+			this.getClass ().getSimpleName (),
+			neoUrl
+		);
+		
 		this.setDatabase ( GraphDatabase.driver (
 			neoUrl, AuthTokens.basic ( neoUser, neoPassword )
 		));
@@ -49,6 +60,8 @@ public abstract class NeoInitComponent
 	
 	public void setDatabase ( KnetMinerInitializer kinitializer )
 	{
+		log.info ( "{} setting Neo4j connection from config params", this.getClass ().getSimpleName () );
+		
 		var traverser = kinitializer.getGraphTraverser ();
 		Validate.notNull ( traverser, "No semantic motif traverser is configured, can't get DB coordinates" );
 

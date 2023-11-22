@@ -79,7 +79,7 @@ public class CyConceptIndexer extends NeoInitComponent
 	{
 		try
 		{
-			log.info ( "Retrieving index properties from: {}", path.toAbsolutePath () );
+			log.info ( "Retrieving concept index properties from: {}", path.toAbsolutePath () );
 			Reader reader = new FileReader ( path.toFile () );
 			createConceptsIndex ( reader );
 		}
@@ -144,7 +144,7 @@ public class CyConceptIndexer extends NeoInitComponent
 	 */
 	private Set<String> expandBaseProperties ( Set<String> propertyBaseNames, Set<String> allDBProps )
 	{
-		log.info ( "Expanding {} DB properties from {} base names", allDBProps.size (), propertyBaseNames.size () );
+		log.info ( "Expanding to {} DB properties from {} base names", allDBProps.size (), propertyBaseNames.size () );
 		log.trace ( "DB properties to filter: {}", allDBProps );
 
 		Set<String> expandedProps = allDBProps.parallelStream ()
@@ -181,7 +181,7 @@ public class CyConceptIndexer extends NeoInitComponent
 	{
 		try ( Session session = driver.session () ) 
 		{
-			log.info ( "Deleting old full index" );
+			log.info ( "Deleting old concept full text index" );
 			session.run ( format ( "DROP INDEX %s IF EXISTS", CY_INDEX_NAME ) );
 			
 			log.info ( "Creating full text index for concepts" );

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static uk.ac.rothamsted.knetminer.service.CyConceptIndexer.CY_INDEX_NAME;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,23 +36,6 @@ public class CyConceptIndexerIT
 		neoDriverResource.ensureNeo4jMode ();
 	}
 
-	/**
-	 * TODO: delete, it was moved to the indexer
-	 */
-	public static void removeIndex ()
-	{
-		var neoDriver = neoDriverResource.getDriver ();
-		var indexInitializer = new CyConceptIndexer ();
-		indexInitializer.setDatabase ( neoDriver );
-
-		try ( Session session = neoDriver.session () )
-		{
-			String cypherQuery = String.format (
-				"DROP INDEX %s IF EXISTS", CY_INDEX_NAME
-			);
-			session.run ( cypherQuery );
-		}
-	}
 
 	@Test
 	public void testBasics ()
