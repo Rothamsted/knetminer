@@ -135,11 +135,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 	      <artifactId>maven-failsafe-plugin</artifactId>
 	      <configuration>
-	      	<systemProperties>
+	      	<systemPropertyVariables>
 						<!-- sent to Java -->
 	      		<maven.profileId>${maven.profileId}</maven.profileId>
 		        <neo4j.server.boltPort>${neo4j.server.boltPort}</neo4j.server.boltPort>
-	      	</systemProperties>
+	      	</systemPropertyVariables>
 	      </configuration>
 			</plugin>
 			
