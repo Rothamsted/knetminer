@@ -34,7 +34,7 @@
 * #778 Network view with too many genes for the current user role breaks the UI.
 
 ## API
-* Gene table and Evidence table outputs now are pure JSON (cleaning and improving the "CSV inside JSON" old format). This makes improves the coding of API clients (#655).
+* Gene table and Evidence table outputs now are pure JSON (cleaning and improving the "CSV inside JSON" old format). This improves the coding of API clients (#655).
 * Gene table output now includes the graph distance between genes and their evidences (based on semantic motifs, #743).
 * Deprecated API calls removed, `/dataSource` (#653), `/ksHost` (#792), /latestNetworkStats (#657).
 
@@ -43,10 +43,9 @@
 
 ## Miscellanea
 * Migration to Java 17, new Java features available to developers.
-* Migration to recent versions of Tomcat and Jetty (used for building), with consequent migration 
-of old J2EE libraries (eg, `java.servlet` to Jakarta, #74f27f0)
+* Migration to recent versions of Tomcat and Jetty (used for building), with consequent migration of old J2EE libraries (eg, `java.servlet` to Jakarta, #74f27f0)
 * Neo4j mode migrated to Neo4 5.10.x
-* Various dependencies upgrades.
+* Various dependencies upgraded.
 * Minor enhancements to demo/aratiny launching scripts and continuous integration scripts.
 * Maven build, option to run aratiny in single-specie mode added (#a387ee9, #cf23443).
 * Several new example queries added to better showcase updated user limits.
