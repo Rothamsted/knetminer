@@ -20,7 +20,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
-import uk.org.lidalia.slf4jext.Level;
 
 /**
  *
