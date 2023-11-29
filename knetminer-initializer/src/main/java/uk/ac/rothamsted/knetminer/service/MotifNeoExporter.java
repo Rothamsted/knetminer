@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+import uk.org.lidalia.slf4jext.Level;
 
 /**
  *
@@ -33,7 +34,6 @@ public class MotifNeoExporter extends NeoInitComponent
 	/**
 	 * We use our scheduler only to set a low limit for queuedTaskCap, since the source here is
 	 * much faster and there is little point with queueing too much stuff.
-	 * 
 	 */
 	private static final Scheduler FLUX_SCHEDULER = newBoundedElastic ( 
 		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, MotifNeoExporter.class.getSimpleName () + ".scheduler" 
@@ -54,11 +54,18 @@ public class MotifNeoExporter extends NeoInitComponent
 			
 			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
 
-			PercentProgressLogger progressLogger = new PercentProgressLogger (
-				"{}% semantic motif endpoints processed",
+			PercentProgressLogger submissionLogger = new PercentProgressLogger (
+				"{}% semantic motif endpoints sent to Neo4j",
 				genes2PathLengths.size()
 			);
-		
+			// WARNING: if you switch to a parallel publisher, you need to fix this
+			submissionLogger.setIsThreadSafe ( true );
+
+			PercentProgressLogger completionLogger = new PercentProgressLogger (
+				"{}% semantic motif endpoints stored",
+				genes2PathLengths.size()
+			);
+			
 			// Prepare a stream of records
 			//
 			Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream;
@@ -84,7 +91,7 @@ public class MotifNeoExporter extends NeoInitComponent
 				int conceptId = gene2Concept.getRight();
 				int distance = smEntry.getValue();
 				
-				progressLogger.updateWithIncrement();
+				submissionLogger.updateWithIncrement();
 				
 				return Map.of (
 					"geneId", geneId,
@@ -100,6 +107,7 @@ public class MotifNeoExporter extends NeoInitComponent
 			.parallel ()
 			.runOn ( FLUX_SCHEDULER )
 			.doOnNext ( this::processBatch )
+			.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
 			.sequential ()
 			.blockLast ();
 			
@@ -120,8 +128,8 @@ public class MotifNeoExporter extends NeoInitComponent
 			String cyRelations =
 				"""
         UNWIND $smRelRows AS relRow\s
-        MATCH ( gene:Gene { ondexId: toString ( relRow.geneId )} )
-        MATCH ( concept:Concept { ondexId: toString ( relRow.conceptId )} )
+        MATCH ( gene:Gene {ondexId: toString ( relRow.geneId )} ),
+					    ( concept:Concept {ondexId: toString ( relRow.conceptId )} )
         CREATE (gene) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (concept)				
         """;
 			tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );

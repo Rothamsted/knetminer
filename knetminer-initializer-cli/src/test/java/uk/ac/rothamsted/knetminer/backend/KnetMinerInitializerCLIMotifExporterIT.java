@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -28,8 +27,8 @@ import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 public class KnetMinerInitializerCLIMotifExporterIT
 {
 	@ClassRule
-	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
-
+	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource ();
+	
 	@BeforeClass
 	public static void init () throws IOException
 	{
@@ -37,7 +36,10 @@ public class KnetMinerInitializerCLIMotifExporterIT
 		MotifNeoExporter.setSampleSize ( 100 );
 	}
 	
-	@Before
+	/*
+	 * TODO: remove, the component already deletes old links.
+	 */
+	//@Before
 	public void cleanTestData ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
@@ -82,7 +84,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	}
 	
 	
-	@Test // @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )
+	@Test
 	public void testAllFromConfig ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (

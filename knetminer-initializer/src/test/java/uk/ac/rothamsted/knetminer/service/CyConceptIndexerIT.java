@@ -3,7 +3,7 @@ package uk.ac.rothamsted.knetminer.service;
 import static org.junit.Assert.assertEquals;
 import static uk.ac.rothamsted.knetminer.service.CyConceptIndexer.CY_INDEX_NAME;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,9 +46,12 @@ public class CyConceptIndexerIT
 
 		indexer.createConceptsIndex ( "prefName", "altName", "Phenotype" );
 
-		verify ();
+		verify ( "prefName", "altName", "Phenotype", "Phenotype_1" );
 	}
 
+	/**
+	 * Reads indexing params from config.
+	 */
 	@Test
 	public void testReadFromConfig ()
 	{
@@ -58,9 +61,12 @@ public class CyConceptIndexerIT
 		indexer.setDatabase ( neoDriverResource.getDriver () );
 		indexer.createConceptsIndex ( knetInitializer );
 
-		verify ();
+		verify ( "prefName", "altName", "Phenotype", "Phenotype_1", "PUB_1", "PUB_2" );
 	}
 
+	/**
+	 * Reads both indexing params and Neo4j params from config.
+	 */
 	@Test
 	public void testReadAllFromConfig ()
 	{
@@ -70,9 +76,13 @@ public class CyConceptIndexerIT
 		indexer.setDatabase ( knetInitializer );
 		indexer.createConceptsIndex ( knetInitializer );
 
-		verify ();
+		verify ( "prefName", "altName", "Phenotype", "Phenotype_1", "PUB_1", "PUB_2" );
 	}
 
+	/**
+	 * Reads indexing params from config and Neo4j params from config, inferring the latter
+	 * from the {@code config://} pattern.
+	 */	
 	@Test
 	public void testReadAllFromConfigViaBoltURL ()
 	{
@@ -82,10 +92,10 @@ public class CyConceptIndexerIT
 		indexer.setDatabase ( "config://", null, null, knetInitializer );
 		indexer.createConceptsIndex ( knetInitializer );
 
-		verify ();
+		verify ( "prefName", "altName", "Phenotype", "Phenotype_1", "PUB_1", "PUB_2" );
 	}
 
-	private void verify ()
+	private void verify ( String ...exptProperties )
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 		try ( Session session = neoDriver.session () )
@@ -95,17 +105,20 @@ public class CyConceptIndexerIT
 			);
 			Result result = session.run ( cypherQuery );
 			
-			var properties = result
+			var properties = Set.copyOf ( 
+				result
 				.next ()
 				.get ( "properties" )
-				.asList ();
+				.asList ()
+			);
 			
 			log.info ( "Returned properties list: {}", properties );
 			
-			var exptProperties = List.of ( "Phenotype", "Phenotype_1", "altName", "prefName" );
+			var exptPropertiesList = Set.of ( exptProperties );
+			
 			assertEquals ( 
 				"Indexed properties don't match expected ones!",
-				properties, exptProperties
+				exptPropertiesList, properties
 			);
 		}
 	}

@@ -1,14 +1,6 @@
 package uk.ac.rothamsted.knetminer.backend;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
@@ -70,7 +62,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 	@Option (
 		names = { "-f", "--force"},
-		description = "If true, reinitialises everything, independently on "
+		description = "Reinitialises everything, independently on "
 			+ "whether data files exist and are more recent than the OXL file."
 	)
 	private boolean doForce = false;
@@ -87,21 +79,21 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	@Option (
 		names = { "-nl", "--neo-url"},
 		paramLabel = "<bolt:// URL>|config://",
-		description = "Neo4j BOLT URL for --neo-motifs. config:// to get Neo coordinates from --config (--neo-user and --neo-password are ignored)."
+		description = "Neo4j BOLT URL for related commands. config:// to get Neo coordinates from --config (--neo-user and --neo-password are ignored)."
 	)
-	private String neoUrl;
+	private String neoUrl = "config://";
 
 	@Option (
 		names = { "-nu", "--neo-user"},
 		paramLabel = "<user>",
-		description = "Neo4j user for --neo-motifs."
+		description = "Neo4j user for related commands."
 	)
 	private String neoUser;
 
 	@Option (
 		names = { "-np", "--neo-password"},
 		paramLabel = "<neoPassword>",
-		description = "Neo4j neoPassword for --neo-motifs."
+		description = "Neo4j neoPassword for related commands."
 	)
 	private String neoPassword;
 
@@ -115,10 +107,10 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	private String neoInitCypherPath = null;
 
 	@Option (
-		names = { "-cyx", "--neo-index"},
+		names = { "-dx", "--neo-index"},
 		paramLabel = "<path>|config://",
 		description =
-		"Create index for full text concept search (see documentation). " +
+		"Create Neo4j indexes to support applications (for now, concept full-text index, see documentation). " +
 		"If the path is config://, takes the path from --config, customOptions/"
 		+ CyConceptIndexer.INDEX_KEYS_PROP + ")."
 	)
@@ -188,7 +180,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			log.info ( "Creating Neo4j full text index for concepts" );
 
 			var indexer = new CyConceptIndexer();
-			indexer.setDatabase (neoUrl, neoUser, neoPassword, initializer);
+			indexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 
 			if ( !"config://".equals ( neoIndexPropertiesPath ) )
 				indexer.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );

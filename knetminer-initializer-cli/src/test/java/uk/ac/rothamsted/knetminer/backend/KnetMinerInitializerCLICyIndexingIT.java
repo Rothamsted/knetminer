@@ -1,6 +1,7 @@
 package uk.ac.rothamsted.knetminer.backend;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.rothamsted.knetminer.service.CyConceptIndexer.CY_INDEX_NAME;
 
 import java.io.IOException;
 
@@ -12,17 +13,16 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
-import uk.ac.rothamsted.knetminer.service.CypherInitializer;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
  * TODO: comment me!
  *
- * @author brandizi
- * <dl><dt>Date:</dt><dd>11 Oct 2023</dd></dl>
+ * @author Marco Brandizi
+ * <dl><dt>Date:</dt><dd>29 Nov 2023</dd></dl>
  *
  */
-public class KnetMinerInitializerCLICypherInitIT
+public class KnetMinerInitializerCLICyIndexingIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
@@ -30,43 +30,34 @@ public class KnetMinerInitializerCLICypherInitIT
 	@BeforeClass
 	public static void init () throws IOException
 	{
-		neoDriverResource.ensureNeo4jMode ();
-		KnetMinerInitializerCLITest.init ();
+		KnetMinerInitializerCLICypherInitIT.init ();
 	}
 	
 	/**
-	 * TODO: this is a copy of the same method in {@link CypherInitializerIT}. Needs
-	 * some refactoring, together with {@link #verify()}.
+	 * The component removes the index, but we do this here, to be sure that {@link #verify()}
+	 * catches a newly-created index.
 	 */
 	@Before
-	public void cleanTestData ()
+	public void removeIndex ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		var cyinit = new CypherInitializer ();
-		cyinit.setDatabase ( neoDriver );
 
-		cyinit.runCypher ( "MATCH (f:Foo) DELETE f" );
-
-		try ( Session session = neoDriver.session() ) 
+		try ( Session session = neoDriver.session () )
 		{
-			String cyVerify = """
-				MATCH (f:Foo) RETURN COUNT(f) AS ct
-				""";
-			Result result = session.run( cyVerify );
-			int ct = result.next ().get ( 0 ).asInt ();
-			
-			assertEquals ( "runCypher() didn't clean up!", 0, ct );
-		}		
+			String cypherQuery = String.format (
+				"DROP INDEX %s IF EXISTS", CY_INDEX_NAME
+			);
+			session.run ( cypherQuery );
+		}
 	}	
-	
 		
 	@Test
 	public void testAllFromParams ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
-			// "-i", KnetMinerInitializerCLITest.oxlPath, 
-			// "-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", KnetMinerInitializerCLITest.datasetPath + "/config/neo4j/neo-init.cypher",
+			//"-i", KnetMinerInitializerCLITest.oxlPath, 
+			//"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
+		  "--neo-index", KnetMinerInitializerCLITest.datasetPath + "/config/neo4j/concept-index-properties.txt",
 		  "--neo-url", "bolt://localhost:" + neoDriverResource.getBoltPort (),
 		  "--neo-user", "neo4j",
 		  "--neo-password", "testTest"
@@ -78,12 +69,12 @@ public class KnetMinerInitializerCLICypherInitIT
 	}
 
 	@Test
-	public void testCmdsFromConfig ()
+	public void testPropNamesFromConfig ()
 	{
 		var exitCode = KnetMinerInitializerCLI.invoke (
-			"-i", KnetMinerInitializerCLITest.oxlPath, 
+			//"-i", KnetMinerInitializerCLITest.oxlPath, 
 			"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", "config://",
+		  "--neo-index", "config://",
 		  "--neo-url", "bolt://localhost:" + neoDriverResource.getBoltPort (),
 		  "--neo-user", "neo4j",
 		  "--neo-password", "testTest"
@@ -100,8 +91,8 @@ public class KnetMinerInitializerCLICypherInitIT
 		var exitCode = KnetMinerInitializerCLI.invoke (
 			// From config when omitted "-i", KnetMinerInitializerCLITest.oxlPath, 
 			"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", "config://",
-		  "--neo-url", "config://"
+		  "--neo-index", "config://"
+		  // "--neo-url", "config://" // this is the default
 		);
 		
 		Assert.assertEquals ( "Wrong exit code!", 0, exitCode );
@@ -111,18 +102,20 @@ public class KnetMinerInitializerCLICypherInitIT
 	
 	
 	/**
-	 * TODO: this is a copy from {@link CypherInitializerIT}, see {@link #cleanTestData()}.
+	 * TODO: this is a copy from {@link uk.ac.rothamsted.knetminer.service.CypherInitializerIT}, 
+	 * see {@link #cleanTestData()}.
 	 */
 	private void verify ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		try ( Session session = neoDriver.session() ) 
+		try ( Session session = neoDriver.session () )
 		{
-			String cyVerify = "MATCH (f:Foo) RETURN COUNT(f) AS ct";
-			Result result = session.run( cyVerify );
-			int ct = result.next ().get ( 0 ).asInt ();
+			String cypherQuery = String.format ( 
+				"SHOW ALL INDEXES WHERE name = '%s'", CY_INDEX_NAME
+			);
+			Result result = session.run ( cypherQuery );
 			
-			assertEquals ( "runCypher() failed, count verification doesn't match!", 2, ct );
+			assertTrue ( "Indexer didn't create an index!", result.hasNext () );
 		}
 	}	
 }
