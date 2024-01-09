@@ -30,7 +30,7 @@ import uk.ac.ebi.utils.objects.XValidate;
  * <dl><dt>Date:</dt><dd>22 Nov 2023</dd></dl>
  *
  */
-public class CyConceptIndexer extends NeoInitComponent
+public class NeoConceptIndexer extends NeoInitComponent
 {
 	public static final String CY_INDEX_NAME = "conceptIndex";
 	

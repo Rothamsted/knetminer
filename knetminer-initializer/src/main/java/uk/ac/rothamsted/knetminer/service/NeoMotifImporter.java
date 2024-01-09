@@ -28,14 +28,14 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
  * <dl><dt>Date:</dt><dd>25 Aug 2023</dd></dl>
  *
  */
-public class MotifNeoExporter extends NeoInitComponent
+public class NeoMotifImporter extends NeoInitComponent
 {
 	/**
 	 * We use our scheduler only to set a low limit for queuedTaskCap, since the source here is
 	 * much faster and there is little point with queueing too much stuff.
 	 */
 	private static final Scheduler FLUX_SCHEDULER = newBoundedElastic ( 
-		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, MotifNeoExporter.class.getSimpleName () + ".scheduler" 
+		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, NeoMotifImporter.class.getSimpleName () + ".scheduler" 
 	);
 
 	/** From the rdf2neo experience */
@@ -178,7 +178,7 @@ public class MotifNeoExporter extends NeoInitComponent
 
 	public static void setSampleSize ( int sampleSize )
 	{
-		MotifNeoExporter.sampleSize = sampleSize;
+		NeoMotifImporter.sampleSize = sampleSize;
 	}
 
 	/**

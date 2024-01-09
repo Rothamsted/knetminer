@@ -13,18 +13,22 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
-import uk.ac.rothamsted.knetminer.service.CypherInitializer;
-import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
+import uk.ac.rothamsted.knetminer.service.NeoInitializer;
+import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * TODO: comment me!
+ * Tests the {@link NeoMotifImporter} CLI wrapper.
+ *
+ * <b>WARNING</b>: These tests are actually run only when you run
+ * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
+ * dataset.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>21 Oct 2023</dd></dl>
  *
  */
-public class KnetMinerInitializerCLIMotifExporterIT
+public class KnetMinerInitializerCLIMotifImporterIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource ();
@@ -33,7 +37,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	public static void init () throws IOException
 	{
 		KnetMinerInitializerCLICypherInitIT.init ();
-		MotifNeoExporter.setSampleSize ( 100 );
+		NeoMotifImporter.setSampleSize ( 100 );
 	}
 	
 	/*
@@ -43,7 +47,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	public void cleanTestData ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( neoDriver );
 
 		cyinit.runCypher ( "MATCH () - [lnk:hasMotifLink] -> () DELETE lnk" );
@@ -64,7 +68,7 @@ public class KnetMinerInitializerCLIMotifExporterIT
 	public static void resetTestMode ()
 	{
 		// Just in case other classes needs it
-		MotifNeoExporter.resetSampleSize ();
+		NeoMotifImporter.resetSampleSize ();
 	}
 	
 	@Test // @Ignore ( "TODO: Cypher is still too slow, to be improved with parallel batches" )

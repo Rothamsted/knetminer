@@ -12,13 +12,17 @@ import org.neo4j.driver.Session;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * Tests for {@link CypherInitializer}
+ * Tests for {@link NeoInitializer}
+ * 
+ * <b>WARNING</b>: These tests are actually run only when you run
+ * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
+ * dataset.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>3 Oct 2023</dd></dl>
  *
  */
-public class CypherInitializerIT
+public class NeoInitializerIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
@@ -33,7 +37,7 @@ public class CypherInitializerIT
 	public void cleanTestData ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( neoDriver );
 
 		cyinit.runCypher ( "MATCH (f:Foo) DELETE f" );
@@ -54,7 +58,7 @@ public class CypherInitializerIT
 	@Test
 	public void testBasics ()
 	{
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( neoDriverResource.getDriver () );
 		
 		cyinit.runCypher (
@@ -69,7 +73,7 @@ public class CypherInitializerIT
 	public void testReadFromConfig ()
 	{
 		var kinitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
-		CypherInitializer cyinit = new CypherInitializer ();
+		NeoInitializer cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( neoDriverResource.getDriver () );
 
 		cyinit.runCypher ( kinitializer );
@@ -81,7 +85,7 @@ public class CypherInitializerIT
 	public void testReadAllFromConfig ()
 	{
 		var kinitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( kinitializer );
 
 		cyinit.runCypher ( kinitializer );
@@ -93,7 +97,7 @@ public class CypherInitializerIT
 	public void testReadAllFromConfigViaBoltURL ()
 	{
 		var kinitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( "config://", null, null, kinitializer );
 
 		cyinit.runCypher ( kinitializer );

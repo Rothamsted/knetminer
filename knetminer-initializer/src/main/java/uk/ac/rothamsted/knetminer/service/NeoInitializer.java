@@ -25,7 +25,7 @@ import uk.ac.ebi.utils.runcontrol.ProgressLogger;
  * <dl><dt>Date:</dt><dd>2 Oct 2023</dd></dl>
  *
  */
-public class CypherInitializer extends NeoInitComponent
+public class NeoInitializer extends NeoInitComponent
 {
 	public static final String CY_INIT_SCRIPT_PROP = "cypherInitScript";
 	

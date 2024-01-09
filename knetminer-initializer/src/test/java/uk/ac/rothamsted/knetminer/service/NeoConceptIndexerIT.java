@@ -1,7 +1,7 @@
 package uk.ac.rothamsted.knetminer.service;
 
 import static org.junit.Assert.assertEquals;
-import static uk.ac.rothamsted.knetminer.service.CyConceptIndexer.CY_INDEX_NAME;
+import static uk.ac.rothamsted.knetminer.service.NeoConceptIndexer.CY_INDEX_NAME;
 
 import java.util.Set;
 
@@ -16,14 +16,19 @@ import org.neo4j.driver.Session;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * Tests for {@link CyConceptIndexer}.
- *
+ * Tests for {@link NeoConceptIndexer}.
+ * 
+ * <b>WARNING</b>: These tests are actually run only when you run
+ * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
+ * dataset.
+ * 
  * @author Vitaly Vyurkov
  * @author Marco Brandizi
+ * 
  * <dl><dt>Date:</dt><dd>22 Nov 2023</dd></dl>
  *
  */
-public class CyConceptIndexerIT
+public class NeoConceptIndexerIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource ();
@@ -41,7 +46,7 @@ public class CyConceptIndexerIT
 	public void testBasics ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		var indexer = new CyConceptIndexer ();
+		var indexer = new NeoConceptIndexer ();
 		indexer.setDatabase ( neoDriver );
 
 		indexer.createConceptsIndex ( "prefName", "altName", "Phenotype" );
@@ -57,7 +62,7 @@ public class CyConceptIndexerIT
 	{
 		var knetInitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
 		
-		var indexer = new CyConceptIndexer ();
+		var indexer = new NeoConceptIndexer ();
 		indexer.setDatabase ( neoDriverResource.getDriver () );
 		indexer.createConceptsIndex ( knetInitializer );
 
@@ -72,7 +77,7 @@ public class CyConceptIndexerIT
 	{
 		var knetInitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
 
-		var indexer = new CyConceptIndexer ();
+		var indexer = new NeoConceptIndexer ();
 		indexer.setDatabase ( knetInitializer );
 		indexer.createConceptsIndex ( knetInitializer );
 
@@ -88,7 +93,7 @@ public class CyConceptIndexerIT
 	{
 		var knetInitializer = KnetMinerInitializerTest.createKnetMinerInitializer ( false, true );
 		
-		var indexer = new CyConceptIndexer ();
+		var indexer = new NeoConceptIndexer ();
 		indexer.setDatabase ( "config://", null, null, knetInitializer );
 		indexer.createConceptsIndex ( knetInitializer );
 

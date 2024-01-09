@@ -11,10 +11,10 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
-import uk.ac.rothamsted.knetminer.service.CyConceptIndexer;
-import uk.ac.rothamsted.knetminer.service.CypherInitializer;
+import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
+import uk.ac.rothamsted.knetminer.service.NeoInitializer;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
-import uk.ac.rothamsted.knetminer.service.MotifNeoExporter;
+import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
 
 /**
  * A command-line (CLI) interface, which is another wrapper to the core. This allows for producing KnetMiner
@@ -72,7 +72,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	 */
 	@Option (
 		names = { "-sm", "--neo-motifs"},
-		description = "Exports sematic motif endopoints to Neo4j (requires --neo-xxx options)."
+		description = "Imports sematic motif endopoints into Neo4j (requires --neo-xxx options)."
 	)
 	private boolean doNeoMotifs = false;
 
@@ -98,11 +98,11 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	private String neoPassword;
 
 	@Option (
-		names = { "-cy", "--neo-init-script"},
+		names = { "-cy", "--cy-script"},
 		paramLabel = "<path>|config://",
 		description =
 			"Runs Cypher init commands from a file, (if config://, takes the path from --config, customOptions/"
-			+ CypherInitializer.CY_INIT_SCRIPT_PROP + ")."
+			+ NeoInitializer.CY_INIT_SCRIPT_PROP + ")."
 	)
 	private String neoInitCypherPath = null;
 
@@ -112,7 +112,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		description =
 		"Create Neo4j indexes to support applications (for now, concept full-text index, see documentation). " +
 		"If the path is config://, takes the path from --config, customOptions/"
-		+ CyConceptIndexer.INDEX_KEYS_PROP + ")."
+		+ NeoConceptIndexer.INDEX_KEYS_PROP + ")."
 	)
 	private String neoIndexPropertiesPath = null;
 
@@ -157,7 +157,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 				"--neo-motifs can't be used without --config"
 			);
 
-			var motifNeoExporter = new MotifNeoExporter ();
+			var motifNeoExporter = new NeoMotifImporter ();
 			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
 		}
@@ -166,7 +166,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		{
 			log.info ( "Running Neo4j initialisation script" );
 
-			var cyInit = new CypherInitializer ();
+			var cyInit = new NeoInitializer ();
 			cyInit.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 
 			if ( !"config://".equals ( neoInitCypherPath ) )
@@ -179,7 +179,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		{
 			log.info ( "Creating Neo4j full text index for concepts" );
 
-			var indexer = new CyConceptIndexer();
+			var indexer = new NeoConceptIndexer();
 			indexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 
 			if ( !"config://".equals ( neoIndexPropertiesPath ) )

@@ -12,11 +12,15 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
-import uk.ac.rothamsted.knetminer.service.CypherInitializer;
+import uk.ac.rothamsted.knetminer.service.NeoInitializer;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * TODO: comment me!
+ * Tests the {@link NeoInitializer} CLI wrapper.
+ * 
+ * <b>WARNING</b>: These tests are actually run only when you run
+ * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
+ * dataset.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>11 Oct 2023</dd></dl>
@@ -35,14 +39,14 @@ public class KnetMinerInitializerCLICypherInitIT
 	}
 	
 	/**
-	 * TODO: this is a copy of the same method in {@link CypherInitializerIT}. Needs
+	 * TODO: this is a copy of the same method in {@link NeoInitializerIT}. Needs
 	 * some refactoring, together with {@link #verify()}.
 	 */
 	@Before
 	public void cleanTestData ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
-		var cyinit = new CypherInitializer ();
+		var cyinit = new NeoInitializer ();
 		cyinit.setDatabase ( neoDriver );
 
 		cyinit.runCypher ( "MATCH (f:Foo) DELETE f" );
@@ -66,7 +70,7 @@ public class KnetMinerInitializerCLICypherInitIT
 		var exitCode = KnetMinerInitializerCLI.invoke (
 			// "-i", KnetMinerInitializerCLITest.oxlPath, 
 			// "-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", KnetMinerInitializerCLITest.datasetPath + "/config/neo4j/neo-init.cypher",
+		  "--cy-script", KnetMinerInitializerCLITest.datasetPath + "/config/neo4j/neo-init.cypher",
 		  "--neo-url", "bolt://localhost:" + neoDriverResource.getBoltPort (),
 		  "--neo-user", "neo4j",
 		  "--neo-password", "testTest"
@@ -83,7 +87,7 @@ public class KnetMinerInitializerCLICypherInitIT
 		var exitCode = KnetMinerInitializerCLI.invoke (
 			"-i", KnetMinerInitializerCLITest.oxlPath, 
 			"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", "config://",
+		  "--cy-script", "config://",
 		  "--neo-url", "bolt://localhost:" + neoDriverResource.getBoltPort (),
 		  "--neo-user", "neo4j",
 		  "--neo-password", "testTest"
@@ -100,7 +104,7 @@ public class KnetMinerInitializerCLICypherInitIT
 		var exitCode = KnetMinerInitializerCLI.invoke (
 			// From config when omitted "-i", KnetMinerInitializerCLITest.oxlPath, 
 			"-c" , KnetMinerInitializerCLITest.datasetPath + "/config/test-config-neo4j.yml",
-		  "--neo-init-script", "config://",
+		  "--cy-script", "config://",
 		  "--neo-url", "config://"
 		);
 		
@@ -111,7 +115,7 @@ public class KnetMinerInitializerCLICypherInitIT
 	
 	
 	/**
-	 * TODO: this is a copy from {@link CypherInitializerIT}, see {@link #cleanTestData()}.
+	 * TODO: this is a copy from {@link NeoInitializerIT}, see {@link #cleanTestData()}.
 	 */
 	private void verify ()
 	{

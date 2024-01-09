@@ -1,7 +1,7 @@
 package uk.ac.rothamsted.knetminer.backend;
 
 import static org.junit.Assert.assertTrue;
-import static uk.ac.rothamsted.knetminer.service.CyConceptIndexer.CY_INDEX_NAME;
+import static uk.ac.rothamsted.knetminer.service.NeoConceptIndexer.CY_INDEX_NAME;
 
 import java.io.IOException;
 
@@ -13,16 +13,21 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
- * TODO: comment me!
+ * Tests the {@link NeoConceptIndexer} CLI wrapper.
+ * 
+ * <b>WARNING</b>: These tests are actually run only when you run
+ * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
+ * dataset.
  *
  * @author Marco Brandizi
  * <dl><dt>Date:</dt><dd>29 Nov 2023</dd></dl>
  *
  */
-public class KnetMinerInitializerCLICyIndexingIT
+public class KnetMinerInitializerCLINeoIndexingIT
 {
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
@@ -102,7 +107,7 @@ public class KnetMinerInitializerCLICyIndexingIT
 	
 	
 	/**
-	 * TODO: this is a copy from {@link uk.ac.rothamsted.knetminer.service.CypherInitializerIT}, 
+	 * TODO: this is a copy from {@link uk.ac.rothamsted.knetminer.service.NeoInitializerIT}, 
 	 * see {@link #cleanTestData()}.
 	 */
 	private void verify ()

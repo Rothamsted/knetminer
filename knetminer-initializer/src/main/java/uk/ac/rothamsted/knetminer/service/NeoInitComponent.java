@@ -43,21 +43,10 @@ public abstract class NeoInitComponent
 		));
 	}
 	
-
-	public void setDatabase ( 
-		String neoUrl, String neoUser, String neoPassword, KnetMinerInitializer kinitializer 
-	)
-	{
-		if ( !"config://".equals ( neoUrl ) )
-		{
-			setDatabase ( neoUrl, neoUser, neoPassword );
-			return;
-		}
-		
-		// Else, deal with the special meaning of config://
-		this.setDatabase ( kinitializer );
-	}
-	
+	/**
+	 * Takes Neo4j coordinates from the same config files that were used to initialise the 
+	 * {@link KnetMinerInitializer}.
+	 */
 	public void setDatabase ( KnetMinerInitializer kinitializer )
 	{
 		log.info ( "{} setting Neo4j connection from config params", this.getClass ().getSimpleName () );
@@ -77,4 +66,24 @@ public abstract class NeoInitComponent
 		
 		this.setDatabase ( driver );		
 	}
+	
+	/**
+	 * Wrapper that checks is neoUrl is 'config://' and when that's the case, it uses
+	 * the {@link #setDatabase(KnetMinerInitializer) config-based initialisation}, else
+	 * it uses {@link #setDatabase(String, String, String) explicit coordinates}.
+	 *  
+	 */
+	public void setDatabase ( 
+		String neoUrl, String neoUser, String neoPassword, KnetMinerInitializer kinitializer 
+	)
+	{
+		if ( !"config://".equals ( neoUrl ) )
+		{
+			setDatabase ( neoUrl, neoUser, neoPassword );
+			return;
+		}
+		
+		// Else, deal with the special meaning of config://
+		this.setDatabase ( kinitializer );
+	}	
 }

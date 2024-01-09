@@ -13,10 +13,8 @@ import org.junit.Test;
 
 
 /**
- * Junit test class for KnetMinerInitializerCLI
- * 
- * TODO: needs tests for the Neo4j-related functions.
- * 
+ * Tests {@link KnetMinerInitializerCLI}
+ *  
  * @author brandizi
  * @author jojicunnunni
  * <dl><dt>Date:</dt><dd>25 Feb 2022</dd></dl>

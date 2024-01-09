@@ -50,12 +50,12 @@ public class KnetMinerInitializerTest
 
 	/**
 	 * This serves both this class, via {@link #initKnetMinerInitializer()} and
-	 * {@link MotifNeoExporterIT}.
+	 * {@link NeoMotifImporterIT}.
 	 *
 	 * Here, it is invoked with doReset = true, so that new support data are created from scratch
 	 * and tested.
 	 *
-	 * In {@link MotifNeoExporterIT}, it is invoked with doReset = false, so that the initialisation
+	 * In {@link NeoMotifImporterIT}, it is invoked with doReset = false, so that the initialisation
 	 * isn't repeated.
 	 * 
 	 * isNeo4jMode is sued by Neo4j initialisation-related tests, to tell this method it should 

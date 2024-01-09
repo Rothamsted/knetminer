@@ -22,16 +22,18 @@ import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 
 /**
- * Tests for MotifNeoExporter.
+ * Tests for NeoMotifImporter.
  *
  * <b>WARNING</b>: These tests are actually run only when you run
  * mvn -Pneo4j ... which setup a test Neo4j with the aratiny dummy
  * dataset.
  *
+ * @author Marco Brandizi
+ *
  * <dl><dt>Date:</dt><dd>25 Aug 2023</dd></dl>
  *
  */
-public class MotifNeoExporterIT
+public class NeoMotifImporterIT
 {
 	/**
 	 * For performance reasons, we test a reduced random subset of the semantic motifs in the 
@@ -79,7 +81,7 @@ public class MotifNeoExporterIT
 		/*
 		 * The original test set is too big and takes too much time, let's reduce it
 		 * 
-		 * Note that here we're not using MotifNeoExporter.setSampleSize(), because we need
+		 * Note that here we're not using NeoMotifImporter.setSampleSize(), because we need
 		 * to reuse the sample to verify the results.
 		 */	
 		testMotifs = MOTIFS_SAMPLE_SIZE < smData.size () 
@@ -90,7 +92,7 @@ public class MotifNeoExporterIT
 			
 		assertTrue ( "Semantic motif subset is empty!", testMotifs.size () > 0 );
 		
-		var motifNeoExporter = new MotifNeoExporter ();
+		var motifNeoExporter = new NeoMotifImporter ();
 		motifNeoExporter.setDatabase ( neoDriverResource.getDriver () );
 		motifNeoExporter.saveMotifs ( testMotifs );
 	}
