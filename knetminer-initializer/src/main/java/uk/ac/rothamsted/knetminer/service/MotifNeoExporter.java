@@ -93,8 +93,9 @@ public class MotifNeoExporter extends NeoInitComponent
 				submissionLogger.updateWithIncrement();
 				
 				return Map.of (
-					"geneId", geneId,
-					"conceptId", conceptId,
+					// Currently, all the Ondex properties are stored as strings
+					"geneId", String.valueOf ( geneId ),
+					"conceptId", String.valueOf ( conceptId ),
 					"graphDistance", distance
 				);
 			});
@@ -122,13 +123,18 @@ public class MotifNeoExporter extends NeoInitComponent
 	private int processBatch ( List<Map<String, Object>> smRelationsBatch )
 	{
 		try ( Session session = driver.session() ) 
-		{			
+		{
+			/*
+			 * TODO: see if more optimisation is possible:
+			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
+			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
+			 */
 			Transaction tx = session.beginTransaction();
 			String cyRelations =
 				"""
         UNWIND $smRelRows AS relRow\s
-        MATCH ( gene:Gene {ondexId: toString ( relRow.geneId )} ),
-					    ( concept:Concept {ondexId: toString ( relRow.conceptId )} )
+        MATCH ( gene:Gene { ondexId: relRow.geneId } ),
+					    ( concept:Concept { ondexId: relRow.conceptId } )
         CREATE (gene) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (concept)				
         """;
 			tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
@@ -176,7 +182,7 @@ public class MotifNeoExporter extends NeoInitComponent
 	}
 
 	/**
-	 * Wrapper of {@link Integer#MAX_VALUE}
+	 * {@link #setSampleSize(int)} wrapper, which sets {@link Integer#MAX_VALUE}
 	 */
 	public static void resetSampleSize ()
 	{
