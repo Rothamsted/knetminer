@@ -44,6 +44,17 @@ public class NeoConceptIndexer extends NeoInitComponent
 
 	private Logger log = LogManager.getLogger ();
 
+	/**
+	 * Creates a full-text concept index named like {@link #CY_INDEX_NAME}, using this set of
+	 * base property (field) names associated to 'Concept' nodes. 
+	 * 
+	 * Each property name is a base name, in the sense that some property names
+	 * in the Ondex-based DB are the same base name with postfixes, eg, if you have 'Abstract' as 
+	 * a base name, the method will look for Abstract, Abstract_01, Abstract_02, etc, and will 
+	 * include all of them in the index. This names are created by the Ondex merge plug-in and we
+	 * have to live with them until we replace Ondex.
+	 * 
+	 */
 	public void createConceptsIndex ( Set<String> propertyBaseNames )
 	{
 		XValidate.notEmpty ( propertyBaseNames, "Property base names for concept full text index is null/empty" );
@@ -69,7 +80,10 @@ public class NeoConceptIndexer extends NeoInitComponent
 		createConceptsIndex ( Set.of ( propertyBaseNames ) );
 	}
 	
-
+	/**
+	 * Takes the property base names to index from the configuration associated to the
+	 * initialiser, looking for the field {@link #INDEX_KEYS_PROP}. 
+	 */
 	public void createConceptsIndex ( KnetMinerInitializer knetMinerInitializer )
 	{
 		String indexInitPropPath = knetMinerInitializer.getKnetminerConfiguration ()
@@ -81,6 +95,9 @@ public class NeoConceptIndexer extends NeoInitComponent
 		this.createConceptsIndex ( Path.of ( indexInitPropPath ) );
 	}
 
+	/**
+	 * Wrapper of {@link #createConceptsIndex(Reader)}.
+	 */
 	public void createConceptsIndex ( Path path )
 	{
 		try
@@ -99,11 +116,18 @@ public class NeoConceptIndexer extends NeoInitComponent
 		}
 	}
 
+	/**
+	 * Wrapper of {@link #createConceptsIndex(BufferedReader)} that introduces a buffered reader.
+	 */
 	public void createConceptsIndex ( Reader reader )
 	{
 		createConceptsIndex ( new BufferedReader ( reader ) );
 	}
 
+	/**
+	 * Takes the index property base names from a reader like a file. This has one base name per 
+	 * line, blank lines or lines starting with '#' (i.e., comments) are ignored.
+	 */
 	public void createConceptsIndex ( BufferedReader reader )
 	{
 		Set<String> propertiesSet = reader.lines ()
@@ -166,7 +190,9 @@ public class NeoConceptIndexer extends NeoInitComponent
 		return expandedProps;
 	}
 
-
+	/**
+	 * Generates the Cypher command to create the index.
+	 */
 	private String createIndexingCypher ( Set<String> indexedProps )
 	{
 		XValidate.notEmpty ( indexedProps, "Can't create index without properties" );
@@ -183,6 +209,9 @@ public class NeoConceptIndexer extends NeoInitComponent
 		return cypherQuery;
 	}
 
+	/**
+	 * Actually creates the index, using {@link #createIndexingCypher(Set)}.
+	 */
 	private void createIndex ( String indexingCypher )
 	{
 		try ( Session session = driver.session () ) 

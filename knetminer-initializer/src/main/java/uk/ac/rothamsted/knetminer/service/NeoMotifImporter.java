@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 
+import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
@@ -22,8 +23,14 @@ import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import uk.ac.ebi.utils.streams.StreamUtils;
 
 /**
- *
- * TODO: comment me!
+ * The Neo4j importer for semantic motif summaries.
+ * 
+ * <p>Imports the links between genes and evidence concepts computed by a 
+ * {@link AbstractGraphTraverser KnetMiner traverser} into a Neo4j database that already 
+ * contains the dataset the traverser was run against.</p>  
+ *  
+ * <p>This is a legacy tool, which we will use for the new KnetMiner API, until we develop
+ * the full-Neoj traverser for it.</p>
  *
  * <dl><dt>Date:</dt><dd>25 Aug 2023</dd></dl>
  *
@@ -45,6 +52,13 @@ public class NeoMotifImporter extends NeoInitComponent
 	
 	private Logger log = LogManager.getLogger();
 	
+	/**
+	 * Does all the job, ie, saves both {@link #saveMotifLinks(Map) the semantic motif links}
+	 * and {@link #saveConceptGeneCounts(Map) the per-concept gene counts}.
+	 * 
+	 * The two parameters from this method are those coming from {@link KnetMinerInitializer#getGenes2PathLengths()}
+	 * and {@link KnetMinerInitializer#getGenes2Concepts()}.
+	 */
 	public void saveMotifs (
 		Map<Pair<Integer, Integer>, Integer> genes2PathLengths, 
 		Map<Integer, Set<Integer>> concepts2Genes
@@ -54,12 +68,19 @@ public class NeoMotifImporter extends NeoInitComponent
 		saveConceptGeneCounts ( concepts2Genes );
 	}
 
+	/**
+	 *  A wrapper of {@link #saveMotifs(Map, Map)}.
+	 */
 	public void saveMotifs ( KnetMinerInitializer knetMinerInitializer )
 	{
 		saveMotifs ( knetMinerInitializer.getGenes2PathLengths (), knetMinerInitializer.getConcepts2Genes () );
 	}
 	
-	
+	/**
+	 * Save the gene/concept links that were created by the semantic motif traverser.
+	 * 
+	 * This results in new Neo4j graph elements, @see {@link #processMotifLinksBatch(List)}.
+	 */
 	private void saveMotifLinks ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
 	{
 		try 
@@ -89,13 +110,15 @@ public class NeoMotifImporter extends NeoInitComponent
 			
 			
 			// Sampling
+			//
 			if ( sampleSize < genes2PathLengths.size () )
 			{
 				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize );
 				smRelsBaseStream = StreamUtils.sampleStream ( smRelsBaseStream, sampleSize, genes2PathLengths.size () );
 			}
 			
-			// Prepare a stream of records
+
+			// Map to a stream of key/value maps, which is the form suitable for Neo4j
 			//
 			Stream<Map<String, Object>> smRelsStream = smRelsBaseStream			
 			.map ( smEntry -> 
@@ -115,7 +138,7 @@ public class NeoMotifImporter extends NeoInitComponent
 				);
 			});
 			
-			// Then use Reactor to batch the source records
+			// Then use Reactor to batch the source records and stream parallel batches to Neo4j
 			//
 			Flux.fromStream ( smRelsStream )
 			.buffer ( BATCH_SIZE )
@@ -135,6 +158,13 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 
+	/**
+	 * Do the job of sending a batch of semantic motif links to Neo4j. This results in 
+	 * structures like: 
+	 * 
+	 * <code>(Gene) - [hasMotifLink { graphDistance: $d }] -> (Concept)</code> 
+	 *  
+	 */
 	private int processMotifLinksBatch ( List<Map<String, Object>> smRelationsBatch )
 	{
 		try ( Session session = driver.session() ) 
@@ -179,7 +209,13 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 
-	
+	/**
+	 * For each concept, saves the count of genes that are associated to it via the semantic
+	 * motif traverser. This is useful to speed-up data retrieval.
+	 *
+	 * This results in new Neo4j graph elements, @see {@link #processConceptGeneCountsBatch(List)}.
+	 * 
+	 */
 	private void saveConceptGeneCounts ( Map<Integer, Set<Integer>> concepts2Genes )
 	{
 		try 
@@ -207,8 +243,8 @@ public class NeoMotifImporter extends NeoInitComponent
 			// Safest here, saveMotifLinks()
 			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );			
 			
-			
 			// Sampling
+			//
 			if ( sampleSize < concepts2Genes.size () )
 			{
 				log.warn ( "Due to setSampleSize(), we're reducing the saved per-gene concept counts to about {}", sampleSize );
@@ -217,7 +253,8 @@ public class NeoMotifImporter extends NeoInitComponent
 				);
 			}
 			
-			// Prepare a stream of records
+			
+			// Map to a stream of key/value maps, which is the form suitable for Neo4j
 			//
 			Stream<Map<String, Object>> concepts2GenesStream = concepts2GenesBaseStream
 			.map ( concept2GenesEntry -> 
@@ -255,6 +292,13 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 	
+	/**
+	 * Do the job of sending a batch of gene counts to Neo4j. This results in 
+	 * structures like: 
+	 * 
+	 * <code>(Concept) - [hasMotifStats] -> (SemanticMotifStats{ conceptGenesCount: $ct})</code>
+	 *  
+	 */
 	private int processConceptGeneCountsBatch ( List<Map<String, Object>> countRowsBatch )
 	{
 		try ( Session session = driver.session() ) 

@@ -3,13 +3,14 @@ package uk.ac.rothamsted.knetminer.service.test;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.rules.ExternalResource;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 
 /**
- * TODO: comment me!
+ * An {@link ExternalResource} rule, which can be used to manage Neo4j-related tests.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>3 Oct 2023</dd></dl>
@@ -24,7 +25,13 @@ public class NeoDriverTestResource extends ExternalResource
 
 	private Logger log = LogManager.getLogger ();
 	
-
+	/**
+	 * If not {@link #isMavenNeo4jMode()}, stops everything. If we're in neo mode, 
+	 * inits {@link #getDriver() the test Neo4j driver}, using the system property
+	 * {@code neo4j.server.boltPort}, which is set in the corresponding 'neo4j' profile
+	 * and defaults for host, user, password.
+	 * 
+	 */
 	@Override
 	protected synchronized void before ()
 	{
@@ -41,16 +48,28 @@ public class NeoDriverTestResource extends ExternalResource
 		);
 	}
 
+	/**
+	 * Closes {@link #getDriver() the test driver}, so don't need to do it explicitly.
+	 */
 	@Override
 	protected synchronized void after ()
 	{
 		if ( driver != null ) driver.close ();
 	}
 
+	/**
+	 * If in {@link #isMavenNeo4jMode() Neo build mode}, 
+	 * gets the driver that points to the test database. This is configured and started by the Maven
+	 * configuration, using the Maven server plug-in.
+	 */
 	public Driver getDriver () {
 		return driver;
 	}
 		
+	/**
+	 * Gets the BOLT port for the build test DB, running on localhost. Like {@link #getDriver()}, this
+	 * is set by Maven and depends on {@link #isMavenNeo4jMode()}.
+	 */
 	public int getBoltPort () {
 		return boltPort;
 	}
@@ -78,9 +97,9 @@ public class NeoDriverTestResource extends ExternalResource
 	}
 	
 	/**
-	 * Uses {@link Assume#assumeTrue(String, boolean)} to stop a test when !{@link #isMavenNeo4jMode()}. 
+	 * Uses {@link Assume#assumeTrue(String, boolean)} to stop a test when !{@link #isMavenNeo4jMode()}.
 	 * 
-	 * @param testCls the test class from which you want to run this, 
+	 * You should invoke somewhere like a {@link BeforeClass} method.
 	 */
 	public void ensureNeo4jMode ()
 	{

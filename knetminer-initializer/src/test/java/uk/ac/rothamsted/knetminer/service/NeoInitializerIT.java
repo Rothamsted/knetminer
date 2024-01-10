@@ -27,6 +27,10 @@ public class NeoInitializerIT
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
 	
+	/**
+	 * Calls {@link NeoDriverTestResource#ensureNeo4jMode() neoDriverResource.ensureNeo4jMode()}, to 
+	 * stop everything when not in Neo mode.
+	 */
 	@BeforeClass
 	public static void init ()
 	{

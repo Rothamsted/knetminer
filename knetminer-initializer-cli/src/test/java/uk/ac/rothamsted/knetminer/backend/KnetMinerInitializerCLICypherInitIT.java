@@ -31,8 +31,13 @@ public class KnetMinerInitializerCLICypherInitIT
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
 	
+	/**
+	 * Calls {@link NeoDriverTestResource#ensureNeo4jMode()}, to stop when not in Neo mode, 
+	 * and then, possibly, calls {@link KnetMinerInitializerCLITest#init()}, to get 
+	 * some common initialisation.
+	 */
 	@BeforeClass
-	public static void init () throws IOException
+	public static void init ()
 	{
 		neoDriverResource.ensureNeo4jMode ();
 		KnetMinerInitializerCLITest.init ();

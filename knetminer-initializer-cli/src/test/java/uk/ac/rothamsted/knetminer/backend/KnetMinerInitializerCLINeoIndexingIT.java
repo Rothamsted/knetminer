@@ -32,8 +32,13 @@ public class KnetMinerInitializerCLINeoIndexingIT
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
 	
+	/**
+	 * Calls {@link KnetMinerInitializerCLICypherInitIT#init()}, that is, checks if we're in 
+	 * Neo mode  build and possibly do some initialisation.
+	 * 
+	 */
 	@BeforeClass
-	public static void init () throws IOException
+	public static void init ()
 	{
 		KnetMinerInitializerCLICypherInitIT.init ();
 	}

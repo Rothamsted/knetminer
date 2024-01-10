@@ -58,7 +58,7 @@ public class KnetMinerInitializerTest
 	 * In {@link NeoMotifImporterIT}, it is invoked with doReset = false, so that the initialisation
 	 * isn't repeated.
 	 * 
-	 * isNeo4jMode is sued by Neo4j initialisation-related tests, to tell this method it should 
+	 * isNeo4jMode is set by Neo4j initialisation-related tests, to tell this method it should 
 	 * load the Neo4j mode test configuration.
 	 *
 	 * Both the OXL and the support data are either to be created or loaded in both cases, since

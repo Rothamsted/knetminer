@@ -35,6 +35,10 @@ public class NeoConceptIndexerIT
 
 	private Logger log = LogManager.getLogger ();
 
+	/**
+	 * Calls {@link NeoDriverTestResource#ensureNeo4jMode() neoDriverResource.ensureNeo4jMode()}, to 
+	 * stop everything when not in Neo mode.
+	 */
 	@BeforeClass
 	public static void init ()
 	{

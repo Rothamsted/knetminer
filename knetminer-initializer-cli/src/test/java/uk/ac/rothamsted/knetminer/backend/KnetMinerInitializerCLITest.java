@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-
 /**
  * Tests {@link KnetMinerInitializerCLI}
  *  
@@ -27,7 +26,7 @@ public class KnetMinerInitializerCLITest
 
 
 	@BeforeClass
-	public static void init() throws IOException
+	public static void init()
 	{
 		var mavenBuildPath = System.getProperty ( "maven.buildDirectory", "target" );
 		mavenBuildPath = Path.of ( mavenBuildPath ).toAbsolutePath ().toString ();

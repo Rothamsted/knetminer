@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.neo4j.driver.Session;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
@@ -31,7 +32,9 @@ public class NeoInitializer extends NeoInitComponent
 	
 	private Logger log = LogManager.getLogger();
 	
-
+	/**
+	 * Each command is run in a new transaction and auto-committed, using {@link Session#run(String)}.
+	 */
 	public void runCypher ( String... cypherCommands )
 	{
 		if ( cypherCommands == null || cypherCommands.length == 0 ) {
@@ -61,6 +64,13 @@ public class NeoInitializer extends NeoInitComponent
 		log.info ( "Cypher initialiser, finished" );
 	}
 	
+	/**
+	 * A variant of {@link #runCypher(String...)} that takes commands from a reader like a file.
+	 * 
+	 * You <b>must</b> separate each command with ';' and each one is one element in the 
+	 * array passed to {@link #runCypher(String...)}, that is, each command is run into a new
+	 * transaction and auto-commited.
+	 */
 	public void runCypher ( Reader reader )
 	{
 		try
@@ -84,6 +94,9 @@ public class NeoInitializer extends NeoInitComponent
 		}
 	}
 
+	/**
+	 * A wrapper of {@link #runCypher(Reader)} that uses a file.
+	 */
 	public void runCypher ( Path path )
 	{
 		try
@@ -102,6 +115,10 @@ public class NeoInitializer extends NeoInitComponent
 		}
 	}
 
+	/**
+	 * {@link #runCypher(Path) uses a file}, taking its path from the configuration of the 
+	 * initialiser, using the property {@link #CY_INIT_SCRIPT_PROP}.  
+	 */
 	public void runCypher ( KnetMinerInitializer kinitializer )
 	{
 		String cyInitScriptPath = kinitializer.getKnetminerConfiguration ()
