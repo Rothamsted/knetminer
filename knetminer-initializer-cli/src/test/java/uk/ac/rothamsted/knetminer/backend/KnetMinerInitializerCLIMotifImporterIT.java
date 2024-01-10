@@ -1,6 +1,5 @@
 package uk.ac.rothamsted.knetminer.backend;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -13,7 +12,6 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
-import uk.ac.rothamsted.knetminer.service.NeoInitializer;
 import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
@@ -39,30 +37,7 @@ public class KnetMinerInitializerCLIMotifImporterIT
 		KnetMinerInitializerCLICypherInitIT.init ();
 		NeoMotifImporter.setSampleSize ( 100 );
 	}
-	
-	/*
-	 * TODO: remove, the component already deletes old links.
-	 */
-	//@Before
-	public void cleanTestData ()
-	{
-		var neoDriver = neoDriverResource.getDriver ();
-		var cyinit = new NeoInitializer ();
-		cyinit.setDatabase ( neoDriver );
-
-		cyinit.runCypher ( "MATCH () - [lnk:hasMotifLink] -> () DELETE lnk" );
-
-		try ( Session session = neoDriver.session() ) 
-		{
-			String cyVerify = """
-				MATCH () - [lnk:hasMotifLink] -> () RETURN COUNT ( lnk ) AS cnt
-				""";
-			Result result = session.run( cyVerify );
-			int ct = result.next ().get ( 0 ).asInt ();
 			
-			assertEquals ( "runCypher() didn't clean up!", 0, ct );
-		}		
-	}		
 	
 	@AfterClass
 	public static void resetTestMode ()

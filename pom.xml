@@ -115,8 +115,8 @@
 		<lucene.version>6.6.0</lucene.version>
 		<ondex.version>7.0</ondex.version>
 		<knetminer.backend.version>4.0.1-SNAPSHOT</knetminer.backend.version>
-		<!-- TODO: realign with rdf-common -->
-		<jutils.version>14.0-SNAPSHOT</jutils.version>		
+		<!-- TODO: realign with the rest -->
+		<jutils.version>14.1-SNAPSHOT</jutils.version>		
 		<springframework.version>6.0.11</springframework.version>
 
 		

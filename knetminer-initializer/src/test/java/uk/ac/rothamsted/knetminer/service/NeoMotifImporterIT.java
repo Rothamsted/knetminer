@@ -1,15 +1,16 @@
 package uk.ac.rothamsted.knetminer.service;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.rng.sampling.CollectionSampler;
-import org.apache.commons.rng.simple.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import uk.ac.ebi.utils.streams.StreamUtils;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 
@@ -46,7 +48,8 @@ public class NeoMotifImporterIT
 	 * This is the random subset of motifs we actually save and test.
 	 */
 	private static Map<Pair<Integer, Integer>, Integer> testMotifs; 
-
+	private static Map<Integer, Set<Integer>> testConcept2Genes;
+	
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
 	
@@ -73,7 +76,7 @@ public class NeoMotifImporterIT
 		// Let's reuse test data produced during regular tests.
 		knetInitializer.initKnetMinerData ( false );
 
-		slog.info ( "Saving semantic motifs endpoints into Neo4j" );
+		slog.info ( "Saving semantic motifs into Neo4j" );
 
 		var smData = knetInitializer.getGenes2PathLengths ();
 		assertTrue ( "No semantic motif test data!", smData.size () > 0 );
@@ -85,20 +88,34 @@ public class NeoMotifImporterIT
 		 * to reuse the sample to verify the results.
 		 */	
 		testMotifs = MOTIFS_SAMPLE_SIZE < smData.size () 
-			? new CollectionSampler<> ( RandomSource.JDK.create (), smData.entrySet () )
-				.samples ( MOTIFS_SAMPLE_SIZE )
-				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )
+			? StreamUtils.sampleStream ( smData.entrySet ().stream (), MOTIFS_SAMPLE_SIZE, smData.size () )
+				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )	
 			: smData;
-			
+		
 		assertTrue ( "Semantic motif subset is empty!", testMotifs.size () > 0 );
 		
-		var motifNeoExporter = new NeoMotifImporter ();
-		motifNeoExporter.setDatabase ( neoDriverResource.getDriver () );
-		motifNeoExporter.saveMotifs ( testMotifs );
+		
+		// Same for concept -> genes
+		// 
+		var concept2Genes = knetInitializer.getConcepts2Genes ();
+		assertTrue ( "No semantic motif test data!", concept2Genes.size () > 0 );
+			
+		testConcept2Genes = MOTIFS_SAMPLE_SIZE < concept2Genes.size () 
+			? StreamUtils.sampleStream ( concept2Genes.entrySet ().stream (), MOTIFS_SAMPLE_SIZE, concept2Genes.size () )
+				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )	
+			: concept2Genes;
+
+		
+		// Let's do it
+		
+		var neoMotifImporter = new NeoMotifImporter ();
+		neoMotifImporter.setDatabase ( neoDriverResource.getDriver () );
+		neoMotifImporter.saveMotifs ( testMotifs, testConcept2Genes );
 	}
 
+	
 	@Test
-	public void testSavedSize ()
+	public void testMotifLinksSavedSize ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 		
@@ -119,7 +136,7 @@ public class NeoMotifImporterIT
 	}
 
 	@Test
-	public void testRelationsExist ()
+	public void testMotifLinksExist ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 
@@ -159,4 +176,58 @@ public class NeoMotifImporterIT
 		}
 	}
 
+	
+	@Test
+	public void testGeneCountsSavedSize ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+		
+		try ( Session session = neoDriver.session() ) 
+		{
+			String cyCountsSz = """
+				MATCH (c:Concept) - [r:hasMotifStats] -> (stat:SemanticMotifStats)
+				RETURN COUNT(r) AS countsSize
+				""";
+			Result result = session.run( cyCountsSz );
+			int neoCount = result.next ().get ( 0 ).asInt ();
+			
+			assertEquals ( 
+				"Size of saved gene counts doesn't match the original concept2Genes size!", 
+				testConcept2Genes.size(), neoCount 
+			);
+		}
+	}	
+	
+	@Test
+	public void testGeneCountsExist ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+
+		try ( Session session = neoDriver.session() )
+		{			
+			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
+			String cypherQuery =
+	   		"""
+				 MATCH (c:Concept) - [r:hasMotifStats] -> (stat:SemanticMotifStats)
+				 RETURN toInteger ( c.ondexId ) AS conceptId, stat.conceptGenesCount AS genesCount
+				""";
+			Result result = session.run( cypherQuery );
+									
+			result.forEachRemaining ( cyRel ->
+			{				
+				var conceptId = cyRel.get ( "conceptId" ).asInt ();
+				var genesCount = cyRel.get ( "genesCount" ).asInt ();
+				
+				log.trace ( "Read entry: {} -> #{}", conceptId, genesCount );
+				
+				var expectedGenes = testConcept2Genes.get ( conceptId );
+				assertNotNull ( "Concept {} in read count tuple doesn't match!", expectedGenes );
+				
+				assertEquals ( 
+					format ( "Read genes count for concept %d doesn't match!", conceptId ),
+					expectedGenes.size(), genesCount
+				);
+			});
+		}
+	}	
 }

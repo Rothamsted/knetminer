@@ -32,8 +32,14 @@ import uk.ac.ebi.utils.objects.XValidate;
  */
 public class NeoConceptIndexer extends NeoInitComponent
 {
-	public static final String CY_INDEX_NAME = "conceptIndex";
+	/**
+	 * The concept full-text index name in Neo4j
+	 */
+	public static final String CY_INDEX_NAME = "conceptFullTextIndex";
 	
+	/**
+	 * The config file field pointing to the file that list the properties to be indexed.
+	 */
 	public static final String INDEX_KEYS_PROP = "cypherConceptIndexProps";
 
 	private Logger log = LogManager.getLogger ();

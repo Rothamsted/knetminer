@@ -159,7 +159,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 			var motifNeoExporter = new NeoMotifImporter ();
 			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
-			motifNeoExporter.saveMotifs ( initializer.getGenes2PathLengths() );
+			motifNeoExporter.saveMotifs ( initializer );
 		}
 
 		if ( neoInitCypherPath != null )

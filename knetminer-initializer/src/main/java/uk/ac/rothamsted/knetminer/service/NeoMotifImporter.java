@@ -5,12 +5,11 @@ import static reactor.core.scheduler.Schedulers.newBoundedElastic;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.rng.sampling.CollectionSampler;
-import org.apache.commons.rng.simple.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
@@ -20,6 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
+import uk.ac.ebi.utils.streams.StreamUtils;
 
 /**
  *
@@ -45,11 +45,26 @@ public class NeoMotifImporter extends NeoInitComponent
 	
 	private Logger log = LogManager.getLogger();
 	
-	public void saveMotifs ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
+	public void saveMotifs (
+		Map<Pair<Integer, Integer>, Integer> genes2PathLengths, 
+		Map<Integer, Set<Integer>> concepts2Genes
+	)
+	{
+		saveMotifLinks ( genes2PathLengths );
+		saveConceptGeneCounts ( concepts2Genes );
+	}
+
+	public void saveMotifs ( KnetMinerInitializer knetMinerInitializer )
+	{
+		saveMotifs ( knetMinerInitializer.getGenes2PathLengths (), knetMinerInitializer.getConcepts2Genes () );
+	}
+	
+	
+	private void saveMotifLinks ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
 	{
 		try 
 		{
-			deleteOldLinks ();
+			deleteOldMotifLinks ();
 			
 			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
 
@@ -67,22 +82,22 @@ public class NeoMotifImporter extends NeoInitComponent
 			
 			// Prepare a stream of records
 			//
-			Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream;
+			Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream = genes2PathLengths.entrySet ()
+			.stream ()
+			// having it on the root stream is the safest option (against 'stream closed or already operated' ).
+			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );
+			
 			
 			// Sampling
 			if ( sampleSize < genes2PathLengths.size () )
 			{
 				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize );
-				smRelsBaseStream	= new CollectionSampler<> ( RandomSource.JDK.create (), genes2PathLengths.entrySet () )
-				.samples ( sampleSize );				
+				smRelsBaseStream = StreamUtils.sampleStream ( smRelsBaseStream, sampleSize, genes2PathLengths.size () );
 			}
-			else
-				smRelsBaseStream = genes2PathLengths.entrySet ().stream ();
 			
 			// Prepare a stream of records
 			//
-			Stream<Map<String, Object>> smRelsStream = smRelsBaseStream
-			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) )			
+			Stream<Map<String, Object>> smRelsStream = smRelsBaseStream			
 			.map ( smEntry -> 
 			{
 				var gene2Concept = smEntry.getKey();
@@ -106,21 +121,21 @@ public class NeoMotifImporter extends NeoInitComponent
 			.buffer ( BATCH_SIZE )
 			.parallel ()
 			.runOn ( FLUX_SCHEDULER )
-			.doOnNext ( this::processBatch )
+			.doOnNext ( this::processMotifLinksBatch )
 			.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
 			.sequential ()
 			.blockLast ();
 			
-			log.info ( "{}, done", this.getClass ().getSimpleName () );
+			log.info ( "saveMotifLinks(), done" );
 		} 
 		catch (Exception ex) {
-			ExceptionUtils.throwEx(RuntimeException.class, ex,
+			ExceptionUtils.throwEx ( RuntimeException.class, ex,
 				"Error while saving semantic motif endpoints to Neo4j: $cause"
 			);
 		}
 	}
 
-	private int processBatch ( List<Map<String, Object>> smRelationsBatch )
+	private int processMotifLinksBatch ( List<Map<String, Object>> smRelationsBatch )
 	{
 		try ( Session session = driver.session() ) 
 		{
@@ -144,7 +159,7 @@ public class NeoMotifImporter extends NeoInitComponent
 		return smRelationsBatch.size ();
 	}
 	
-	private void deleteOldLinks ()
+	private void deleteOldMotifLinks ()
 	{
 		log.info ( "Deleting old semantic motif endpoints" );
 		
@@ -164,6 +179,126 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 
+	
+	private void saveConceptGeneCounts ( Map<Integer, Set<Integer>> concepts2Genes )
+	{
+		try 
+		{
+			deleteOldConceptGeneCounts ();
+			
+			log.info ( "Saving {} per-concept gene counts to Neo4j", concepts2Genes.size () );
+
+			PercentProgressLogger submissionLogger = new PercentProgressLogger (
+				"{}% counts sent to Neo4j",
+				concepts2Genes.size()
+			);
+			// WARNING: if you switch to a parallel publisher, you need to fix this
+			submissionLogger.setIsThreadSafe ( true );
+
+			PercentProgressLogger completionLogger = new PercentProgressLogger (
+				"{}% counts stored",
+				concepts2Genes.size()
+			);
+			
+			// Prepare a stream of records
+			//
+			Stream<Entry<Integer, Set<Integer>>> concepts2GenesBaseStream = concepts2Genes.entrySet ()
+			.stream ()
+			// Safest here, saveMotifLinks()
+			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );			
+			
+			
+			// Sampling
+			if ( sampleSize < concepts2Genes.size () )
+			{
+				log.warn ( "Due to setSampleSize(), we're reducing the saved per-gene concept counts to about {}", sampleSize );
+				concepts2GenesBaseStream = StreamUtils.sampleStream ( 
+					concepts2GenesBaseStream, sampleSize, concepts2Genes.size () 
+				);
+			}
+			
+			// Prepare a stream of records
+			//
+			Stream<Map<String, Object>> concepts2GenesStream = concepts2GenesBaseStream
+			.map ( concept2GenesEntry -> 
+			{
+				int conceptId = concept2GenesEntry.getKey ();
+				Set<Integer> geneIds = concept2GenesEntry.getValue ();
+				int genesCount = geneIds.size ();
+				
+				submissionLogger.updateWithIncrement();
+				
+				return Map.of (
+					// Currently, all the Ondex properties are stored as strings
+					"conceptId", String.valueOf ( conceptId ),
+					"genesCount", genesCount
+				);
+			});
+			
+			// Then use Reactor to batch the source records
+			//
+			Flux.fromStream ( concepts2GenesStream )
+			.buffer ( BATCH_SIZE )
+			.parallel ()
+			.runOn ( FLUX_SCHEDULER )
+			.doOnNext ( this::processConceptGeneCountsBatch )
+			.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
+			.sequential ()
+			.blockLast ();
+			
+			log.info ( "saveConceptGeneCounts(), done" );
+		} 
+		catch (Exception ex) {
+			ExceptionUtils.throwEx(RuntimeException.class, ex,
+				"Error while saving per-concept gene counts to Neo4j: $cause"
+			);
+		}
+	}
+	
+	private int processConceptGeneCountsBatch ( List<Map<String, Object>> countRowsBatch )
+	{
+		try ( Session session = driver.session() ) 
+		{
+			/*
+			 * TODO: see if more optimisation is possible:
+			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
+			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
+			 */
+			Transaction tx = session.beginTransaction();
+			String cyRelations =
+				"""
+        UNWIND $countRows AS countRow\s
+        MATCH ( concept:Concept { ondexId: countRow.conceptId } )
+        CREATE (concept) - [:hasMotifStats] -> (:SemanticMotifStats{ conceptGenesCount: countRow.genesCount})				
+        """;
+			tx.run ( cyRelations, Map.of ( "countRows", countRowsBatch) );
+			tx.commit();
+		}
+		log.trace ( "{} per-gene concept counts stored", countRowsBatch.size () );
+		return countRowsBatch.size ();
+	}	
+	
+	
+	private void deleteOldConceptGeneCounts ()
+	{
+		log.info ( "Deleting old per-concept gene counts" );
+		
+		try ( Session session = driver.session() ) 
+		{
+			// The transactions trick comes from https://neo4j.com/developer/kb/large-delete-transaction-best-practices-in-neo4j/
+			String cyDelete =
+				"""
+        MATCH ( concept:Concept ) - [link:hasMotifStats] -> ( stats:SemanticMotifStats )
+        CALL {
+          WITH link, stats
+          DELETE link, stats
+        }
+        IN TRANSACTIONS OF 10000 ROWS
+        """;
+			session.run ( cyDelete );
+		}
+	}	
+	
 	/**
 	 * This is useful for tests, since usually there are many sample data to save, which slows everything down.
 	 * 
