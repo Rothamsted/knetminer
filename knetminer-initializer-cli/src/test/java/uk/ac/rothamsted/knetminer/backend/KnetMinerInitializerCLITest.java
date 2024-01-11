@@ -6,15 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 /**
- * Junit test class for KnetMinerInitializerCLI
- * 
+ * Tests {@link KnetMinerInitializerCLI}
+ *  
  * @author brandizi
  * @author jojicunnunni
  * <dl><dt>Date:</dt><dd>25 Feb 2022</dd></dl>
@@ -22,12 +21,12 @@ import org.junit.Test;
  */
 public class KnetMinerInitializerCLITest
 {
-	private static String datasetPath;
+	public static String datasetPath;
+	public static String oxlPath;
 
-	private static String oxlPath;
-	
+
 	@BeforeClass
-	public static void init() throws IOException
+	public static void init()
 	{
 		var mavenBuildPath = System.getProperty ( "maven.buildDirectory", "target" );
 		mavenBuildPath = Path.of ( mavenBuildPath ).toAbsolutePath ().toString ();
@@ -36,7 +35,8 @@ public class KnetMinerInitializerCLITest
 		// Maven copies test files here.
 		datasetPath = mavenBuildPath + "/test-classes/test-dataset";
 		
-		// The maven-dependency plug-in downloads this here and I don't know any way to change it
+		// This is both here and in target/test-classes/test-dataset/data/poaceae-sample.oxl
+		// Using this path to test config overriding
 		oxlPath = mavenBuildPath + "/dependency/poaceae-sample.oxl";
 	}
 		
@@ -53,28 +53,5 @@ public class KnetMinerInitializerCLITest
 		assertTrue ( "Lucene output not found!", new File ( datasetPath + "/data/index" ).exists () );
 		assertTrue ( "Traverser output not found!", new File ( datasetPath + "/data/concepts2Genes.ser" ).exists () );
 	}
-
-
-//	@Test
-//	public void testAdvancedOpts () throws IOException
-//	{
-//		testCaseOut = testCasePath + "/output-cli-advanced";
-//		FileUtils.deleteQuietly ( new File ( testCaseOut ) );
-//
-//		var exitCode = KnetMinerInitializerCLI.invoke (
-//			"-i", testCasePath + "/test-case/poaceae-sample.oxl", 
-//			"-d", testCaseOut, 
-//			"-o", "StateMachineFilePath=file:///" + testCasePath + "/SemanticMotifs.txt",  
-//			"--tax-id", "4565",
-//			"--tax-id", "3702",
-//			"-c" , testCasePath + "/config-test/dataset-cfg.yml"
-//		);
-//		
-//		Assert.assertEquals ( "Wrong exit code!", 0, exitCode );
-//				
-//		assertTrue ( "Lucene output not found!", new File ( testCasePath + "/config-test" + "/index" ).exists () );
-//		assertTrue ( "Traverser output not found!", new File ( testCasePath + "/config-test" + "/concepts2Genes.ser" ).exists () );
-//			
-//	}
 
 }

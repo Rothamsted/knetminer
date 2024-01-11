@@ -1,0 +1,7 @@
+# This is used for tests.
+#
+"@includes":
+- config-neo4j.yml
+  
+"graphTraverser @merge":
+  "knetminer.backend.configPath": "${mydir}/neo4j/test-config.xml"

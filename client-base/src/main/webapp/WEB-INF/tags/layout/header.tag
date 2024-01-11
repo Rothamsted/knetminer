@@ -26,7 +26,7 @@
 			</ul>
 			<ul class="navbar-items">
 				<div class="product_links">
-					<a  href='https://knetminer.com/tutorial/' target="_blank" title="Access Tutorial" class="nav-links">Tutorial</a>	
+					<a href='https://knetminer.com/tutorial/' target="_blank" title="Access Tutorial" class="nav-links">Tutorial</a>	
 					<a href='https://knetminer.com/category/publications/' target="_blank" title="KnetMiner Citation" class="nav-links" id="citeus">Cite Us</a>	
 				</div>
 

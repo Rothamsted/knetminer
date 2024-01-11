@@ -1,28 +1,40 @@
-# See TODO for a description of the configuration format. If you want to test the CLI,
-# DO NOT use this file, use test-config.yml
+# This is distributed with the CLI as an example.
+#
+"@includes":
+- defaults-cfg.yml
+
+# Beware that some of ${} placeholders are interpolated (ie, resolved) by Maven, others are
+# resolved by the Knetminer configuration component.
+#
+# Note to Knetminer developers: as explained elsewhere, Maven interpolates AT BUILD TIME, you can't 
+# rely on it at runtime, where it isn't used at all (anymore, eventually).
 #
 
-oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
+# For the tests, we have to use this OXL, which overrides the defaults loaded above
+# 
+oxl: "data/poaceae-sample.oxl"
 
-
-"dataset":
+# Details about the datset and supported species
+# 
+"dataset @merge":
   id: aratiny
   title: Aratiny dataset
-  version: 5.0.1-SNAPSHOT
+  version: ${project.version}
   keywords: "Aratiny, Arabidopsis, Knetminer Test"
   description: >-
-    A very small test dataset, based on subsampling the Poaceae dataset, and
+    A very small test dataset, based on subsampling the Poaceae dataset, and 
     used to build a test/reference Knetminer instance.
 
-  # creationDate: default is the OXL'a last modified time
-
-  organization: "Rothamsted"
-  sampleQueries: "" 
-  backgroundImage: ""
-
+  # creationDate: default is the OXL'a last modified time  
+  
+  # organization: is in the defaults
+  # sampleQueries: config/sample-queries.xml # this is a default
+  # backgroundImage: config/background.jpg # this is the default 
+  
   species:
   - taxId: 3702
     scientificName: Arabidopsis Thaliana
+    # this is optional, at the moment it's only used in the /dataset-info API 
     commonName: Thale cress
     # chromosomeBaseMap: config/species/base-map-3702.xml # this is the default
   - taxId: 4565
@@ -31,8 +43,4 @@ oxl: "${project.build.directory}/dependency/poaceae-sample.oxl"
   - taxId: 4577
     scientificName: Zea mays
     commonName: Maize
-
-graphTraverser:
-  GraphTraverserClass: ""
-  StateMachineFilePath: "file:///${mydir}/SemanticMotifs.txt"
-  "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
+    

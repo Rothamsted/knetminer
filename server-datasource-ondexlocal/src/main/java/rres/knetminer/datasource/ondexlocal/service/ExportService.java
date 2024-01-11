@@ -624,7 +624,7 @@ public class ExportService
 		// for foundConcepts()
 		
 		
-		// Now resultRows has to become the final TSV table
+		// Now resultRows has to become the final table
 		//
 		
 		var evidenceTableStrm = evidenceTable.parallelStream ();

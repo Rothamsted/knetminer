@@ -1,0 +1,7 @@
+# TODO: document me! See uk.ac.rothamsted.knetminer.service.CyConceptIndexer 
+#
+prefName
+altName
+
+Phenotype
+PUB

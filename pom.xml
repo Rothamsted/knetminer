@@ -6,7 +6,7 @@
 	<parent>
 	  <groupId>uk.ac.rothamsted.knetminer</groupId>
 	  <artifactId>knetminer-common</artifactId>
-  	<version>5.0</version>
+  	<version>5.0.1-SNAPSHOT</version>
 	</parent>  
 
 	<artifactId>app-common</artifactId>
@@ -115,7 +115,9 @@
 		<ondex.version>7.0.1</ondex.version>
 		<knetminer.backend.version>4.0.1</knetminer.backend.version>
 
-		
+		<!-- TODO: realign with the rest -->
+		<jutils.version>14.1-SNAPSHOT</jutils.version>				
+
 		<!-- We define these using the Jetty properties, so that they can be overridden from the 
 		     command line -->
 		<jetty.http.port>8080</jetty.http.port>
@@ -243,22 +245,6 @@
 
 			</plugins>		
 		</pluginManagement>
-		
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-			</plugin>
-
-		</plugins>
 	</build>
 
 
@@ -395,6 +381,12 @@
 				<artifactId>log4j-jcl</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
+			<!-- slf4j 2 needs this bridge -->
+			<dependency>
+			  <groupId>org.apache.logging.log4j</groupId>
+			  <artifactId>log4j-slf4j2-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>			
 			<dependency>
 			 	<groupId>org.apache.logging.log4j</groupId>
 			 	<artifactId>log4j-slf4j-impl</artifactId>

@@ -1,0 +1,12 @@
+# This is distributed with the CLI as an example.
+#
+"@includes":
+- config.yml
+  
+"graphTraverser @merge":
+  GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  
+  "knetminer.backend.configPath": "${mydir}/neo4j/config.xml"
+
+customOptions:
+  cypherInitScript: "${mydir}/neo4j/neo-init.cypher"
+  cypherConceptIndexProps: "${mydir}/neo4j/concept-index-properties.txt"

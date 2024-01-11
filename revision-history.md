@@ -49,6 +49,7 @@
 * Minor enhancements to demo/aratiny launching scripts and continuous integration scripts.
 * Maven build, option to run aratiny in single-specie mode added (#a387ee9, #cf23443).
 * Several new example queries added to better showcase updated user limits.
+* Tools added (in knetminer-initializer) to start the knetminer-nova migration.
 
 # 5.6.0-SNAPSHOT
 * Current snapshot (on 5.6 branch).
