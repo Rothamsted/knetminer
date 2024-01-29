@@ -1,12 +1,5 @@
 package rres.knetminer.datasource.ondexlocal;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +14,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Functions;
@@ -32,7 +24,6 @@ import rres.knetminer.datasource.api.CountHitsResponse;
 import rres.knetminer.datasource.api.CountLociResponse;
 import rres.knetminer.datasource.api.GenomeRequest;
 import rres.knetminer.datasource.api.GenomeResponse;
-import rres.knetminer.datasource.api.GraphSummaryResponse;
 import rres.knetminer.datasource.api.JsonLikeNetworkResponse;
 import rres.knetminer.datasource.api.KeywordResponse;
 import rres.knetminer.datasource.api.KnetminerDataSource;

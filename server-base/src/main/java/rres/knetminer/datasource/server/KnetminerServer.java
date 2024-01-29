@@ -397,7 +397,7 @@ public class KnetminerServer
 			if ( "getGoogleAnalyticsApiConfig".equals ( mode ) )
 				ExceptionUtils.throwEx ( 
 					IllegalArgumentException.class, 
-					"The method %s isn't a valid data source API call, use the equivalent /dataset-info//google-analytics-id instead",
+					"The method %s isn't a valid data source API call, use the equivalent /dataset-info/google-analytics-id instead",
 					mode
 			);
 			
