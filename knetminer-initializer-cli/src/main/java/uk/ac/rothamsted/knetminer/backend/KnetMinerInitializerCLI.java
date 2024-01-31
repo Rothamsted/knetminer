@@ -12,6 +12,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
 import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
+import uk.ac.rothamsted.knetminer.service.NeoGenePubIdIndexer;
 import uk.ac.rothamsted.knetminer.service.NeoInitializer;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
@@ -110,7 +111,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		names = { "-dx", "--neo-index"},
 		paramLabel = "<path>|config://",
 		description =
-		"Create Neo4j indexes to support applications (for now, concept full-text index, see documentation). " +
+		"Create Neo4j indexes to support applications (see the documentation for details). " +
 		"If the path is config://, takes the path from --config, customOptions/"
 		+ NeoConceptIndexer.INDEX_KEYS_PROP + ")."
 	)
@@ -177,15 +178,19 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 
 		if ( neoIndexPropertiesPath != null )
 		{
-			log.info ( "Creating Neo4j full text index for concepts" );
+			log.info ( "Creating Neo4j full text indexes" );
 
-			var indexer = new NeoConceptIndexer();
-			indexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			var conceptIndexer = new NeoConceptIndexer ();
+			conceptIndexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 
 			if ( !"config://".equals ( neoIndexPropertiesPath ) )
-				indexer.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );
+				conceptIndexer.createConceptsIndex ( Path.of ( neoIndexPropertiesPath ) );
 			else
-				indexer.createConceptsIndex ( initializer );
+				conceptIndexer.createConceptsIndex ( initializer );
+			
+			var geneIdIndexer = new NeoGenePubIdIndexer ();
+			geneIdIndexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			geneIdIndexer.createIndex ();
 		}
 
 		return 0;

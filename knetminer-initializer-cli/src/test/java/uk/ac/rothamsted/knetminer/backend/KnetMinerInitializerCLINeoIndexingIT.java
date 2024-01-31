@@ -1,16 +1,19 @@
 package uk.ac.rothamsted.knetminer.backend;
 
-import static org.junit.Assert.assertTrue;
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
+import static org.neo4j.driver.Values.parameters;
 import static uk.ac.rothamsted.knetminer.service.NeoConceptIndexer.CY_INDEX_NAME;
+import static uk.ac.rothamsted.knetminer.service.NeoGenePubIdIndexer.CY_ACC_INDEX_NAME;
+import static uk.ac.rothamsted.knetminer.service.NeoGenePubIdIndexer.CY_NAME_INDEX_NAME;
 
-import java.io.IOException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
@@ -44,7 +47,7 @@ public class KnetMinerInitializerCLINeoIndexingIT
 	}
 	
 	/**
-	 * The component removes the index, but we do this here, to be sure that {@link #verify()}
+	 * The component removes the index, but we do this here, to be sure that methods like {@link #verify()}
 	 * catches a newly-created index.
 	 */
 	@Before
@@ -52,12 +55,11 @@ public class KnetMinerInitializerCLINeoIndexingIT
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 
-		try ( Session session = neoDriver.session () )
+		for ( String idxName: new String[] { CY_INDEX_NAME, CY_ACC_INDEX_NAME, CY_NAME_INDEX_NAME } )
 		{
-			String cypherQuery = String.format (
-				"DROP INDEX %s IF EXISTS", CY_INDEX_NAME
-			);
-			session.run ( cypherQuery );
+			try ( Session session = neoDriver.session () ) {
+				session.run ( format ( "DROP INDEX %s IF EXISTS", idxName ) );
+			}
 		}
 	}	
 		
@@ -118,14 +120,17 @@ public class KnetMinerInitializerCLINeoIndexingIT
 	private void verify ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
+				
 		try ( Session session = neoDriver.session () )
 		{
-			String cypherQuery = String.format ( 
-				"SHOW ALL INDEXES WHERE name = '%s'", CY_INDEX_NAME
-			);
-			Result result = session.run ( cypherQuery );
+			var nrows = session.run (
+				"SHOW ALL INDEXES WHERE name IN $idxNames",
+				parameters ( "idxNames", List.of ( CY_INDEX_NAME, CY_ACC_INDEX_NAME, CY_NAME_INDEX_NAME ) )
+			)
+			.list ()
+			.size ();
 			
-			assertTrue ( "Indexer didn't create an index!", result.hasNext () );
+			assertEquals ( "Indexer didn't create an index!", 3, nrows );
 		}
 	}	
 }

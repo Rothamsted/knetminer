@@ -103,6 +103,7 @@ public class NeoConceptIndexerIT
 
 		verify ( "prefName", "altName", "Phenotype", "Phenotype_1", "PUB_1", "PUB_2" );
 	}
+	
 
 	private void verify ( String ...exptProperties )
 	{

@@ -55,7 +55,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 	 * have to live with them until we replace Ondex.
 	 * 
 	 */
-	public void createConceptsIndex ( Set<String> propertyBaseNames )
+	public void createIndex ( Set<String> propertyBaseNames )
 	{
 		XValidate.notEmpty ( propertyBaseNames, "Property base names for concept full text index is null/empty" );
 
@@ -77,7 +77,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 	
 	public void createConceptsIndex ( String... propertyBaseNames )
 	{
-		createConceptsIndex ( Set.of ( propertyBaseNames ) );
+		createIndex ( Set.of ( propertyBaseNames ) );
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 			.filter ( p -> !p.startsWith ( "#" ) ) // Supports comments
 			.collect( Collectors.toSet() );
 
-		createConceptsIndex ( propertiesSet );
+		createIndex ( propertiesSet );
 	}
 
 	/**
