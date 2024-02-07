@@ -1,19 +1,19 @@
 package uk.ac.rothamsted.knetminer.service;
 
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 import static reactor.core.scheduler.Schedulers.DEFAULT_BOUNDED_ELASTIC_SIZE;
 import static reactor.core.scheduler.Schedulers.newBoundedElastic;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
-import org.neo4j.driver.Transaction;
 
 import net.sourceforge.ondex.algorithm.graphquery.AbstractGraphTraverser;
 import reactor.core.publisher.Flux;
@@ -42,7 +42,8 @@ public class NeoMotifImporter extends NeoInitComponent
 	 * much faster and there is little point with queueing too much stuff.
 	 */
 	private static final Scheduler FLUX_SCHEDULER = newBoundedElastic ( 
-		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, NeoMotifImporter.class.getSimpleName () + ".scheduler" 
+		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, 
+		uncapitalize ( NeoMotifImporter.class.getSimpleName () ) + ".scheduler" 
 	);
 
 	/** From the rdf2neo experience */
@@ -64,8 +65,19 @@ public class NeoMotifImporter extends NeoInitComponent
 		Map<Integer, Set<Integer>> concepts2Genes
 	)
 	{
-		saveMotifLinks ( genes2PathLengths );
-		saveConceptGeneCounts ( concepts2Genes );
+		try 
+		{
+			deleteOldMotifLinks ();
+			createIdIndex ();
+			
+			saveMotifLinks ( genes2PathLengths );
+			saveConceptGeneCounts ( concepts2Genes );
+		}
+		catch (Exception ex) {
+			ExceptionUtils.throwEx ( RuntimeException.class, ex,
+				"Error while saving semantic motif endpoints to Neo4j: $cause"
+			);
+		}
 	}
 
 	/**
@@ -83,79 +95,69 @@ public class NeoMotifImporter extends NeoInitComponent
 	 */
 	private void saveMotifLinks ( Map<Pair<Integer, Integer>, Integer> genes2PathLengths )
 	{
-		try 
+		log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
+
+		PercentProgressLogger submissionLogger = new PercentProgressLogger (
+			"{}% semantic motif endpoints sent to Neo4j",
+			genes2PathLengths.size()
+		);
+		// WARNING: if you switch to a parallel publisher, you need to fix this
+		submissionLogger.setIsThreadSafe ( true );
+
+		PercentProgressLogger completionLogger = new PercentProgressLogger (
+			"{}% semantic motif endpoints stored",
+			genes2PathLengths.size()
+		);
+		
+		// Prepare a stream of records
+		//
+		Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream = genes2PathLengths.entrySet ()
+		.stream ()
+		// having it on the root stream is the safest option (against 'stream closed or already operated' ).
+		.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );
+		
+		
+		// Sampling
+		//
+		if ( sampleSize < genes2PathLengths.size () )
 		{
-			deleteOldMotifLinks ();
-			
-			log.info ( "Saving {} semantic motif endpoints to Neo4j", genes2PathLengths.size () );
-
-			PercentProgressLogger submissionLogger = new PercentProgressLogger (
-				"{}% semantic motif endpoints sent to Neo4j",
-				genes2PathLengths.size()
-			);
-			// WARNING: if you switch to a parallel publisher, you need to fix this
-			submissionLogger.setIsThreadSafe ( true );
-
-			PercentProgressLogger completionLogger = new PercentProgressLogger (
-				"{}% semantic motif endpoints stored",
-				genes2PathLengths.size()
-			);
-			
-			// Prepare a stream of records
-			//
-			Stream<Entry<Pair<Integer, Integer>, Integer>> smRelsBaseStream = genes2PathLengths.entrySet ()
-			.stream ()
-			// having it on the root stream is the safest option (against 'stream closed or already operated' ).
-			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );
-			
-			
-			// Sampling
-			//
-			if ( sampleSize < genes2PathLengths.size () )
-			{
-				log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize );
-				smRelsBaseStream = StreamUtils.sampleStream ( smRelsBaseStream, sampleSize, genes2PathLengths.size () );
-			}
-			
-
-			// Map to a stream of key/value maps, which is the form suitable for Neo4j
-			//
-			Stream<Map<String, Object>> smRelsStream = smRelsBaseStream			
-			.map ( smEntry -> 
-			{
-				var gene2Concept = smEntry.getKey();
-				int geneId = gene2Concept.getLeft();
-				int conceptId = gene2Concept.getRight();
-				int distance = smEntry.getValue();
-				
-				submissionLogger.updateWithIncrement();
-				
-				return Map.of (
-					// Currently, all the Ondex properties are stored as strings
-					"geneId", String.valueOf ( geneId ),
-					"conceptId", String.valueOf ( conceptId ),
-					"graphDistance", distance
-				);
-			});
-			
-			// Then use Reactor to batch the source records and stream parallel batches to Neo4j
-			//
-			Flux.fromStream ( smRelsStream )
-			.buffer ( BATCH_SIZE )
-			.parallel ()
-			.runOn ( FLUX_SCHEDULER )
-			.doOnNext ( this::processMotifLinksBatch )
-			.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
-			.sequential ()
-			.blockLast ();
-			
-			log.info ( "saveMotifLinks(), done" );
-		} 
-		catch (Exception ex) {
-			ExceptionUtils.throwEx ( RuntimeException.class, ex,
-				"Error while saving semantic motif endpoints to Neo4j: $cause"
-			);
+			log.warn ( "Due to setSampleSize(), we're reducing the saved links to about {}", sampleSize );
+			smRelsBaseStream = StreamUtils.sampleStream ( smRelsBaseStream, sampleSize, genes2PathLengths.size () );
 		}
+		
+
+		// Map to a stream of key/value maps, which is the form suitable for Neo4j
+		//
+		Stream<Map<String, Object>> smRelsStream = smRelsBaseStream			
+		.map ( smEntry -> 
+		{
+			var gene2Concept = smEntry.getKey();
+			int geneId = gene2Concept.getLeft();
+			int conceptId = gene2Concept.getRight();
+			int distance = smEntry.getValue();
+			
+			submissionLogger.updateWithIncrement();
+			
+			return Map.of (
+				// Currently, all the Ondex properties are stored as strings
+				"geneId", String.valueOf ( geneId ),
+				"conceptId", String.valueOf ( conceptId ),
+				"graphDistance", distance
+			);
+		});
+		
+		// Then use Reactor to batch the source records and stream parallel batches to Neo4j
+		//
+		Flux.fromStream ( smRelsStream )
+		.buffer ( BATCH_SIZE )
+		.parallel ()
+		.runOn ( FLUX_SCHEDULER )
+		.doOnNext ( this::processMotifLinksBatch )
+		.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
+		.sequential ()
+		.blockLast ();
+
+		log.info ( "saveMotifLinks(), done" );
 	}
 
 	/**
@@ -174,16 +176,17 @@ public class NeoMotifImporter extends NeoInitComponent
 			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
 			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
 			 */
-			Transaction tx = session.beginTransaction();
-			String cyRelations =
-				"""
-        UNWIND $smRelRows AS relRow\s
-        MATCH ( gene:Gene { ondexId: relRow.geneId } ),
-					    ( concept:Concept { ondexId: relRow.conceptId } )
-        CREATE (gene) - [:hasMotifLink { graphDistance: relRow.graphDistance }] -> (concept)				
-        """;
-			tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
-			tx.commit();
+			session.executeWriteWithoutResult ( tx ->
+			{
+				String cyRelations =
+					"""
+	        UNWIND $smRelRows AS relRow\s
+	        MATCH ( gene:Gene { ondexId: relRow.geneId } ),
+						    ( concept:Concept { ondexId: relRow.conceptId } )
+	        CREATE (gene) - [:hasMotifLink{ graphDistance: relRow.graphDistance }] -> (concept)
+	        """;
+				tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
+			});
 		}
 		log.trace ( "{} links stored", smRelationsBatch.size () );
 		return smRelationsBatch.size ();
@@ -209,6 +212,32 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 
+	/**
+	 * Create a Neo4j index about Concept.ondexId, the field currently used for 
+	 * identifying nodes.
+	 * 
+	 * We added this to rdf2neo (via the Ondex config), here, we're keeping it
+	 * to get old data auto-updated and be sure this index is used by the 
+	 * other queries in this class.
+	 * 
+	 */
+	private void createIdIndex ()
+	{
+		log.info ( "Creating Neo4j node ID index" );
+
+		try ( Session session = driver.session () ) 
+		{
+			session.executeWriteWithoutResult ( tx ->
+			{				
+				tx.run (
+					"CREATE INDEX concept_ondexId IF NOT EXISTS FOR (c:Concept) ON (c.ondexId)" 
+				);
+			});
+		}	
+		
+		log.info ( "ID index created" );		
+	}
+	
 	/**
 	 * For each concept, saves the count of genes that are associated to it via the semantic
 	 * motif traverser. This is useful to speed-up data retrieval.
@@ -308,15 +337,17 @@ public class NeoMotifImporter extends NeoInitComponent
 			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
 			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
 			 */
-			Transaction tx = session.beginTransaction();
-			String cyRelations =
-				"""
-        UNWIND $countRows AS countRow\s
-        MATCH ( concept:Concept { ondexId: countRow.conceptId } )
-        CREATE (concept) - [:hasMotifStats] -> (:SemanticMotifStats{ conceptGenesCount: countRow.genesCount})				
-        """;
-			tx.run ( cyRelations, Map.of ( "countRows", countRowsBatch) );
-			tx.commit();
+			session.executeWriteWithoutResult ( tx ->
+			{
+				String cyRelations =
+					"""
+	        UNWIND $countRows AS countRow\s
+	        MATCH ( concept:Concept { ondexId: countRow.conceptId } )
+	        CREATE (concept) - [:hasMotifStats] -> (smStats:SemanticMotifStats)
+	        SET smStats = { conceptGenesCount: countRow.genesCount } 				
+	        """;
+				tx.run ( cyRelations, Map.of ( "countRows", countRowsBatch) );
+			});
 		}
 		log.trace ( "{} per-gene concept counts stored", countRowsBatch.size () );
 		return countRowsBatch.size ();
