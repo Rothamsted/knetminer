@@ -11,7 +11,6 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import uk.ac.rothamsted.knetminer.service.NeoInitializer;
-import uk.ac.rothamsted.knetminer.service.NeoInitializerIT;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
 /**
