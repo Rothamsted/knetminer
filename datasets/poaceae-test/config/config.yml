@@ -12,7 +12,7 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: wheatknet-beta # TODO: must become poaceae, after fixing the proxy
+  id: poaceae-test
   title: Beta Poaceae KnetMiner
   version: 55 
 

@@ -5,9 +5,6 @@
 #
 "@includes":
 - config.yml
-
-"dataset @merge":
-  id: wheatknet # TODO: must become poaceae, after fixing the proxy
   
 "graphTraverser @merge":
   GraphTraverserClass: "uk.ac.rothamsted.knetminer.backend.cypher.genesearch.CypherGraphTraverser"  

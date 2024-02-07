@@ -15,4 +15,4 @@
 
 # Enables the Cypher Debugger, to profile Cypher queries.
 # WARNING: this is a SERIOUS security hole and we keep it on ONLY for this internal instance 
-cypherDebuggerEnabled: true
+cypherDebuggerEnabled: false
