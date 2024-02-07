@@ -4106,6 +4106,7 @@
 		<gene>ZM00001EB064480</gene>
 		<gene>ZM00001EB240630</gene>
 	</query>
+<<<<<<< Upstream, based on branch 'master' of https://github.com/Rothamsted/knetminer.git
 	<!-- TODO: pro query-->
 	<!-- <query>
 		<description></description>
@@ -4113,6 +4114,18 @@
 		<taxId></taxId>
 		<term></term>
 		<gene></gene>
+=======
+	
+	<!-- Crafted by MB to see something significant about regions -->
+	<query>
+		<description>Maize region search</description>
+		<taxId>4577</taxId>
+		<term>drought AND ABA</term>
+		<gene>SIZ1</gene>
+		<gene>HAB1</gene>
+		<gene>AT1G50370</gene>
+		<gene>ZM00001EB355410</gene>
+>>>>>>> b6f6dc0 Updating poaceae config.
 		<region>
 			<chromosome></chromosome>
 			<start></start>
