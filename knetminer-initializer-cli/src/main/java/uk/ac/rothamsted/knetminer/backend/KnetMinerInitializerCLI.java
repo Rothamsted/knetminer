@@ -11,10 +11,10 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
+import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
 import uk.ac.rothamsted.knetminer.service.NeoGenePubIdIndexer;
 import uk.ac.rothamsted.knetminer.service.NeoInitializer;
-import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
 import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
 
 /**
