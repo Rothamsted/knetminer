@@ -29,7 +29,7 @@
 24^	PlantOntologyTerm
 25^	CoExpStudy
 26^	SNPEffect
-
+27^	Cultivar
 
 #Transitions
 1-10	enc
@@ -55,6 +55,8 @@
 1-20	has_mutant
 1-20	has_variation
 1-13	has_phenotype
+1-27	present_in
+1-27	absent_in
 
 10-10	h_s_s	4
 10-7	h_s_s	4
