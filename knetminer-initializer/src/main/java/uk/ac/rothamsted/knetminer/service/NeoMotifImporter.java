@@ -21,6 +21,9 @@ import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import uk.ac.ebi.utils.streams.StreamUtils;
+import uk.ac.rothamsted.knetminer.backend.cypher.CypherClient;
+import uk.ac.rothamsted.neo4j.utils.Neo4jDataManager;
+import uk.org.lidalia.slf4jext.Level;
 
 /**
  * The Neo4j importer for semantic motif summaries.
@@ -168,26 +171,23 @@ public class NeoMotifImporter extends NeoInitComponent
 	 *  
 	 */
 	private int processMotifLinksBatch ( List<Map<String, Object>> smRelationsBatch )
-	{
-		try ( Session session = driver.session() ) 
-		{
-			/*
-			 * TODO: see if more optimisation is possible:
-			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
-			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
-			 */
-			session.executeWriteWithoutResult ( tx ->
-			{
-				String cyRelations =
-					"""
-	        UNWIND $smRelRows AS relRow\s
-	        MATCH ( gene:Gene { ondexId: relRow.geneId } ),
-						    ( concept:Concept { ondexId: relRow.conceptId } )
-	        CREATE (gene) - [:hasMotifLink{ graphDistance: relRow.graphDistance }] -> (concept)
-	        """;
-				tx.run ( cyRelations, Map.of ( "smRelRows", smRelationsBatch) );
-			});
-		}
+	{		
+		String cyRelations = """
+	    UNWIND $smRelRows AS relRow\s
+	    MATCH ( gene:Gene { ondexId: relRow.geneId } ),
+				    ( concept:Concept { ondexId: relRow.conceptId } )
+	    CREATE (gene) - [:hasMotifLink{ graphDistance: relRow.graphDistance }] -> (concept)
+	  """;
+		
+		var neoMgr = new Neo4jDataManager ( driver );
+		// neoMgr.setAttemptMsgLogLevel ( Level.INFO );
+		// neoMgr.setMaxRetries ( 3 );
+		
+		// Wraps it in a transaction and also re-attempts it in case of
+		// node lock issues.
+		//
+		neoMgr.runCypher ( cyRelations, "smRelRows", smRelationsBatch );
+		
 		log.trace ( "{} links stored", smRelationsBatch.size () );
 		return smRelationsBatch.size ();
 	}
@@ -213,8 +213,8 @@ public class NeoMotifImporter extends NeoInitComponent
 	}
 
 	/**
-	 * Create a Neo4j index about Concept.ondexId, the field currently used for 
-	 * identifying nodes.
+	 * Create a Neo4j index about Concept.ondexId, Gene.ondexId, the properties 
+	 * currently used for identifying nodes.
 	 * 
 	 * We added this to rdf2neo (via the Ondex config), here, we're keeping it
 	 * to get old data auto-updated and be sure this index is used by the 
@@ -223,7 +223,7 @@ public class NeoMotifImporter extends NeoInitComponent
 	 */
 	private void createIdIndex ()
 	{
-		log.info ( "Creating Neo4j node ID index" );
+		log.info ( "Creating Neo4j Concept ID indexes" );
 
 		try ( Session session = driver.session () ) 
 		{
@@ -233,9 +233,19 @@ public class NeoMotifImporter extends NeoInitComponent
 					"CREATE INDEX concept_ondexId IF NOT EXISTS FOR (c:Concept) ON (c.ondexId)" 
 				);
 			});
+			log.debug ( "Concept index done" );
+			
+			// Turns out you need this too, despite all Gene nodes are Concept nodes too
+			session.executeWriteWithoutResult ( tx ->
+			{				
+				tx.run (
+					"CREATE INDEX gene_ondexId IF NOT EXISTS FOR (g:Gene) ON (g.ondexId)" 
+				);
+			});
+			log.debug ( "Gene index done" );
 		}	
 		
-		log.info ( "ID index created" );		
+		log.info ( "ID indexes created" );		
 	}
 	
 	/**
@@ -330,20 +340,22 @@ public class NeoMotifImporter extends NeoInitComponent
 	 */
 	private int processConceptGeneCountsBatch ( List<Map<String, Object>> countRowsBatch )
 	{
-		try ( Session session = driver.session() ) 
-		{
-			session.executeWriteWithoutResult ( tx ->
-			{
-				String cyRelations =
-					"""
-	        UNWIND $countRows AS countRow\s
-	        MATCH ( concept:Concept { ondexId: countRow.conceptId } )
-	        CREATE (concept) - [:hasMotifStats] 
-						-> (smStats:SemanticMotifStats{ conceptGenesCount: countRow.genesCount })				
-	        """;
-				tx.run ( cyRelations, Map.of ( "countRows", countRowsBatch) );
-			});
-		}
+		String cyRelations = """
+	    UNWIND $countRows AS countRow\s
+	    MATCH ( concept:Concept { ondexId: countRow.conceptId } )
+	    CREATE (concept) - [:hasMotifStats] 
+				-> (smStats:SemanticMotifStats{ conceptGenesCount: countRow.genesCount })				
+	  """;
+		
+		var neoMgr = new Neo4jDataManager ( driver );
+		// neoMgr.setAttemptMsgLogLevel ( Level.INFO );
+		// neoMgr.setMaxRetries ( 3 );
+		
+		// Wraps it in a transaction and also re-attempts it in case of
+		// node lock issues.
+		//
+		neoMgr.runCypher ( cyRelations, "countRows", countRowsBatch );
+		
 		log.trace ( "{} per-gene concept counts stored", countRowsBatch.size () );
 		return countRowsBatch.size ();
 	}	
