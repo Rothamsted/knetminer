@@ -332,19 +332,14 @@ public class NeoMotifImporter extends NeoInitComponent
 	{
 		try ( Session session = driver.session() ) 
 		{
-			/*
-			 * TODO: see if more optimisation is possible:
-			 *   https://community.neo4j.com/t/create-cypher-query-very-slow/62780
-			 *   https://medium.com/neo4j/5-tips-tricks-for-fast-batched-updates-of-graph-structures-with-neo4j-and-cypher-73c7f693c8cc
-			 */
 			session.executeWriteWithoutResult ( tx ->
 			{
 				String cyRelations =
 					"""
 	        UNWIND $countRows AS countRow\s
 	        MATCH ( concept:Concept { ondexId: countRow.conceptId } )
-	        CREATE (concept) - [:hasMotifStats] -> (smStats:SemanticMotifStats)
-	        SET smStats = { conceptGenesCount: countRow.genesCount } 				
+	        CREATE (concept) - [:hasMotifStats] 
+						-> (smStats:SemanticMotifStats{ conceptGenesCount: countRow.genesCount })				
 	        """;
 				tx.run ( cyRelations, Map.of ( "countRows", countRowsBatch) );
 			});
