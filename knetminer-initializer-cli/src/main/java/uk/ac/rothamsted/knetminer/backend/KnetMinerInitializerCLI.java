@@ -126,6 +126,11 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 	{
 		KnetMinerInitializer initializer = null;
 
+		/**
+		 * WARNING! Operations order is meaningful! For instance, --neo-motifs
+		 * needs to be run before indexing, and probably you want --cy-script as last.
+		 */
+		
 		if ( configYmlPath != null )
 		{
 			initializer = new KnetMinerInitializer ();
@@ -149,33 +154,8 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			log.info ( "Doing the data initialisation" );
 			initializer.initKnetMinerData ( this.doForce );
 		}
-
-		if ( doNeoMotifs )
-		{
-			log.info ( "Populating Neo4j with semantic motif summaries" );
-
-			if ( initializer == null ) throw new IllegalArgumentException (
-				"--neo-motifs can't be used without --config"
-			);
-
-			var motifNeoExporter = new NeoMotifImporter ();
-			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
-			motifNeoExporter.saveMotifs ( initializer );
-		}
-
-		if ( neoInitCypherPath != null )
-		{
-			log.info ( "Running Neo4j initialisation script" );
-
-			var cyInit = new NeoInitializer ();
-			cyInit.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
-
-			if ( !"config://".equals ( neoInitCypherPath ) )
-				cyInit.runCypher ( Path.of ( neoInitCypherPath ) );
-			else
-				cyInit.runCypher ( initializer );
-		}
-
+		
+		
 		if ( neoIndexPropertiesPath != null )
 		{
 			log.info ( "Creating Neo4j full text indexes" );
@@ -192,6 +172,33 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			geneIdIndexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			geneIdIndexer.createIndex ();
 		}
+		
+		
+		if ( doNeoMotifs )
+		{
+			log.info ( "Populating Neo4j with semantic motif summaries" );
+
+			if ( initializer == null ) throw new IllegalArgumentException (
+				"--neo-motifs can't be used without --config"
+			);
+
+			var motifNeoExporter = new NeoMotifImporter ();
+			motifNeoExporter.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			motifNeoExporter.saveMotifs ( initializer );
+		}
+		
+		if ( neoInitCypherPath != null )
+		{
+			log.info ( "Running Neo4j initialisation script" );
+
+			var cyInit = new NeoInitializer ();
+			cyInit.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+
+			if ( !"config://".equals ( neoInitCypherPath ) )
+				cyInit.runCypher ( Path.of ( neoInitCypherPath ) );
+			else
+				cyInit.runCypher ( initializer );
+		}		
 
 		return 0;
 	}
