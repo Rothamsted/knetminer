@@ -509,8 +509,11 @@ public class ExportService
 		// The rest is RO or not used in parallel
 		//
 		var genes2Concepts = knetInitializer.getGenes2Concepts ();			
-		int allGenesSize = genes2Concepts.keySet ().size ();
+		final int allGenesSize = genes2Concepts.keySet ().size ();
 		int userGenesSize = userGenes.size ();
+		
+		// It has optimisations initialised in the constructor
+		final FisherExact fisherExact = new FisherExact ( allGenesSize );
 		
 		log.info ( "Generating Evidence table" );
 		
@@ -598,7 +601,6 @@ public class ExportService
 			double pvalue = -1d;
 			if ( matchedInGeneList > 0 )
 			{
-				FisherExact fisherExact = new FisherExact ( allGenesSize );
 				pvalue = fisherExact.getP ( 
 					matchedInGeneList, matchedNotInGeneList, notMatchedInGeneList, notMatchedNotInGeneList
 				);
