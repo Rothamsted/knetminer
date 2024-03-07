@@ -39,7 +39,7 @@ public class NeoGenePubIdIndexer extends NeoInitComponent
 		{
 			session.executeWriteWithoutResult ( tx ->
 			{
-				log.info ( "Deleting old name/accession full text indexes" );
+				log.debug ( "Deleting old name/accession full text indexes" );
 				tx.run ( format ( "DROP INDEX %s IF EXISTS", CY_NAME_INDEX_NAME ) );
 				tx.run ( format ( "DROP INDEX %s IF EXISTS", CY_ACC_INDEX_NAME ) );
 				
