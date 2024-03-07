@@ -42,7 +42,7 @@ public class KnetMinerInitializerCLICypherInitIT
 	}
 	
 	/**
-	 * TODO: this is a copy of the same method in {@link NeoInitializerIT}. Needs
+	 * TODO: this is a copy of the same method in {@code NeoInitializerIT}. Needs
 	 * some refactoring, together with {@link #verify()}.
 	 */
 	@Before
@@ -118,7 +118,7 @@ public class KnetMinerInitializerCLICypherInitIT
 	
 	
 	/**
-	 * TODO: this is a copy from {@link NeoInitializerIT}, see {@link #cleanTestData()}.
+	 * TODO: this is a copy from {@code NeoInitializerIT}, see {@link #cleanTestData()}.
 	 */
 	private void verify ()
 	{

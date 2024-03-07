@@ -1,9 +1,6 @@
 package uk.ac.rothamsted.knetminer.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.neo4j.driver.Values.parameters;
-
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
