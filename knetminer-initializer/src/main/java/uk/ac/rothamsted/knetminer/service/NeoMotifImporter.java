@@ -21,9 +21,7 @@ import reactor.core.scheduler.Scheduler;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.runcontrol.PercentProgressLogger;
 import uk.ac.ebi.utils.streams.StreamUtils;
-import uk.ac.rothamsted.knetminer.backend.cypher.CypherClient;
 import uk.ac.rothamsted.neo4j.utils.Neo4jDataManager;
-import uk.org.lidalia.slf4jext.Level;
 
 /**
  * The Neo4j importer for semantic motif summaries.
