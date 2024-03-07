@@ -3,6 +3,7 @@ package uk.ac.rothamsted.knetminer.service;
 import static org.junit.Assert.assertEquals;
 import static uk.ac.rothamsted.knetminer.service.NeoConceptIndexer.CY_INDEX_NAME;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -115,14 +116,12 @@ public class NeoConceptIndexerIT
 			);
 			Result result = session.run ( cypherQuery );
 			
-			var properties = Set.copyOf ( 
-				result
-				.next ()
-				.get ( "properties" )
-				.asList ()
-			);
+			Set<String> properties = new HashSet<> ( result
+			.next ()
+			.get ( "properties" )
+			.asList (Object::toString) );
 			
-			log.info ( "Returned properties list: {}", properties );
+			log.debug ( "Returned properties list: {}", properties );
 			
 			var exptPropertiesList = Set.of ( exptProperties );
 			
