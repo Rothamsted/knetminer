@@ -208,9 +208,10 @@ public class OndexLocalDataSource extends KnetminerDataSource
 		var graph = ondexServiceProvider.getDataService ().getGraph ();
 		var taxId = StringUtils.trimToEmpty ( request.getTaxId () );
 		
-		if ( request.getList () != null && request.getList ().size () > 0 )
+		List<String> userGenesList = request.getList ();		
+		if ( userGenesList != null && !userGenesList.isEmpty () )
 		{
-			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( request.getList (), taxId ) );
+			userGenes.addAll ( searchService.filterGenesByAccessionKeywords ( userGenesList, taxId ) );
 			log.info ( "Number of user provided genes: " + userGenes.size () );
 		}
 
