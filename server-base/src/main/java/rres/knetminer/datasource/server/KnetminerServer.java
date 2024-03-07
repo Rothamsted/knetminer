@@ -214,7 +214,9 @@ public class KnetminerServer
 	
 	
 	/**
-	 * Wrappers for {@link #handleGenomeOrQtl(String, GenomeRequest, HttpServletRequest, String)}
+	 * Wrappers for {@link #handle(String, GenomeRequest, HttpServletRequest, String)}
+	 * used by {@link #genome(String, String, List, String, List, String, boolean, HttpServletRequest)}
+	 * and {@link #qtl(String, String, List, String, List, String, boolean, HttpServletRequest)}.
 	 */
 	private ResponseEntity<KnetminerResponse> handleGenomeOrQtl (
 		String ds,
