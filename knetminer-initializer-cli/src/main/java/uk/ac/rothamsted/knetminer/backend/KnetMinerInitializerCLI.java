@@ -12,10 +12,12 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Option;
 import uk.ac.rothamsted.knetminer.service.KnetMinerInitializer;
+import uk.ac.rothamsted.knetminer.service.NeoChromosomeFix;
 import uk.ac.rothamsted.knetminer.service.NeoConceptIndexer;
 import uk.ac.rothamsted.knetminer.service.NeoGenePubIdIndexer;
 import uk.ac.rothamsted.knetminer.service.NeoInitializer;
 import uk.ac.rothamsted.knetminer.service.NeoMotifImporter;
+import uk.ac.rothamsted.knetminer.service.NeoPrefNamesFix;
 
 /**
  * A command-line (CLI) interface, which is another wrapper to the core. This allows for producing KnetMiner
@@ -111,7 +113,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		names = { "-dx", "--neo-index"},
 		paramLabel = "<path>|config://",
 		description =
-		"Create Neo4j indexes to support applications (see the documentation for details). " +
+		"Create Neo4j indexes and other optimisations/fixes to support applications (see the documentation for details). " +
 		"If the path is config://, takes the path from --config, customOptions/"
 		+ NeoConceptIndexer.INDEX_KEYS_PROP + ")."
 	)
@@ -158,7 +160,7 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 		
 		if ( neoIndexPropertiesPath != null )
 		{
-			log.info ( "Creating Neo4j full text indexes" );
+			log.info ( "Creating Neo4j indexes and optimisations" );
 
 			var conceptIndexer = new NeoConceptIndexer ();
 			conceptIndexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
@@ -171,6 +173,14 @@ public class KnetMinerInitializerCLI implements Callable<Integer>
 			var geneIdIndexer = new NeoGenePubIdIndexer ();
 			geneIdIndexer.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
 			geneIdIndexer.createIndex ();
+
+			var chrFix = new NeoChromosomeFix ();
+			chrFix.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			chrFix.processChromosomes ();
+			
+			var prefNameFix = new NeoPrefNamesFix ();
+			prefNameFix.setDatabase ( neoUrl, neoUser, neoPassword, initializer );
+			prefNameFix.fixNames ();
 		}
 		
 		
