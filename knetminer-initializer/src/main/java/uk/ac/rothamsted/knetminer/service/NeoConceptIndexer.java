@@ -55,7 +55,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 	 * have to live with them until we replace Ondex.
 	 * 
 	 */
-	public void createIndex ( Set<String> propertyBaseNames )
+	public void createConceptsIndex ( Set<String> propertyBaseNames )
 	{
 		XValidate.notEmpty ( propertyBaseNames, "Property base names for concept full text index is null/empty" );
 
@@ -70,14 +70,14 @@ public class NeoConceptIndexer extends NeoInitComponent
 		}
 
 		var cyIndexer = createIndexingCypher ( indexedProps );
-		createIndex ( cyIndexer );
+		runIndexingCypher ( cyIndexer );
 
 		log.info ( "Concept full text indexing, all done" );
 	}
 	
 	public void createConceptsIndex ( String... propertyBaseNames )
 	{
-		createIndex ( Set.of ( propertyBaseNames ) );
+		createConceptsIndex ( Set.of ( propertyBaseNames ) );
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 			.filter ( p -> !p.startsWith ( "#" ) ) // Supports comments
 			.collect( Collectors.toSet() );
 
-		createIndex ( propertiesSet );
+		createConceptsIndex ( propertiesSet );
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class NeoConceptIndexer extends NeoInitComponent
 	/**
 	 * Actually creates the index, using {@link #createIndexingCypher(Set)}.
 	 */
-	private void createIndex ( String indexingCypher )
+	private void runIndexingCypher ( String indexingCypher )
 	{
 		try ( Session session = driver.session () ) 
 		{
