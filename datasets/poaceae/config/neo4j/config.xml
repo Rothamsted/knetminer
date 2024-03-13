@@ -20,7 +20,7 @@
   	<constructor-arg value = "rouser" />
   </bean> 
   <bean name = "neo4j.password" class = "java.lang.String">
-  	<constructor-arg value = "rouser" />
+  	<constructor-arg value = "ronlyuser" />
   </bean> 
 
 	
