@@ -12,7 +12,7 @@
   <!-- For all the rest, the defaults should be fine -->
 	<import resource = "defaults-cfg.xml" />
 	
-	
+	<!-- 
   <bean name = "neo4j.BoltUrl" class = "java.lang.String">
   	<constructor-arg value = "bolt://babvs65.rothamsted.ac.uk:7687" />
   </bean> 
@@ -21,6 +21,17 @@
   </bean> 
   <bean name = "neo4j.password" class = "java.lang.String">
   	<constructor-arg value = "ronlyuser" />
+  </bean> 
+  -->
+
+  <bean name = "neo4j.BoltUrl" class = "java.lang.String">
+  	<constructor-arg value = "bolt://18.169.155.109:7687" />
+  </bean> 
+  <bean name = "neo4j.user" class = "java.lang.String">
+  	<constructor-arg value = "public" />
+  </bean> 
+  <bean name = "neo4j.password" class = "java.lang.String">
+  	<constructor-arg value = "passwordless" />
   </bean> 
 
 	
