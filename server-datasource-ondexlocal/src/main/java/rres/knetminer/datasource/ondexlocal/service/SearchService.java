@@ -476,8 +476,7 @@ public class SearchService
   }
 	
 	/**
-	 * TODO: this is the new version, which uses the new model gene->pheno->Trait, to be 
-	 * tested and activated when switching to the new test dataset.
+	 * This is the new version, which uses the new model gene->pheno->Trait.
 	 * 
 	 * TODO: wrap the exception
 	 */

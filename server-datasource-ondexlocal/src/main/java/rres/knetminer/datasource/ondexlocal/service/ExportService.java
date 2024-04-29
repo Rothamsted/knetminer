@@ -263,7 +263,7 @@ public class ExportService
    */
 	public String exportGenomapXML ( 
 		String apiUrl, List<ONDEXConcept> genes, Set<ONDEXConcept> userGenes, List<String> userQtlStr,
-		String keyword, int maxGenes, Map<ONDEXConcept, Double> scoredCandidates
+		String keyword, int maxGenes, Map<ONDEXConcept, Double> scoredGeneCandidates
 	)
 	{
 		log.info ( "Genomaps: generating XML..." );
@@ -351,8 +351,8 @@ public class ExportService
 			
 			// Add 'score' tag as well.
 			Double score = 0.0;
-			if ( scoredCandidates != null && scoredCandidates.get ( gene ) != null )
-				score = scoredCandidates.get ( gene ); // fetch score
+			if ( scoredGeneCandidates != null && scoredGeneCandidates.get ( gene ) != null )
+				score = scoredGeneCandidates.get ( gene ); // fetch score
 			
 			sb.append ( "<score>" + score + "</score>\n" ); // score
 			sb.append ( "</feature>\n" );
