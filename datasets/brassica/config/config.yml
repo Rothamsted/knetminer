@@ -15,8 +15,8 @@
   description: Knetminer instance about brassica
   keywords: broccoli, mustard, cabbage, rapeseed, canola, turnip
 
-  version: 54
-  creationDate: 20220912
+  version: 58
+  creationDate: 20240701
   # These are in the defaults
   #organization: in the defaults 
   #provider:
@@ -33,13 +33,43 @@
     scientificName: Brassica oleracea
     commonName: Broccoli
   
-  - taxId: 3711
-    scientificName: Brassica rapa
+  - taxId: 1813537
+    scientificName: Brassica rapa ro18
     commonName: Turnip
   
   - taxId: 90675
     scientificName: Camelina sativa
     commonName: Camelina
 
+  - taxId: 3707
+    scientificName: Brassica juncea
+    commonName: Mustard Greens
+
   
-seedGenesFile: config/seed-genes-example.tsv
+# seedGenesFile: config/seed-genes-example.tsv
+
+
+# WARNING: READ the notes in defaults-cfg.yml!
+# 
+googleAnalyticsAPI:
+  measurementId: G-31YFKXKSYH # Converted from old UA-237399750-1
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+# We're using the same as the API, but we need to override defaults
+googleAnalyticsClient:
+  measurementId: G-31YFKXKSYH
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+
+# These are custom options, which aren't explicitly defined by the Knetminer configuration. 
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
+# 
+# WARNING: DO NOT ABUSE this feature! As explained in the link above, this is an hack to help with provisional
+# or uncommon configuration parameters. Using this section SHOULD BE AN EXCEPTION to defining configuration
+# variables explicitly (out of this section), so that they can be validated. 
+#
+customOptions:
+  ui:
+    # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+    # Likely, you don't want it enabled.
+    betaFeedbackBannerEnabled: true

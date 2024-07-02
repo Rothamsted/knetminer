@@ -1,7 +1,7 @@
-# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# This is the Docker default root config file, which configures tropicana.
 # used when no other option is given to Docker.
 # 
-# Your dataset will need its own version of this file. 
+# Your dataset will need its own version of this file.
 # 
  
 "@includes":
@@ -13,20 +13,32 @@
 # 
 "dataset @merge":
   id: tropicana
-  title: Tropical Plant Test Knetminer Instance
+  title: Tropical Plant Knetminer Instance
   description: Knetminer instance for Coffee and Banana species
-  keywords: Coffee, Banana
+  #keywords: Coffee, Banana
+  keywords: Arabidopsis, Coffee, Banana
 
-  version: 54
-  creationDate: 20220923
+  version: 58
+  creationDate: 20240606
   # These are in the defaults
   #organization: in the defaults 
   #provider:
   # sampleQueries: config/sample-queries.xml # this is a default
   # backgroundImage: config/background.jpg # this is the default 
   
+
+  # ======> WARNING!
+  # SemanticMotif.txt won't work if you include Arabidopsis (endless paths met).
+  # For that to work, you need to use SemanticMotifs-no-ara.txt
+  # I've also experienced problems with adding rice to the first two.
+  #
   species:
-     
+
+#Sam 240606 : In our test we inculde arabidopsis, by default it shouldn't be here
+  - taxId: 3702
+    scientificName: Arabidopsis thaliana
+    commonName: Arabidopsis
+
   - taxId: 214687
     scientificName: Musa acuminata
     commonName: Banana
@@ -36,4 +48,30 @@
     commonName: Coffee bean
   
 # No spaces or lower case letters allowed in seed genes tsv
-seedGenesFile: config/seed-genes-tropicana.tsv
+# seedGenesFile: config/seed-genes-tropicana.tsv
+
+
+# WARNING: READ the notes in defaults-cfg.yml!
+# 
+googleAnalyticsAPI:
+  measurementId: G-31YFKXKSYH # Converted from old UA-237399750-1
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+# We're using the same as the API, but we need to override defaults
+googleAnalyticsClient:
+  measurementId: G-31YFKXKSYH
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+
+# These are custom options, which aren't explicitly defined by the Knetminer configuration. 
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
+# 
+# WARNING: DO NOT ABUSE this feature! As explained in the link above, this is an hack to help with provisional
+# or uncommon configuration parameters. Using this section SHOULD BE AN EXCEPTION to defining configuration
+# variables explicitly (out of this section), so that they can be validated. 
+#
+customOptions:
+  ui:
+    # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+    # Likely, you don't want it enabled.
+    betaFeedbackBannerEnabled: true
