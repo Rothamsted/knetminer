@@ -1,1 +1,74 @@
-Error: Failed to connect to The EBI Ensembl server 
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="22576415" number="A10">
+		<band index="1">
+			<start>0</start>
+			<end>22576415</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="34445504" number="A01">
+		<band index="1">
+			<start>0</start>
+			<end>34445504</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="36095996" number="A02">
+		<band index="1">
+			<start>0</start>
+			<end>36095996</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="32457817" number="A03">
+		<band index="1">
+			<start>0</start>
+			<end>32457817</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="23305641" number="A04">
+		<band index="1">
+			<start>0</start>
+			<end>23305641</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="32871474" number="A05">
+		<band index="1">
+			<start>0</start>
+			<end>32871474</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="30241088" number="A06">
+		<band index="1">
+			<start>0</start>
+			<end>30241088</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="27715701" number="A07">
+		<band index="1">
+			<start>0</start>
+			<end>27715701</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="25318967" number="A08">
+		<band index="1">
+			<start>0</start>
+			<end>25318967</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="60281870" number="A09">
+		<band index="1">
+			<start>0</start>
+			<end>60281870</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
