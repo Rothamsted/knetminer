@@ -15,10 +15,10 @@
   id: solanaceae
   title: Solanaceae Test Knetminer Instance
   description: Knetminer instance for Solanaceae species
-  keywords: Tomato, Potato, Capsicum, Sweet Pepper
+  keywords: Tomato, Potato, Capsicum, Sweet Pepper, Asparagus, Beet, Cucumber, Carrot, Lettuce, Coyote Tobacco
 
-  version: 54
-  creationDate: 20220915
+  version: 58
+  creationDate: 20240708
   # These are in the defaults
   #organization: in the defaults 
   #provider:
@@ -33,11 +33,35 @@
     
   - taxId: 4072
     scientificName: Capsicum annuum
-    commonName: Capsicum
+    commonName: Pepper
   
   - taxId: 4081
     scientificName: Solanum lycopersicum
     commonName: Tomato
+  
+  - taxId: 4686
+    scientificName: Asparagus officinalis
+    commonName: Asparagus
+
+  - taxId: 3555
+    scientificName: Beta vulgaris
+    commonName: Beet
+
+  - taxId: 3659
+    scientificName: Cucumis sativus
+    commonName: Cucumber
+
+  - taxId: 79200
+    scientificName: Daucus carota
+    commonName: Carrot
+
+  - taxId: 4236
+    scientificName: Lactuca sativa
+    commonName: Lettuce
+
+  - taxId: 49451
+    scientificName: Nicotiana attenuata
+    commonName: Coyote Tobacco
 
 # No spaces or lower case letters allowed in seed genes tsv
-seedGenesFile: config/seed-genes-solanaceae.tsv
+# seedGenesFile: config/seed-genes-solanaceae.tsv

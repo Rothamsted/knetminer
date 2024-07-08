@@ -72,4 +72,4 @@ customOptions:
   ui:
     # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
     # Likely, you don't want it enabled.
-    betaFeedbackBannerEnabled: true
+    betaFeedbackBannerEnabled: false

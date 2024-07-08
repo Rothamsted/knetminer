@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="38796167" number="8">
+		<band index="1">
+			<start>0</start>
+			<end>38796167</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="1089388" number="Bvchr2_un.sca004">
+		<band index="1">
+			<start>0</start>
+			<end>1089388</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="1077293" number="Bvchr8_un.sca001">
+		<band index="1">
+			<start>0</start>
+			<end>1077293</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="1334862" number="Bvchr7_un.sca001">
+		<band index="1">
+			<start>0</start>
+			<end>1334862</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="1571937" number="Bvchr2_un.sca019">
+		<band index="1">
+			<start>0</start>
+			<end>1571937</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="1286270" number="Bvchr3_un.sca005">
+		<band index="1">
+			<start>0</start>
+			<end>1286270</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="1094224" number="Bvchr1_un.sca006">
+		<band index="1">
+			<start>0</start>
+			<end>1094224</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="1049538" number="Bvchr5_un.sca008">
+		<band index="1">
+			<start>0</start>
+			<end>1049538</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="40393389" number="2">
+		<band index="1">
+			<start>0</start>
+			<end>40393389</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="1219007" number="Bvchr3_un.sca008">
+		<band index="1">
+			<start>0</start>
+			<end>1219007</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="1202327" number="Bvchr1_un.sca014">
+		<band index="1">
+			<start>0</start>
+			<end>1202327</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="2649046" number="Bvchr4_un.sca001">
+		<band index="1">
+			<start>0</start>
+			<end>2649046</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="1867823" number="Bvchr2_un.sca008">
+		<band index="1">
+			<start>0</start>
+			<end>1867823</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="14"  length="45274173" number="9">
+		<band index="1">
+			<start>0</start>
+			<end>45274173</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="15"  length="26577699" number="3">
+		<band index="1">
+			<start>0</start>
+			<end>26577699</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="16"  length="1104623" number="Bvchr4_un.sca019">
+		<band index="1">
+			<start>0</start>
+			<end>1104623</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="17"  length="1634226" number="Bvchr8_un.sca003">
+		<band index="1">
+			<start>0</start>
+			<end>1634226</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="18"  length="1237106" number="Bvchr4_un.sca003">
+		<band index="1">
+			<start>0</start>
+			<end>1237106</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="19"  length="1366303" number="Bvchr3_un.sca002">
+		<band index="1">
+			<start>0</start>
+			<end>1366303</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="20"  length="1444883" number="Bvchr3_un.sca007">
+		<band index="1">
+			<start>0</start>
+			<end>1444883</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="21"  length="1325581" number="Bvchr4_un.sca009">
+		<band index="1">
+			<start>0</start>
+			<end>1325581</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="22"  length="1412932" number="Bvchr3_un.sca006">
+		<band index="1">
+			<start>0</start>
+			<end>1412932</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="23"  length="52461754" number="5">
+		<band index="1">
+			<start>0</start>
+			<end>52461754</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="24"  length="1524158" number="Bvchr1_un.sca005">
+		<band index="1">
+			<start>0</start>
+			<end>1524158</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="25"  length="1523057" number="Bvchr1_un.sca001">
+		<band index="1">
+			<start>0</start>
+			<end>1523057</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="26"  length="1167601" number="Bvchr5_un.sca003">
+		<band index="1">
+			<start>0</start>
+			<end>1167601</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="27"  length="2000989" number="Bvchr4_un.sca011">
+		<band index="1">
+			<start>0</start>
+			<end>2000989</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="28"  length="1033696" number="Bvchr1_un.sca015">
+		<band index="1">
+			<start>0</start>
+			<end>1033696</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="29"  length="34941034" number="1">
+		<band index="1">
+			<start>0</start>
+			<end>34941034</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="30"  length="1304391" number="Bvchr4_un.sca014">
+		<band index="1">
+			<start>0</start>
+			<end>1304391</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="31"  length="60962716" number="6">
+		<band index="1">
+			<start>0</start>
+			<end>60962716</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="32"  length="1466180" number="Bvchr3_un.sca001">
+		<band index="1">
+			<start>0</start>
+			<end>1466180</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="33"  length="1361392" number="Bvchr7_un.sca005">
+		<band index="1">
+			<start>0</start>
+			<end>1361392</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="34"  length="1075709" number="Bvchr3_un.sca009">
+		<band index="1">
+			<start>0</start>
+			<end>1075709</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="35"  length="44152522" number="7">
+		<band index="1">
+			<start>0</start>
+			<end>44152522</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="36"  length="1068896" number="Bvchr3_un.sca010">
+		<band index="1">
+			<start>0</start>
+			<end>1068896</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="37"  length="33024243" number="4">
+		<band index="1">
+			<start>0</start>
+			<end>33024243</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="38"  length="4817789" number="Bvchr1_un.sca002">
+		<band index="1">
+			<start>0</start>
+			<end>4817789</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
