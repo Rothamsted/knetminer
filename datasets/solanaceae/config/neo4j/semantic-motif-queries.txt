@@ -9,7 +9,8 @@ MATCH path = (gene_1:Gene) - [pav:absent_in|present_in] - (c:Cultivar) WHERE gen
 
 MATCH path = (gene_1:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [occ_in_1_2_d:occ_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [op:occ_in|pub_in] -> (publication_2:Publication) - [occ:occ_in] - (trait_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [op:occ_in|pub_in] -> (publication_2:Publication) - [occ:occ_in] - (trait_1:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [op:occ_in|pub_in] -> (publication_2:Publication) - [occ:occ_in] - (bp_1:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [cooc_wi_9_21:cooc_wi] - (trait_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [cooc_wi_9_21:cooc_wi] - (bp:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
 
@@ -19,7 +20,7 @@ MATCH path = (gene_1:Gene) - [participates_in_9_4_d:participates_in] -> (bioProc
 MATCH path = (gene_1:Gene) - [has_phenotype_9_13_d:has_phenotype] -> (phenotype_13:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [part_of_1_19_d:part_of] -> (path_19:Path) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [inv_in_1_188_d:inv_in] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [part_of_1_19_d:part_of] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
@@ -45,7 +46,7 @@ MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (g
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [has_phenotype_9_13_d:has_phenotype] -> (phenotype_13:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [part_of_1_19_d:part_of] -> (path_19:Path) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [inv_in_1_188_d:inv_in] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [part_of_1_19_d:part_of] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
@@ -91,6 +92,7 @@ MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [participates_in_9_4_d:participates_in] -> (bioProc_4:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [located_in_9_5_d:located_in] -> (celComp_5:CelComp) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [pub_in_9_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [pub_in_9_2_d:occ_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [has_function_9_3_d:has_function] -> (molFunc_3:MolFunc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [cooc_wi_9_21:cooc_wi] - (trait_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [bp:cooc_wi] - (trait_21:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
@@ -122,4 +124,3 @@ MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_
 
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [has_function_9_3_d:has_function] -> (molFunc_3:MolFunc) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [cooc_wi_9_21:cooc_wi] - (trait_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [enc_1_10_d:enc] -> (protein_10:Protein) - [rel_10_10:ortho] - (protein_10b:Protein) <- [enc_10_9_d:enc] - (gene_9:Gene) - [rel_9_9_2:genetic|physical] - (gene_9b:Gene) - [bp:cooc_wi] - (trait_21:BioProc) WHERE gene_1.iri IN $startGeneIris RETURN path
