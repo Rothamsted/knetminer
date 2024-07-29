@@ -23,7 +23,7 @@ MATCH path = (gene_1:Gene) - [part_of_1_19_d:part_of] -> (path_19:Path) WHERE ge
 MATCH path = (gene_1:Gene) - [part_of_1_19_d:part_of] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [pub_in_211_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [leads_to_20_26_d:leads_to] -> (sNPEffect_26:SNPEffect) WHERE gene_1.iri IN $startGeneIris RETURN path
 
@@ -49,7 +49,7 @@ MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (g
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [part_of_1_19_d:part_of] -> (reaction_188:Reaction) WHERE gene_1.iri IN $startGeneIris RETURN path
 
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
-MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Phenotype) WHERE gene_1.iri IN $startGeneIris RETURN path
+MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [is_part_of_211_21:part_of] -> (pheno_21:Trait) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [associated_with_20_211_d:associated_with] -> (pheno_211:Phenotype) - [pub_in_211_2_d:pub_in] -> (publication_2:Publication) WHERE gene_1.iri IN $startGeneIris RETURN path
 MATCH path = (gene_1:Gene) - [rel_1_9:homoeolog|regulates|genetic|physical] - (gene_9:Gene) - [rel_1_20_d:has_mutant|has_variation] -> (sNP_20:SNP) - [leads_to_20_26_d:leads_to] -> (sNPEffect_26:SNPEffect) WHERE gene_1.iri IN $startGeneIris RETURN path
 
