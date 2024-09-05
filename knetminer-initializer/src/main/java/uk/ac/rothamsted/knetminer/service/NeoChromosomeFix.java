@@ -30,14 +30,16 @@ public class NeoChromosomeFix extends NeoInitComponent
 		try ( Session session = driver.session () ) 
 		{
 			log.debug ( "Turning begin/end properties into numbers" );
+			// TODO: There are multiple concepts needing this (Gene, SNP), so let's hope
+			// this heuristic is fine.
 			session.run ( """
-				MATCH (g:Gene)
-				WHERE 
-				  g.BEGIN IS NOT NULL AND g.BEGIN IS::String
-				  OR g.END IS NOT NULL AND g.END IS::String
-				WITH g CALL {
-				  WITH g
-				  SET g.BEGIN = toInteger( g.BEGIN ), g.END = toInteger ( g.END )
+				MATCH (c:Concept)
+				WHERE
+				  c.BEGIN IS NOT NULL AND c.BEGIN IS::String AND toInteger ( c.BEGIN ) IS NOT NULL
+				  OR c.END IS NOT NULL AND c.END IS::String AND toInteger ( c.END ) IS NOT NULL
+				WITH c CALL {
+				  WITH c
+				  SET c.BEGIN = toInteger( c.BEGIN ), c.END = toInteger ( c.END )
 				}
 				IN TRANSACTIONS OF 10000 ROWS
 			""");
