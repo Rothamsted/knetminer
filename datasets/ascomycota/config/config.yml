@@ -12,12 +12,12 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: cereals
-  title: Cereals Premium Test
+  id: ascomycota-premium
+  title: Ascomycota Premium
   description: >-
-        Knetminer Cereals Premium resource includes genomes of Arabidopsis, wheat, rice janponica, rice indica, maize, barley and brachypodium. 
-  keywords: wheat, rice, indica, Arabidopis, Maize, Barley, Brachypodium.
-  version: 57
+        Knetminer Ascomycota Premium resource includes genomes of Saccharomyces cerevisiae, Aspergillus fumigatus, Aspergillus nidulans, Candida albicans, Fusarium culmorum, Fusarium graminearum, Magnaporthe oryzae, Neurospora crassa, Schizosaccharomyces pombe and Zymoseptoria tritici.
+  keywords: Saccharomyces cerevisiae, Aspergillus fumigatus, Aspergillus nidulans, Candida albicans, Fusarium culmorum, Fusarium graminearum, Magnaporthe oryzae, Neurospora crassa, Schizosaccharomyces pombe and Zymoseptoria tritici. 
+  version: 58
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
@@ -30,42 +30,45 @@
   #
   species:
 
-  - taxId: 3702
-    scientificName: Arabidopsis thaliana
-    commonName: Arabidopsis
+  - taxId: 559292
+    scientificName: Saccharomyces cerevisiae
+    commonName: Saccharomyces cerevisiae
 
-  - taxId: 4565
-    scientificName: Triticum aestivum
-    commonName: Wheat
+  - taxId: 330879
+    scientificName: Aspergillus fumigatus
+    commonName: Aspergillus fumigatus
 
-  - taxId: 4577
-    scientificName: Zea mays
-    commonName: Maize
+  - taxId: 227321
+    scientificName: Aspergillus nidulans
+    commonName: Aspergillus nidulans
 
-  - taxId: 39946
-    scientificName: Oryza sativa Indica
-    commonName: Indian Rice
+  - taxId: 237561
+    scientificName: Candida albicans
+    commonName: Candida albicans
 
-  - taxId: 39947
-    scientificName: Oryza sativa Japonica
-    commonName: Rice
+  - taxId: 5516
+    scientificName: Fusarium culmorum
+    commonName: Fusarium culmorum
 
-  - taxId: 112509
-    scientificName: Hordeum vulgare
-    commonName: Barley
+  - taxId: 5518
+    scientificName: Fusarium graminearum
+    commonName: Fusarium graminearum
 
-  - taxId: 15368
-    scientificName: Brachypodium distachyon
-    commonName: Brachypodium
+  - taxId: 242507
+    scientificName: Magnaporthe oryzae
+    commonName: Magnaporthe_oryzae
 
-  - taxId: 4498
-    scientificName: Avena sativa ot3098
-    commonName: Oat
+    taxId: 367110
+    scientificName: Neurospora crassa
+    commonName: Neurospora crassa
 
-  - taxId: 4558
-    scientificName: Sorghum bicolor
-    commonName: Sorghum
-   
+    taxId: 284812
+    scientificName: Schizosaccharomyces pombe
+    commonName: Schizosaccharomyces pombe
+
+    taxId: 336722
+    scientificName: Zymoseptoria tritici
+    commonName: Zymoseptoria tritici
     
 #seedGenesFile: config/seed-genes-poaceae.tsv
 

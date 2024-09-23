@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genome>
-	<chromosome index="1"  length="75071545" number="1">
+	<chromosome index="1" length="30427671" number="1">
 		<band index="1">
 			<start>0</start>
-			<end>75071545</end>
+			<end>30427671</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2"  length="59130575" number="2">
+	<chromosome index="2" length="19698289" number="2">
 		<band index="1">
 			<start>0</start>
-			<end>59130575</end>
+			<end>19698289</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3"  length="59640145" number="3">
+	<chromosome index="3" length="23459830" number="3">
 		<band index="1">
 			<start>0</start>
-			<end>59640145</end>
+			<end>23459830</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4"  length="48594894" number="4">
+	<chromosome index="4" length="18585056" number="4">
 		<band index="1">
 			<start>0</start>
-			<end>48594894</end>
+			<end>18585056</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5"  length="28630136" number="5">
+	<chromosome index="5" length="26975502" number="5">
 		<band index="1">
 			<start>0</start>
-			<end>28630136</end>
+			<end>26975502</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
