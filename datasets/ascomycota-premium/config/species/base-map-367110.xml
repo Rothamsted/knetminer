@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genome>
-	<chromosome index="1"  length="516505932" number="1H">
+	<chromosome index="1"  length="4255303" number="VII">
 		<band index="1">
 			<start>0</start>
-			<end>516505932</end>
+			<end>4255303</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="2"  length="665585731" number="2H">
+	<chromosome index="2"  length="6000761" number="IV">
 		<band index="1">
 			<start>0</start>
-			<end>665585731</end>
+			<end>6000761</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="3"  length="621516506" number="3H">
+	<chromosome index="3"  length="9798893" number="I">
 		<band index="1">
 			<start>0</start>
-			<end>621516506</end>
+			<end>9798893</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="4"  length="610333535" number="4H">
+	<chromosome index="4"  length="6436246" number="V">
 		<band index="1">
 			<start>0</start>
-			<end>610333535</end>
+			<end>6436246</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="5"  length="588218686" number="5H">
+	<chromosome index="5"  length="4218384" number="VI">
 		<band index="1">
 			<start>0</start>
-			<end>588218686</end>
+			<end>4218384</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="6"  length="561794515" number="6H">
+	<chromosome index="6"  length="4478683" number="II">
 		<band index="1">
 			<start>0</start>
-			<end>561794515</end>
+			<end>4478683</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="7"  length="632540561" number="7H">
+	<chromosome index="7"  length="5274802" number="III">
 		<band index="1">
 			<start>0</start>
-			<end>632540561</end>
+			<end>5274802</end>
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>

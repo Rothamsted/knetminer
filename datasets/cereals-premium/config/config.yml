@@ -12,12 +12,12 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: cereals
-  title: Cereals Premium Test
+  id: cereals-premium
+  title: Cereals Premium
   description: >-
-        Knetminer Cereals Premium resource includes genomes of Arabidopsis, wheat, rice janponica, rice indica, maize, barley and brachypodium. 
-  keywords: wheat, rice, indica, Arabidopis, Maize, Barley, Brachypodium.
-  version: 57
+        Knetminer Cereals Premium resource includes genomes of Arabidopsis, wheat, rice janponica, rice indica, maize, barley, brachypodium, sorghum and oat. 
+  keywords: wheat, rice, indica, Arabidopis, Maize, Barley, Brachypodium, sorghum, oat.
+  version: 58
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default

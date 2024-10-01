@@ -46,7 +46,7 @@
     scientificName: Candida albicans
     commonName: Candida albicans
 
-  - taxId: 5516
+  - taxId: 1318462
     scientificName: Fusarium culmorum
     commonName: Fusarium culmorum
 
@@ -58,15 +58,15 @@
     scientificName: Magnaporthe oryzae
     commonName: Magnaporthe_oryzae
 
-    taxId: 367110
+  - taxId: 367110
     scientificName: Neurospora crassa
     commonName: Neurospora crassa
 
-    taxId: 284812
+  - taxId: 284812
     scientificName: Schizosaccharomyces pombe
     commonName: Schizosaccharomyces pombe
 
-    taxId: 336722
+  - taxId: 336722
     scientificName: Zymoseptoria tritici
     commonName: Zymoseptoria tritici
     
