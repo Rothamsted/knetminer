@@ -158,7 +158,9 @@ public class NeoMotifImporterIT
 		neoMotifImporter.saveMotifs ( testMotifs );
 	}
 
-	
+	/**
+	 * The no of saved links must match {@link #testMotifs}.
+	 */
 	@Test
 	public void testMotifLinksSavedSize ()
 	{
@@ -180,6 +182,9 @@ public class NeoMotifImporterIT
 		}
 	}
 
+	/**
+	 * Verifies that links in {@link #testMotifs} are actually saved.
+	 */
 	@Test
 	public void testMotifLinksExist ()
 	{
@@ -221,9 +226,12 @@ public class NeoMotifImporterIT
 		}
 	}
 
-	
+	/**
+	 * Verifies that the sum of per-concept gene counts matches the size of
+	 * {@link #testMotifs}.
+	 */
 	@Test
-	public void testGeneCountsSavedSize ()
+	public void testGeneCountsSavedTotal ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 		
@@ -231,6 +239,7 @@ public class NeoMotifImporterIT
 		{
 			String cyCountsSz = """
 				MATCH (:Concept) - [:hasMotifStats] -> (stat:ConceptMotifStats)
+				WHERE stat.TAXID <> "_ALL_"
 				RETURN SUM(stat.conceptGenesCount) AS counts
 				""";
 			Result result = session.run( cyCountsSz );
@@ -242,8 +251,38 @@ public class NeoMotifImporterIT
 				testMotifs.size()
 			);
 		}
-	}	
+	}
 	
+	/**
+	 * Verifies that there are {@code ConceptMotifStats} nodes having TAXID = '_ALL_'.
+	 * These count all the genes associated to a concepts without considering the specie.
+	 */
+	@Test
+	public void testGeneCountsSavedTotalUsingAllTaxId ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+		
+		try ( Session session = neoDriver.session() ) 
+		{
+			String cyCountsSz = """
+				MATCH (:Concept) - [:hasMotifStats] -> (stat:ConceptMotifStats)
+				WHERE stat.TAXID = "_ALL_"
+				RETURN SUM(stat.conceptGenesCount) AS counts
+				""";
+			Result result = session.run( cyCountsSz );
+			int dbCount = result.next ().get ( 0 ).asInt ();
+			
+			assertEquals ( 
+				"Size of saved gene counts isn't consistent with the links table!", 
+				dbCount,
+				testMotifs.size()
+			);
+		}
+	}		
+	
+	/**
+	 * Matches the per-concept gene counts with data in {@link #testMotifs}.
+	 */
 	@Test
 	public void testGeneCountsExist ()
 	{
@@ -255,6 +294,7 @@ public class NeoMotifImporterIT
 			String cypherQuery =
 	   		"""
 				 MATCH (c:Concept) - [r:hasMotifStats] -> (stat:ConceptMotifStats)
+				 WHERE stat.TAXID <> "_ALL_"
 				 RETURN 
 				   toInteger ( c.ondexId ) AS conceptId,
 				   SUM ( stat.conceptGenesCount ) AS genesCount
@@ -283,7 +323,9 @@ public class NeoMotifImporterIT
 		}
 	}	
 	
-	
+	/**
+	 * Verifies the per-concept specie-independet total gene counts.
+	 */
 	@Test
 	public void testMultiSpecieGeneCounts ()
 	{
@@ -293,6 +335,7 @@ public class NeoMotifImporterIT
 		{
 			String cyCheckStats = """
 				MATCH (concept:Concept) - [:hasMotifStats] -> (stat:ConceptMotifStats)
+				WHERE stat.TAXID <> "_ALL_"
 				WITH concept, COUNT ( stat ) AS nstats
 				WHERE nstats > 1
 				RETURN concept.ondexId AS id
@@ -309,8 +352,11 @@ public class NeoMotifImporterIT
 	}		
 	
 	
+	/**
+	 * Verifies the total per-gene concept counts.
+	 */
 	@Test
-	public void testConceptCountsSavedSize ()
+	public void testConceptCountsSavedTotal ()
 	{
 		var neoDriver = neoDriverResource.getDriver ();
 		
@@ -331,6 +377,9 @@ public class NeoMotifImporterIT
 		}
 	}	
 	
+	/**
+	 * Matches the per-gene concept counts with data in {@link #testMotifs}.
+	 */
 	@Test
 	public void testConceptCountsExist ()
 	{

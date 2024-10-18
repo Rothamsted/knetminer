@@ -248,11 +248,10 @@ public class NeoMotifImporter extends NeoInitComponent
 	}
 	
 	/**
-	 * For each concept, saves the count of genes that are associated to it via the semantic
-	 * motif traverser. This is useful to speed-up data retrieval.
+	 * For each concept and TAX ID, saves the count of genes (having the TAXID) that are associated 
+	 * to the concept via the semantic motif traverser. This is useful to speed-up data retrieval.
 	 *
-	 * This results in new Neo4j graph elements, @see {@link #processConceptGeneCountsBatch(List)}.
-	 * 
+	 * This issues a static query that creates {@code ConceptMotifStats} nodes. 
 	 */
 	private void saveConceptGeneCounts ()
 	{
@@ -275,6 +274,19 @@ public class NeoMotifImporter extends NeoInitComponent
 				IN TRANSACTIONS OF 10000 ROWS						
 				""";
 				session.run ( updateCy );
+				
+				log.info ( "Saving per-concept all-species gene counts to Neo4j" );
+				updateCy =
+				"""
+				MATCH (gene:Gene) - [:hasMotifLink] -> (concept:Concept)
+				WITH COUNT ( DISTINCT gene ) AS ngenes, concept
+				CALL {
+				  WITH ngenes, concept
+				  CREATE (concept) - [:hasMotifStats] -> (:ConceptMotifStats{ TAXID: "_ALL_", conceptGenesCount: ngenes })
+				}
+				IN TRANSACTIONS OF 10000 ROWS						
+				""";
+				session.run ( updateCy );
 			}
 			
 			log.info ( "saveConceptGeneCounts(), done" );
@@ -286,6 +298,10 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 	
+	/**
+	 * Deletes previous per-concept stats. This is called by {@link #saveConceptGeneCounts()},
+	 * before (re)doing its job.
+	 */
 	private void deleteOldConceptGeneCounts ()
 	{
 		log.info ( "Deleting old per-concept gene counts" );
@@ -307,6 +323,13 @@ public class NeoMotifImporter extends NeoInitComponent
 	}
 	
 	
+	/**
+	 * For each gene, saves the count of concepts that are associated 
+	 * to the gene via the semantic motif traverser. This is useful to speed-up 
+	 * data retrieval.
+	 *
+	 * This issues a static query that creates {@code GeneMotifStats} nodes. 
+	 */
 	private void saveGeneConceptCounts ()
 	{
 		try 
@@ -339,6 +362,10 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 	
+	/**
+	 * Deletes previous per-gene stats. This is called by {@link #saveGeneConceptCounts()},
+	 * before (re)doing its job.
+	 */
 	private void deleteOldGeneConceptCounts ()
 	{
 		log.info ( "Deleting old per-gene concept counts" );
@@ -359,7 +386,14 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}		
 	
-	
+	/**
+	 * Creates Neo4j indexes over the nodes and properties that are created by 
+	 * {@link #saveConceptGeneCounts()} and {@link #saveGeneConceptCounts()}. 
+	 * 
+	 * These indexes are useful to speed-up the retrieval of the said data.
+	 * 
+	 * This method is invoked by {@link #saveMotifs(Map)}
+	 */
 	private void createStatsIndexes ()
 	{
 		log.info ( "Creating Neo4j Motif Stats indexes" );
