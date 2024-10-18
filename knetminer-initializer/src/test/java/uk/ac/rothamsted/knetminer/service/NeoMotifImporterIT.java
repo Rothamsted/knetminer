@@ -2,12 +2,10 @@ package uk.ac.rothamsted.knetminer.service;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,6 +17,9 @@ import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
+import net.sourceforge.ondex.core.ONDEXConcept;
+import net.sourceforge.ondex.core.ONDEXGraph;
+import net.sourceforge.ondex.core.util.ONDEXGraphUtils;
 import uk.ac.ebi.utils.streams.StreamUtils;
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
@@ -48,7 +49,6 @@ public class NeoMotifImporterIT
 	 * This is the random subset of motifs we actually save and test.
 	 */
 	private static Map<Pair<Integer, Integer>, Integer> testMotifs; 
-	private static Map<Integer, Set<Integer>> testConcept2Genes;
 	
 	@ClassRule
 	public static NeoDriverTestResource neoDriverResource = new NeoDriverTestResource (); 
@@ -87,30 +87,75 @@ public class NeoMotifImporterIT
 		 * Note that here we're not using NeoMotifImporter.setSampleSize(), because we need
 		 * to reuse the sample to verify the results.
 		 */	
-		testMotifs = MOTIFS_SAMPLE_SIZE < smData.size () 
+		
+		var isSampling = MOTIFS_SAMPLE_SIZE < smData.size ();
+		
+		testMotifs = isSampling 
 			? StreamUtils.sampleStream ( smData.entrySet ().stream (), MOTIFS_SAMPLE_SIZE, smData.size () )
 				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )	
 			: smData;
 		
 		assertTrue ( "Semantic motif subset is empty!", testMotifs.size () > 0 );
 		
+		if ( isSampling )
+		{
+			// We need to add a case with two TAXIDs pointing to the same concept, to 
+			// perform one of the tests
+			slog.info ( "Adding multi-specie links to the sample test set of links" );
+			
+			ONDEXGraph graph = knetInitializer.getGraph ();
+			
+			// Like nested loops, but parallel
+			boolean hasGoodTestCase = smData.keySet ()
+			.parallelStream ()
+			.anyMatch ( lnk -> {
+				int geneId = lnk.getLeft ();
+				int conceptId = lnk.getRight ();
+				
+				ONDEXConcept gene = graph.getConcept ( geneId );
+				String taxId = ONDEXGraphUtils.getAttribute ( graph, gene, "TAXID" )
+						.getValue ()
+						.toString ();
+				
+				var otherLnk = smData.keySet ()
+				.parallelStream ()
+				.filter ( lnk1 -> conceptId == lnk1.getRight () )
+				.filter ( lnk1 -> {
+					int geneId1 = lnk1.getLeft ();
+					ONDEXConcept gene1 =  graph.getConcept ( geneId1 );
+					String taxId1 = ONDEXGraphUtils.getAttribute ( graph, gene1, "TAXID" )
+							.getValue ()
+							.toString ();
+					return !taxId.equals ( taxId1 );
+				})
+				.findAny ()
+				.orElse ( null );
+				
+				if ( otherLnk == null ) return false;
+				
+				testMotifs.put ( lnk, smData.get ( lnk ) );
+				testMotifs.put ( otherLnk, smData.get ( otherLnk ) );
+				return true;
+			});
+			
+			
+			assertTrue ( 
+				"Can't motif links to test multiple species associated to the same concept!",
+				hasGoodTestCase
+			);
+		}
 		
+			
 		// Same for concept -> genes
 		// 
 		var concept2Genes = knetInitializer.getConcepts2Genes ();
 		assertTrue ( "No semantic motif test data!", concept2Genes.size () > 0 );
-			
-		testConcept2Genes = MOTIFS_SAMPLE_SIZE < concept2Genes.size () 
-			? StreamUtils.sampleStream ( concept2Genes.entrySet ().stream (), MOTIFS_SAMPLE_SIZE, concept2Genes.size () )
-				.collect ( Collectors.toMap ( Entry::getKey, Entry::getValue ) )	
-			: concept2Genes;
-
 		
 		// Let's do it
 		
 		var neoMotifImporter = new NeoMotifImporter ();
 		neoMotifImporter.setDatabase ( neoDriverResource.getDriver () );
-		neoMotifImporter.saveMotifs ( testMotifs, testConcept2Genes );
+		neoMotifImporter.saveMotifs ( testMotifs );
 	}
 
 	
@@ -185,15 +230,16 @@ public class NeoMotifImporterIT
 		try ( Session session = neoDriver.session() ) 
 		{
 			String cyCountsSz = """
-				MATCH (c:Concept) - [r:hasMotifStats] -> (stat:SemanticMotifStats)
-				RETURN COUNT(r) AS countsSize
+				MATCH (:Concept) - [:hasMotifStats] -> (stat:ConceptMotifStats)
+				RETURN SUM(stat.conceptGenesCount) AS counts
 				""";
 			Result result = session.run( cyCountsSz );
-			int neoCount = result.next ().get ( 0 ).asInt ();
+			int dbCount = result.next ().get ( 0 ).asInt ();
 			
 			assertEquals ( 
-				"Size of saved gene counts doesn't match the original concept2Genes size!", 
-				testConcept2Genes.size(), neoCount 
+				"Size of saved gene counts isn't consistent with the links table!", 
+				dbCount,
+				testMotifs.size()
 			);
 		}
 	}	
@@ -208,8 +254,10 @@ public class NeoMotifImporterIT
 			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
 			String cypherQuery =
 	   		"""
-				 MATCH (c:Concept) - [r:hasMotifStats] -> (stat:SemanticMotifStats)
-				 RETURN toInteger ( c.ondexId ) AS conceptId, stat.conceptGenesCount AS genesCount
+				 MATCH (c:Concept) - [r:hasMotifStats] -> (stat:ConceptMotifStats)
+				 RETURN 
+				   toInteger ( c.ondexId ) AS conceptId,
+				   SUM ( stat.conceptGenesCount ) AS genesCount
 				""";
 			Result result = session.run( cypherQuery );
 									
@@ -220,14 +268,103 @@ public class NeoMotifImporterIT
 				
 				log.trace ( "Read entry: {} -> #{}", conceptId, genesCount );
 				
-				var expectedGenes = testConcept2Genes.get ( conceptId );
-				assertNotNull ( "Concept {} in read count tuple doesn't match!", expectedGenes );
-				
+				var expectedGenes = testMotifs.keySet ()
+					.parallelStream ()
+					.filter ( e -> e.getValue () == conceptId )
+					.map ( e -> e.getKey () ) // gene ID
+					.distinct ()
+					.count ();
+								
 				assertEquals ( 
 					format ( "Read genes count for concept %d doesn't match!", conceptId ),
-					expectedGenes.size(), genesCount
+					expectedGenes, genesCount
 				);
 			});
 		}
 	}	
+	
+	
+	@Test
+	public void testMultiSpecieGeneCounts ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+		
+		try ( Session session = neoDriver.session() ) 
+		{
+			String cyCheckStats = """
+				MATCH (concept:Concept) - [:hasMotifStats] -> (stat:ConceptMotifStats)
+				WITH concept, COUNT ( stat ) AS nstats
+				WHERE nstats > 1
+				RETURN concept.ondexId AS id
+				LIMIT 1
+				""";
+			Result result = session.run( cyCheckStats );
+			var hasMultiCountsConcepts = result.hasNext ();
+			
+			assertTrue ( 
+				"Saved per-concept gene counts don't have any multi-specie records!", 
+				hasMultiCountsConcepts
+			);
+		}
+	}		
+	
+	
+	@Test
+	public void testConceptCountsSavedSize ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+		
+		try ( Session session = neoDriver.session() ) 
+		{
+			String cyCountsSz = """
+				MATCH (:Gene) - [:hasMotifStats] -> (stat:GeneMotifStats)
+				RETURN SUM(stat.geneConceptsCount) AS counts
+				""";
+			Result result = session.run( cyCountsSz );
+			int dbCount = result.next ().get ( 0 ).asInt ();
+			
+			assertEquals ( 
+				"Size of saved concept counts isn't consistent with the links table!", 
+				dbCount,
+				testMotifs.size()
+			);
+		}
+	}	
+	
+	@Test
+	public void testConceptCountsExist ()
+	{
+		var neoDriver = neoDriverResource.getDriver ();
+
+		try ( Session session = neoDriver.session() )
+		{			
+			// Unfortunately, we're still saving all Ondex properties as strings, so toString() is needed
+			String cypherQuery =
+	   		"""
+				 MATCH (g:Gene) - [r:hasMotifStats] -> (stat:GeneMotifStats)
+				 RETURN toInteger ( g.ondexId ) AS geneId, stat.geneConceptsCount AS conceptsCount
+				""";
+			Result result = session.run( cypherQuery );
+									
+			result.forEachRemaining ( cyRel ->
+			{				
+				var geneId = cyRel.get ( "geneId" ).asInt ();
+				var conceptsCount = cyRel.get ( "conceptsCount" ).asInt ();
+				
+				log.trace ( "Read entry: {} -> #{}", geneId, conceptsCount );
+				
+				var expectedConcepts = testMotifs.keySet ()
+					.parallelStream ()
+					.filter ( e -> e.getKey () == geneId )
+					.map ( e -> e.getValue () ) // concept ID
+					.distinct ()
+					.count ();
+								
+				assertEquals ( 
+					format ( "Read concepts count for gene %d doesn't match!", geneId ),
+					expectedConcepts, conceptsCount
+				);
+			});
+		}
+	}		
 }

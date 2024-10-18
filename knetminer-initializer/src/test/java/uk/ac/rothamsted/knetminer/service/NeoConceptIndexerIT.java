@@ -13,6 +13,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+import org.neo4j.driver.Value;
 
 import uk.ac.rothamsted.knetminer.service.test.NeoDriverTestResource;
 
@@ -119,15 +120,15 @@ public class NeoConceptIndexerIT
 			Set<String> properties = new HashSet<> ( result
 			.next ()
 			.get ( "properties" )
-			.asList (Object::toString) );
+			.asList ( v -> v.asString () ) );
 			
 			log.debug ( "Returned properties list: {}", properties );
 			
-			var exptPropertiesList = Set.of ( exptProperties );
+			var exptPropertiesSet = Set.of ( exptProperties );
 			
 			assertEquals ( 
 				"Indexed properties don't match expected ones!",
-				exptPropertiesList, properties
+				exptPropertiesSet, properties
 			);
 		}
 	}

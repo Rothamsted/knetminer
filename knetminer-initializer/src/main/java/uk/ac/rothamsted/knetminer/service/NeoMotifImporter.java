@@ -7,10 +7,10 @@ import static reactor.core.scheduler.Schedulers.newBoundedElastic;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.neo4j.driver.Session;
@@ -62,8 +62,7 @@ public class NeoMotifImporter extends NeoInitComponent
 	 * and {@link KnetMinerInitializer#getGenes2Concepts()}.
 	 */
 	public void saveMotifs (
-		Map<Pair<Integer, Integer>, Integer> genes2PathLengths, 
-		Map<Integer, Set<Integer>> concepts2Genes
+		Map<Pair<Integer, Integer>, Integer> genes2PathLengths
 	)
 	{
 		try 
@@ -72,7 +71,9 @@ public class NeoMotifImporter extends NeoInitComponent
 			createIdIndex ();
 			
 			saveMotifLinks ( genes2PathLengths );
-			saveConceptGeneCounts ( concepts2Genes );
+			saveConceptGeneCounts (); // These are usually more, let's do them first
+			saveGeneConceptCounts ();
+			createStatsIndexes ();
 		}
 		catch (Exception ex) {
 			ExceptionUtils.throwEx ( RuntimeException.class, ex,
@@ -82,11 +83,11 @@ public class NeoMotifImporter extends NeoInitComponent
 	}
 
 	/**
-	 *  A wrapper of {@link #saveMotifs(Map, Map)}.
+	 *  A wrapper of {@link #saveMotifs(Map)}.
 	 */
 	public void saveMotifs ( KnetMinerInitializer knetMinerInitializer )
 	{
-		saveMotifs ( knetMinerInitializer.getGenes2PathLengths (), knetMinerInitializer.getConcepts2Genes () );
+		saveMotifs ( knetMinerInitializer.getGenes2PathLengths () );
 	}
 	
 	/**
@@ -253,72 +254,28 @@ public class NeoMotifImporter extends NeoInitComponent
 	 * This results in new Neo4j graph elements, @see {@link #processConceptGeneCountsBatch(List)}.
 	 * 
 	 */
-	private void saveConceptGeneCounts ( Map<Integer, Set<Integer>> concepts2Genes )
+	private void saveConceptGeneCounts ()
 	{
 		try 
 		{
 			deleteOldConceptGeneCounts ();
 			
-			log.info ( "Saving {} per-concept gene counts to Neo4j", concepts2Genes.size () );
-
-			PercentProgressLogger submissionLogger = new PercentProgressLogger (
-				"{}% counts sent to Neo4j",
-				concepts2Genes.size()
-			);
-			// WARNING: if you switch to a parallel publisher, you need to fix this
-			submissionLogger.setIsThreadSafe ( true );
-
-			PercentProgressLogger completionLogger = new PercentProgressLogger (
-				"{}% counts stored",
-				concepts2Genes.size()
-			);
-			
-			// Prepare a stream of records
-			//
-			Stream<Entry<Integer, Set<Integer>>> concepts2GenesBaseStream = concepts2Genes.entrySet ()
-			.stream ()
-			// Safest here, saveMotifLinks()
-			.onClose ( () -> log.info ( "Waiting for Neo4j updates to complete" ) );			
-			
-			// Sampling
-			//
-			if ( sampleSize < concepts2Genes.size () )
+			log.info ( "Saving per-concept gene counts to Neo4j" );
+									
+			try ( var session = driver.session () )
 			{
-				log.warn ( "Due to setSampleSize(), we're reducing the saved per-gene concept counts to about {}", sampleSize );
-				concepts2GenesBaseStream = StreamUtils.sampleStream ( 
-					concepts2GenesBaseStream, sampleSize, concepts2Genes.size () 
-				);
+				String updateCy =
+				"""
+				MATCH (gene:Gene) - [:hasMotifLink] -> (concept:Concept)
+				WITH gene.TAXID AS TAXID, COUNT ( DISTINCT gene ) AS ngenes, concept
+				CALL {
+				  WITH TAXID, ngenes, concept
+				  CREATE (concept) - [:hasMotifStats] -> (:ConceptMotifStats{ TAXID: TAXID, conceptGenesCount: ngenes })
+				}
+				IN TRANSACTIONS OF 10000 ROWS						
+				""";
+				session.run ( updateCy );
 			}
-			
-			
-			// Map to a stream of key/value maps, which is the form suitable for Neo4j
-			//
-			Stream<Map<String, Object>> concepts2GenesStream = concepts2GenesBaseStream
-			.map ( concept2GenesEntry -> 
-			{
-				int conceptId = concept2GenesEntry.getKey ();
-				Set<Integer> geneIds = concept2GenesEntry.getValue ();
-				int genesCount = geneIds.size ();
-				
-				submissionLogger.updateWithIncrement();
-				
-				return Map.of (
-					// Currently, all the Ondex properties are stored as strings
-					"conceptId", String.valueOf ( conceptId ),
-					"genesCount", genesCount
-				);
-			});
-			
-			// Then use Reactor to batch the source records
-			//
-			Flux.fromStream ( concepts2GenesStream )
-			.buffer ( BATCH_SIZE )
-			.parallel ()
-			.runOn ( FLUX_SCHEDULER )
-			.doOnNext ( this::processConceptGeneCountsBatch )
-			.doOnNext ( b -> completionLogger.updateWithIncrement ( b.size () ) )
-			.sequential ()
-			.blockLast ();
 			
 			log.info ( "saveConceptGeneCounts(), done" );
 		} 
@@ -329,36 +286,6 @@ public class NeoMotifImporter extends NeoInitComponent
 		}
 	}
 	
-	/**
-	 * Do the job of sending a batch of gene counts to Neo4j. This results in 
-	 * structures like: 
-	 * 
-	 * <code>(Concept) - [hasMotifStats] -> (SemanticMotifStats{ conceptGenesCount: $ct})</code>
-	 *  
-	 */
-	private int processConceptGeneCountsBatch ( List<Map<String, Object>> countRowsBatch )
-	{
-		String cyRelations = """
-	    UNWIND $countRows AS countRow\s
-	    MATCH ( concept:Concept { ondexId: countRow.conceptId } )
-	    CREATE (concept) - [:hasMotifStats] 
-				-> (smStats:SemanticMotifStats{ conceptGenesCount: countRow.genesCount })				
-	  """;
-		
-		var neoMgr = new Neo4jDataManager ( driver );
-		// neoMgr.setAttemptMsgLogLevel ( Level.INFO );
-		// neoMgr.setMaxRetries ( 3 );
-		
-		// Wraps it in a transaction and also re-attempts it in case of
-		// node lock issues.
-		//
-		neoMgr.runCypher ( cyRelations, "countRows", countRowsBatch );
-		
-		log.trace ( "{} per-gene concept counts stored", countRowsBatch.size () );
-		return countRowsBatch.size ();
-	}	
-	
-	
 	private void deleteOldConceptGeneCounts ()
 	{
 		log.info ( "Deleting old per-concept gene counts" );
@@ -368,7 +295,7 @@ public class NeoMotifImporter extends NeoInitComponent
 			// The transactions trick comes from https://neo4j.com/developer/kb/large-delete-transaction-best-practices-in-neo4j/
 			String cyDelete =
 				"""
-        MATCH ( concept:Concept ) - [link:hasMotifStats] -> ( stats:SemanticMotifStats )
+        MATCH ( concept:Concept ) - [link:hasMotifStats] -> ( stats:ConceptMotifStats )
         CALL {
           WITH link, stats
           DELETE link, stats
@@ -377,7 +304,91 @@ public class NeoMotifImporter extends NeoInitComponent
         """;
 			session.run ( cyDelete );
 		}
+	}
+	
+	
+	private void saveGeneConceptCounts ()
+	{
+		try 
+		{
+			deleteOldGeneConceptCounts ();
+			
+			log.info ( "Saving per-gene concept counts to Neo4j" );
+									
+			try ( var session = driver.session () )
+			{
+				String updateCy =
+				"""
+				MATCH (gene:Gene) - [:hasMotifLink] -> (concept:Concept)
+				WITH COUNT ( DISTINCT concept ) AS nconcepts, gene
+				CALL {
+				    WITH nconcepts, gene
+				    CREATE (gene) - [:hasMotifStats] -> (:GeneMotifStats{ geneConceptsCount: nconcepts })
+				}
+				IN TRANSACTIONS OF 10000 ROWS
+				""";
+				session.run ( updateCy );
+			}
+			
+			log.info ( "saveGeneConceptCounts(), done" );
+		} 
+		catch (Exception ex) {
+			ExceptionUtils.throwEx(RuntimeException.class, ex,
+				"Error while saving per-gene concept counts to Neo4j: $cause"
+			);
+		}
+	}
+	
+	private void deleteOldGeneConceptCounts ()
+	{
+		log.info ( "Deleting old per-gene concept counts" );
+		
+		try ( Session session = driver.session() ) 
+		{
+			// The transactions trick comes from https://neo4j.com/developer/kb/large-delete-transaction-best-practices-in-neo4j/
+			String cyDelete =
+				"""
+        MATCH ( gene:Gene ) - [link:hasMotifStats] -> ( stats:GeneMotifStats )
+        CALL {
+          WITH link, stats
+          DELETE link, stats
+        }
+        IN TRANSACTIONS OF 10000 ROWS
+        """;
+			session.run ( cyDelete );
+		}
+	}		
+	
+	
+	private void createStatsIndexes ()
+	{
+		log.info ( "Creating Neo4j Motif Stats indexes" );
+
+		try ( Session session = driver.session () ) 
+		{
+			Stream.of ( 
+				Triple.of ( "conceptMotifStats_genesCount", "ConceptMotifStats", "conceptGenesCount" ),
+				Triple.of ( "geneMotifStats_conceptsCount", "GeneMotifStats", "geneConceptsCount" ),
+				Triple.of ( "conceptMotifStats_TaxId", "ConceptMotifStats", "TAXID" )
+			)
+			.map ( params -> {
+				String idxName = params.getLeft ();
+				String nodeType = params.getMiddle ();
+				String property = params.getRight ();
+				
+				return String.format (
+					"CREATE INDEX %s IF NOT EXISTS FOR (n:%s) ON (n.%s)",
+					idxName, nodeType, property
+				);
+			})
+			.forEach ( cyIdx -> 
+				session.executeWriteWithoutResult ( tx -> tx.run ( cyIdx ) )
+			);
+		}	
+		
+		log.info ( "Motif Stats indexes created" );		
 	}	
+	
 	
 	/**
 	 * This is useful for tests, since usually there are many sample data to save, which slows everything down.
