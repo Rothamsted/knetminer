@@ -10,8 +10,8 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: brassica
-  title: Brassica Test Knetminer Instance
+  id: brassicaceae-premium
+  title: Brassicaceae-premium Test Knetminer Instance
   description: Knetminer instance about brassica
   keywords: broccoli, mustard, cabbage, rapeseed, canola, turnip
 
@@ -25,6 +25,10 @@
   
   species:
      
+  - taxId: 3702
+    scientificName: Arabidopsis thaliana
+    commonName: Arabidopsis
+  
   - taxId: 3708
     scientificName: Brassica napus
     commonName: Rapeseed

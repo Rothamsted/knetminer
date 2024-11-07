@@ -27,6 +27,10 @@
   
   species:
      
+  - taxId: 3702
+    scientificName: Arabidopsis thaliana
+    commonName: Arabidopsis
+
   - taxId: 4113
     scientificName: Solanum tuberosum
     commonName: Potato
