@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="62686529" number="8">
+		<band index="1">
+			<start>0</start>
+			<end>62686529</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="80884392" number="1">
+		<band index="1">
+			<start>0</start>
+			<end>80884392</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="77742459" number="2">
+		<band index="1">
+			<start>0</start>
+			<end>77742459</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="59416394" number="9">
+		<band index="1">
+			<start>0</start>
+			<end>59416394</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="74386277" number="3">
+		<band index="1">
+			<start>0</start>
+			<end>74386277</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="68658214" number="4">
+		<band index="1">
+			<start>0</start>
+			<end>68658214</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="1391575" number="super_16">
+		<band index="1">
+			<start>0</start>
+			<end>1391575</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="71854669" number="5">
+		<band index="1">
+			<start>0</start>
+			<end>71854669</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="1172180" number="super_18">
+		<band index="1">
+			<start>0</start>
+			<end>1172180</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="61277060" number="6">
+		<band index="1">
+			<start>0</start>
+			<end>61277060</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="65505356" number="7">
+		<band index="1">
+			<start>0</start>
+			<end>65505356</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="61233695" number="10">
+		<band index="1">
+			<start>0</start>
+			<end>61233695</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
