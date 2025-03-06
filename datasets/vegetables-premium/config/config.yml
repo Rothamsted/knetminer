@@ -12,13 +12,13 @@
 # Details about the datset and supported species
 # 
 "dataset @merge":
-  id: solanaceae
-  title: Solanaceae Test Knetminer Instance
-  description: Knetminer instance for Solanaceae species
+  id: vegetables-premium
+  title: Vegetables Premium Test Knetminer Instance
+  description: Knetminer instance for Vegetables species
   keywords: Tomato, Potato, Capsicum, Sweet Pepper, Asparagus, Beet, Cucumber, Carrot, Lettuce, Coyote Tobacco
 
-  version: 58
-  creationDate: 20240708
+  version: 60
+  creationDate: 20250305
   # These are in the defaults
   #organization: in the defaults 
   #provider:
