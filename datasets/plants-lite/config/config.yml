@@ -16,9 +16,9 @@
   title: Plants Lite
   description: >-
         Knetminer Plants Lite resource includes genomes of Arabidopsis, wheat, rice janponica, camelina and rapeseed. 
-  keywords: wheat, rice, Arabidopis, camelina, rapeseed.
-  version: 58
-  creationDate: 20240905
+  keywords: wheat, rice, arabidopsis, camelina, rapeseed.
+  version: 60
+  creationDate: 20250307
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default

@@ -15,8 +15,8 @@
   description: Knetminer instance about brassica
   keywords: broccoli, mustard, cabbage, rapeseed, canola, turnip
 
-  version: 58
-  creationDate: 20240701
+  version: 60
+  creationDate: 20250313
   # These are in the defaults
   #organization: in the defaults 
   #provider:
