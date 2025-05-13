@@ -67,5 +67,9 @@
     scientificName: Nicotiana attenuata
     commonName: Coyote Tobacco
 
+  - taxId: 3656
+    scientificName: Cucumis melo
+    commonName: Melon
+
 # No spaces or lower case letters allowed in seed genes tsv
 # seedGenesFile: config/seed-genes-solanaceae.tsv
