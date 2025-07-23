@@ -17,7 +17,7 @@
   description: >-
         Knetminer Test Arabidopsis resource includes genomes of Arabidopsis. 
   keywords: Arabidopis.
-  version: 60
+  version: 61
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
