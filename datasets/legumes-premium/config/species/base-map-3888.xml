@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="372165146" number="1LG6">
+		<band index="1">
+			<start>0</start>
+			<end>372165146</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="427597918" number="2LG1">
+		<band index="1">
+			<start>0</start>
+			<end>427597918</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="437560801" number="3LG5">
+		<band index="1">
+			<start>0</start>
+			<end>437560801</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="446350677" number="4LG4">
+		<band index="1">
+			<start>0</start>
+			<end>446350677</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="579269071" number="5LG3">
+		<band index="1">
+			<start>0</start>
+			<end>579269071</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="480417049" number="6LG2">
+		<band index="1">
+			<start>0</start>
+			<end>480417049</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="491380962" number="7LG7">
+		<band index="1">
+			<start>0</start>
+			<end>491380962</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="1374221" number="CAADHX020023151.1">
+		<band index="1">
+			<start>0</start>
+			<end>1374221</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="2100033" number="CAADHX020023531.1">
+		<band index="1">
+			<start>0</start>
+			<end>2100033</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="1291591" number="CAADHX020023589.1">
+		<band index="1">
+			<start>0</start>
+			<end>1291591</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="1077098" number="CAADHX020024412.1">
+		<band index="1">
+			<start>0</start>
+			<end>1077098</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="2423209" number="CAADHX020024493.1">
+		<band index="1">
+			<start>0</start>
+			<end>2423209</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="2339127" number="CAADHX020024495.1">
+		<band index="1">
+			<start>0</start>
+			<end>2339127</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+

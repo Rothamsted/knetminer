@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="112420854" number="CM064396.1">
+		<band index="1">
+			<start>0</start>
+			<end>112420854</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="103302290" number="CM064397.1">
+		<band index="1">
+			<start>0</start>
+			<end>103302290</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="143109472" number="CM064398.1">
+		<band index="1">
+			<start>0</start>
+			<end>143109472</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="128801742" number="CM064399.1">
+		<band index="1">
+			<start>0</start>
+			<end>128801742</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="116542366" number="CM064400.1">
+		<band index="1">
+			<start>0</start>
+			<end>116542366</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="118975115" number="CM064401.1">
+		<band index="1">
+			<start>0</start>
+			<end>118975115</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="81752458" number="CM064402.1">
+		<band index="1">
+			<start>0</start>
+			<end>81752458</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="51529986" number="CM064403.1">
+		<band index="1">
+			<start>0</start>
+			<end>51529986</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="120499698" number="CM064404.1">
+		<band index="1">
+			<start>0</start>
+			<end>120499698</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="117076737" number="CM064405.1">
+		<band index="1">
+			<start>0</start>
+			<end>117076737</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="149287806" number="CM064406.1">
+		<band index="1">
+			<start>0</start>
+			<end>149287806</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="120530088" number="CM064407.1">
+		<band index="1">
+			<start>0</start>
+			<end>120530088</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="146301462" number="CM064408.1">
+		<band index="1">
+			<start>0</start>
+			<end>146301462</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="14"  length="143237272" number="CM064409.1">
+		<band index="1">
+			<start>0</start>
+			<end>143237272</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="15"  length="160028458" number="CM064410.1">
+		<band index="1">
+			<start>0</start>
+			<end>160028458</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="16"  length="151242074" number="CM064411.1">
+		<band index="1">
+			<start>0</start>
+			<end>151242074</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="17"  length="134191082" number="CM064412.1">
+		<band index="1">
+			<start>0</start>
+			<end>134191082</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="18"  length="135027066" number="CM064413.1">
+		<band index="1">
+			<start>0</start>
+			<end>135027066</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="19"  length="159361216" number="CM064414.1">
+		<band index="1">
+			<start>0</start>
+			<end>159361216</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="20"  length="145034356" number="CM064415.1">
+		<band index="1">
+			<start>0</start>
+			<end>145034356</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="21"  length="1982220" number="PIVG02000079.1">
+		<band index="1">
+			<start>0</start>
+			<end>1982220</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="22"  length="1569740" number="PIVG02000080.1">
+		<band index="1">
+			<start>0</start>
+			<end>1569740</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="23"  length="1519527" number="PIVG02000081.1">
+		<band index="1">
+			<start>0</start>
+			<end>1519527</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
