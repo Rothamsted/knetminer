@@ -15,9 +15,9 @@
   id: cereals-premium
   title: Cereals Premium
   description: >-
-        Knetminer Cereals Premium resource includes genomes of Arabidopsis, wheat, rice janponica, rice indica, maize, barley, brachypodium, sorghum, oat and durum wheat. 
-  keywords: wheat, rice, indica, Arabidopis, Maize, Barley, Brachypodium, sorghum, oat, durum wheat.
-  version: 60
+        Knetminer Cereals Premium resource includes genomes of Arabidopsis, wheat, rice janponica, rice indica, maize, barley, brachypodium, sorghum and durum wheat. 
+  keywords: wheat, rice, indica, Arabidopis, Maize, Barley, Brachypodium, sorghum, durum wheat.
+  version: 62
      
   # organization: is in the defaults
   # sampleQueries: config/sample-queries.xml # this is a default
@@ -58,9 +58,9 @@
     scientificName: Brachypodium distachyon
     commonName: Brachypodium
 
-  - taxId: 4498
-    scientificName: Avena sativa Sang
-    commonName: Oat
+#  - taxId: 4498
+#    scientificName: Avena sativa ot3098
+#    commonName: Oat
 
   - taxId: 4558
     scientificName: Sorghum bicolor
