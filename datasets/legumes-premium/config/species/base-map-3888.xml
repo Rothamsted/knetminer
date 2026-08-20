@@ -49,47 +49,4 @@
 			<color>0xFFFFFF</color>
 		</band>
 	</chromosome>
-	<chromosome index="8"  length="1374221" number="CAADHX020023151.1">
-		<band index="1">
-			<start>0</start>
-			<end>1374221</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="9"  length="2100033" number="CAADHX020023531.1">
-		<band index="1">
-			<start>0</start>
-			<end>2100033</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="10"  length="1291591" number="CAADHX020023589.1">
-		<band index="1">
-			<start>0</start>
-			<end>1291591</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="11"  length="1077098" number="CAADHX020024412.1">
-		<band index="1">
-			<start>0</start>
-			<end>1077098</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="12"  length="2423209" number="CAADHX020024493.1">
-		<band index="1">
-			<start>0</start>
-			<end>2423209</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
-	<chromosome index="13"  length="2339127" number="CAADHX020024495.1">
-		<band index="1">
-			<start>0</start>
-			<end>2339127</end>
-			<color>0xFFFFFF</color>
-		</band>
-	</chromosome>
 </genome>
-
