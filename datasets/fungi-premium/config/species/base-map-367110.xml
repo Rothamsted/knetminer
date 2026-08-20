@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="9798893" number="1">
+		<band index="1">
+			<start>0</start>
+			<end>9798893</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="4478683" number="2">
+		<band index="1">
+			<start>0</start>
+			<end>4478683</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="5274802" number="3">
+		<band index="1">
+			<start>0</start>
+			<end>5274802</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="6000761" number="4">
+		<band index="1">
+			<start>0</start>
+			<end>6000761</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="6436246" number="5">
+		<band index="1">
+			<start>0</start>
+			<end>6436246</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="4218384" number="6">
+		<band index="1">
+			<start>0</start>
+			<end>4218384</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="4255303" number="7">
+		<band index="1">
+			<start>0</start>
+			<end>4255303</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="64840" number="Mt">
+		<band index="1">
+			<start>0</start>
+			<end>64840</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>

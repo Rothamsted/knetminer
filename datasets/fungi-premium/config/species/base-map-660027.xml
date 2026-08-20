@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="1419598" number="JH717908">
+		<band index="1">
+			<start>0</start>
+			<end>1419598</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="1474872" number="JH717907">
+		<band index="1">
+			<start>0</start>
+			<end>1474872</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="1894400" number="JH717906">
+		<band index="1">
+			<start>0</start>
+			<end>1894400</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="2007412" number="JH717905">
+		<band index="1">
+			<start>0</start>
+			<end>2007412</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="2171816" number="JH717904">
+		<band index="1">
+			<start>0</start>
+			<end>2171816</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="2224947" number="JH717903">
+		<band index="1">
+			<start>0</start>
+			<end>2224947</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="2243792" number="JH717902">
+		<band index="1">
+			<start>0</start>
+			<end>2243792</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="2268157" number="JH717901">
+		<band index="1">
+			<start>0</start>
+			<end>2268157</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="3844136" number="JH717900">
+		<band index="1">
+			<start>0</start>
+			<end>3844136</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="4696877" number="JH717899">
+		<band index="1">
+			<start>0</start>
+			<end>4696877</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="5138511" number="JH717898">
+		<band index="1">
+			<start>0</start>
+			<end>5138511</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="5553666" number="JH717897">
+		<band index="1">
+			<start>0</start>
+			<end>5553666</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="6198950" number="JH717896">
+		<band index="1">
+			<start>0</start>
+			<end>6198950</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="1129899" number="DS572704">
+		<band index="1">
+			<start>0</start>
+			<end>1129899</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="1020271" number="DS572707">
+		<band index="1">
+			<start>0</start>
+			<end>1020271</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="1747785" number="DS572700">
+		<band index="1">
+			<start>0</start>
+			<end>1747785</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="1273651" number="DS572703">
+		<band index="1">
+			<start>0</start>
+			<end>1273651</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="2001273" number="DS572698">
+		<band index="1">
+			<start>0</start>
+			<end>2001273</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="2529034" number="DS572696">
+		<band index="1">
+			<start>0</start>
+			<end>2529034</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="1801442" number="DS572699">
+		<band index="1">
+			<start>0</start>
+			<end>1801442</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="1018472" number="DS572706">
+		<band index="1">
+			<start>0</start>
+			<end>1018472</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="2667998" number="DS572695">
+		<band index="1">
+			<start>0</start>
+			<end>2667998</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="1352351" number="DS572702">
+		<band index="1">
+			<start>0</start>
+			<end>1352351</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="1482790" number="DS572701">
+		<band index="1">
+			<start>0</start>
+			<end>1482790</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="2207176" number="DS572697">
+		<band index="1">
+			<start>0</start>
+			<end>2207176</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="1106702" number="DS572705">
+		<band index="1">
+			<start>0</start>
+			<end>1106702</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+

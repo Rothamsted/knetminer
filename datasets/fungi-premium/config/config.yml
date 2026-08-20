@@ -1,0 +1,115 @@
+# This is the Docker default root config file, which configures aratiny, the demo Knetminer instance
+# used when no other option is given to Docker.
+# 
+# Your dataset will need its own version of this file. 
+# 
+ 
+"@includes":
+- defaults-cfg.yml
+
+# oxl: data/knowledge-network.oxl this is the default
+
+# Details about the datset and supported species
+# 
+"dataset @merge":
+  id: fungi-premium
+  title: Fungi Premium
+  description: >-
+        Knetminer Fungi Premium resource includes genomes of Saccharomyces cerevisiae, Aspergillus fumigatus, Aspergillus nidulans, Candida albicans, Fusarium culmorum, Fusarium graminearum, Magnaporthe oryzae, Neurospora crassa, Schizosaccharomyces pombe and Zymoseptoria tritici.
+  keywords: Saccharomyces cerevisiae, Aspergillus fumigatus, Aspergillus nidulans, Candida albicans, Fusarium culmorum, Fusarium graminearum, Magnaporthe oryzae, Neurospora crassa, Schizosaccharomyces pombe, Zymoseptoria tritici, , Fusarium odoratissimum, Fusarium oxysporum lycopersici, Fusarium oxysporum Fo47, Verticillium dahliae.
+  version: 63
+     
+  # organization: is in the defaults
+  # sampleQueries: config/sample-queries.xml # this is a default
+  # backgroundImage: config/background.jpg # this is the default 
+  
+  # ======> WARNING!
+  # SemanticMotif.txt won't work if you include Arabidopsis (endless paths met).
+  # For that to work, you need to use SemanticMotifs-no-ara.txt
+  # I've also experienced problems with adding rice to the first two.
+  #
+  species:
+
+  - taxId: 559292
+    scientificName: Saccharomyces cerevisiae
+    commonName: Saccharomyces cerevisiae
+
+  - taxId: 330879
+    scientificName: Aspergillus fumigatus
+    commonName: Aspergillus fumigatus
+
+  - taxId: 227321
+    scientificName: Aspergillus nidulans
+    commonName: Aspergillus nidulans
+
+  - taxId: 237561
+    scientificName: Candida albicans
+    commonName: Candida albicans
+
+  - taxId: 1318462
+    scientificName: Fusarium culmorum
+    commonName: Fusarium culmorum
+
+  - taxId: 5518
+    scientificName: Fusarium graminearum
+    commonName: Fusarium graminearum
+
+  - taxId: 242507
+    scientificName: Magnaporthe oryzae
+    commonName: Magnaporthe oryzae
+
+  - taxId: 367110
+    scientificName: Neurospora crassa
+    commonName: Neurospora crassa
+
+  - taxId: 284812
+    scientificName: Schizosaccharomyces pombe
+    commonName: Schizosaccharomyces pombe
+
+  - taxId: 336722
+    scientificName: Zymoseptoria tritici
+    commonName: Zymoseptoria tritici
+
+  - taxId: 2502994
+    scientificName: Fusarium odoratissimum
+    commonName: Banana wilt
+
+  - taxId: 426428
+    scientificName: Fusarium oxysporum lycopersici
+    commonName: Tomato wilt
+
+  - taxId: 660027
+    scientificName: Fusarium oxysporum Fo47
+    commonName: Biocontrol strain
+
+  - taxId: 498257
+    scientificName: Verticillium dahliae
+    commonName: Vascular wilt
+    
+#seedGenesFile: config/seed-genes-poaceae.tsv
+
+
+# WARNING: READ the notes in defaults-cfg.yml!
+# 
+googleAnalyticsAPI:
+  measurementId: G-31YFKXKSYH # Converted from old UA-237399750-1
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+# We're using the same as the API, but we need to override defaults
+googleAnalyticsClient:
+  measurementId: G-31YFKXKSYH
+  apiSecret: c9TGJqIBSVuKB1CoRcZ90Q
+
+
+# These are custom options, which aren't explicitly defined by the Knetminer configuration. 
+# See KnetminerConfiguration.getCustomOptions() at https://tinyurl.com/2en342tb for details.
+# 
+# WARNING: DO NOT ABUSE this feature! As explained in the link above, this is an hack to help with provisional
+# or uncommon configuration parameters. Using this section SHOULD BE AN EXCEPTION to defining configuration
+# variables explicitly (out of this section), so that they can be validated. 
+#
+customOptions:
+  ui:
+    # Enable it to show a "give us feedback" banner on the UI. This is a feature used by us at knetminer.com
+    # Likely, you don't want it enabled.
+    betaFeedbackBannerEnabled: false

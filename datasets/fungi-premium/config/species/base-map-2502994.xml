@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genome>
+	<chromosome index="1"  length="6307302" number="KB726998">
+		<band index="1">
+			<start>0</start>
+			<end>6307302</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="2"  length="2387736" number="KB726997">
+		<band index="1">
+			<start>0</start>
+			<end>2387736</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="3"  length="4435000" number="KB726996">
+		<band index="1">
+			<start>0</start>
+			<end>4435000</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="4"  length="1654637" number="KB726995">
+		<band index="1">
+			<start>0</start>
+			<end>1654637</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="5"  length="2820891" number="KB726993">
+		<band index="1">
+			<start>0</start>
+			<end>2820891</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="6"  length="2055901" number="KB726992">
+		<band index="1">
+			<start>0</start>
+			<end>2055901</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="7"  length="1755225" number="KB726991">
+		<band index="1">
+			<start>0</start>
+			<end>1755225</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="8"  length="2130401" number="KB726990">
+		<band index="1">
+			<start>0</start>
+			<end>2130401</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="9"  length="1755347" number="KB726989">
+		<band index="1">
+			<start>0</start>
+			<end>1755347</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="10"  length="1675298" number="KB726988">
+		<band index="1">
+			<start>0</start>
+			<end>1675298</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="11"  length="1651280" number="KB726570">
+		<band index="1">
+			<start>0</start>
+			<end>1651280</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="12"  length="2585670" number="KB726554">
+		<band index="1">
+			<start>0</start>
+			<end>2585670</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="13"  length="1225194" number="KB726480">
+		<band index="1">
+			<start>0</start>
+			<end>1225194</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="14"  length="1794138" number="KB726324">
+		<band index="1">
+			<start>0</start>
+			<end>1794138</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="15"  length="1947538" number="KB726312">
+		<band index="1">
+			<start>0</start>
+			<end>1947538</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="16"  length="2054062" number="KB726307">
+		<band index="1">
+			<start>0</start>
+			<end>2054062</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+	<chromosome index="17"  length="1158442" number="KB726235">
+		<band index="1">
+			<start>0</start>
+			<end>1158442</end>
+			<color>0xFFFFFF</color>
+		</band>
+	</chromosome>
+</genome>
+
